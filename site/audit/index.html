@@ -3,14 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#f8fafc">
-  <title>322-Issue Codebase Audit — Auto-Lab</title>
-  <meta name="description" content="Searchable, paginated engineering audit indexing 322 live GitHub Issues across all 14 Auto-Lab repositories.">
-  <link rel="canonical" href="https://yaniguan.github.io/auto-lab/audit/">
+  <title>Maintainer Backlog — Auto-Lab</title>
   <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css?v=3">
-  <script defer src="../shared.js?v=3"></script>
-  <script defer src="audit.js?v=3"></script>
+  <link rel="stylesheet" href="../styles.css?v=4">
+  <script defer src="../shared.js?v=4"></script>
+  <script defer src="audit.js?v=4"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -18,55 +17,36 @@
   <header class="site-header">
     <a class="brand" href="../" aria-label="Auto-Lab home">
       <img src="../assets/autolab-animated.svg" width="52" height="26" alt="">
-      <span>Auto-Lab <small>Audit</small></span>
+      <span>Auto-Lab <small>Maintainer Backlog</small></span>
     </a>
     <nav aria-label="Main navigation">
-      <a class="nav-link" href="../">Overview</a>
+      <a class="nav-link" href="../">← Back to Overview</a>
       <a class="nav-link" href="../studio/">Interactive Lab</a>
       <a class="nav-link" href="../repos/">14 Repos</a>
-      <a class="nav-link active" href="./">322 Issues</a>
       <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
-      <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
   </header>
 
   <main id="main">
-    <section class="subpage-hero">
-      <div class="wrap">
-        <p class="eyebrow"><span class="status-dot"></span> Line-by-Line Inspection · Live GitHub Issues</p>
-        <h1>322-Issue Engineering Audit</h1>
-        <p>
-          22–24 code-grounded issues per repository across bugs, safety gates, numerics, and schemas.
-        </p>
+    <section class="subpage-hero" style="padding:32px 0 24px;">
+      <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+        <div>
+          <p class="eyebrow"><span class="status-dot"></span> Internal Maintainer View · Unlisted</p>
+          <h1>Issue Backlog (<span id="kpi-total">322</span>)</h1>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span class="pill high">High: <strong id="kpi-high" style="margin-left:4px;">-</strong></span>
+          <span class="pill medium">Medium: <strong id="kpi-medium" style="margin-left:4px;">-</strong></span>
+          <span class="pill low">Low: <strong id="kpi-low" style="margin-left:4px;">-</strong></span>
+        </div>
       </div>
     </section>
 
-    <section class="section wrap" style="padding-top:36px;">
-      <div class="metric-strip" style="margin-bottom:28px;">
-        <div class="metric-card">
-          <span class="small-label teal">Total Tracked Issues</span>
-          <div class="metric-big"><strong id="kpi-total">322</strong> <span>across 14 repos</span></div>
-          <p>Minimum 22 code-grounded issues per repository.</p>
-        </div>
-        <div class="metric-card">
-          <span class="small-label rose">High Severity</span>
-          <div class="metric-big"><strong id="kpi-high">-</strong> <span>critical / high</span></div>
-          <p>Safety bypasses, silent correctness bugs, and data leaks.</p>
-        </div>
-        <div class="metric-card">
-          <span class="small-label amber">Medium Severity</span>
-          <div class="metric-big"><strong id="kpi-medium">-</strong> <span>medium</span></div>
-          <p>Numerical edge cases, schema gaps, and CI hardening.</p>
-        </div>
-        <div class="metric-card">
-          <span class="small-label blue">Low Severity</span>
-          <div class="metric-big"><strong id="kpi-low">-</strong> <span>low / roadmap</span></div>
-          <p>Cross-repo adapters, ergonomics, and next-stage features.</p>
-        </div>
-      </div>
+    <section class="section wrap" style="padding-top:28px;">
+      <div id="repo-pill-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;margin-bottom:18px;"></div>
 
-      <div class="sandbox-card" style="padding:18px 20px;margin-bottom:20px;">
-        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;">
+      <div class="sandbox-card" style="padding:14px 18px;margin-bottom:18px;">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;">
           <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
             <select id="filter-repo" class="select-ctrl" aria-label="Filter by repository">
               <option value="ALL">All 14 Repositories</option>
@@ -91,8 +71,8 @@
             </select>
             <button type="button" class="button secondary" id="btn-reset-filters" style="min-height:38px;padding:6px 13px;">Reset</button>
           </div>
-          <input type="search" id="filter-search" class="input-ctrl" style="min-width:260px;"
-                 placeholder="Search title or source file…" aria-label="Search issues">
+          <input type="search" id="filter-search" class="input-ctrl" style="min-width:250px;"
+                 placeholder="Filter by file or keyword…" aria-label="Search issues">
         </div>
       </div>
 
@@ -100,11 +80,11 @@
         <table>
           <thead>
             <tr>
-              <th>Repository</th>
+              <th>Repo</th>
               <th>Issue</th>
               <th>Severity</th>
               <th>Category</th>
-              <th>Title &amp; Source Location</th>
+              <th>Title &amp; Grounded Code Location</th>
             </tr>
           </thead>
           <tbody id="audit-tbody"></tbody>
@@ -112,9 +92,9 @@
       </div>
 
       <div class="pagination-bar">
-        <span id="page-summary">Loading issues…</span>
+        <span id="page-summary">Loading…</span>
         <div style="display:flex;gap:8px;align-items:center;">
-          <button type="button" class="button secondary" id="btn-prev" style="min-height:36px;padding:6px 14px;">← Previous</button>
+          <button type="button" class="button secondary" id="btn-prev" style="min-height:36px;padding:6px 14px;">← Prev</button>
           <span id="page-indicator" style="font-weight:640;padding:0 8px;">Page 1</span>
           <button type="button" class="button secondary" id="btn-next" style="min-height:36px;padding:6px 14px;">Next →</button>
         </div>
@@ -127,12 +107,8 @@
       <img src="../assets/autolab-static.svg" width="44" height="22" alt="">
       <span>Auto-Lab</span>
     </a>
-    <p>322 Live GitHub Issues · Full Index in <code>docs/ISSUES_AUDIT_INDEX.md</code></p>
-    <div style="display:flex;gap:16px;">
-      <a href="../">Overview</a>
-      <a href="../studio/">Interactive Lab</a>
-      <a href="../repos/">14 Repositories</a>
-    </div>
+    <p>Unlisted Maintainer Backlog · <code>noindex,nofollow</code></p>
+    <a href="../">← Return to Public Site</a>
   </footer>
 </body>
 </html>

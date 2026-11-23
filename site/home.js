@@ -215,9 +215,7 @@
           <td style="white-space:nowrap;"><code>${esc(kpi0)}</code></td>
           <td style="white-space:nowrap;">
             <a class="table-link" href="repos/#${encodeURIComponent(r.repo)}">Card</a>
-            <span style="color:var(--subtle);margin:0 5px;">·</span>
-            <a class="table-link" href="audit/?repo=${encodeURIComponent(r.repo)}">${esc(r.issue_count)} Issues</a>
-            <span style="color:var(--subtle);margin:0 5px;">·</span>
+            <span style="color:var(--subtle);margin:0 6px;">·</span>
             <a class="table-link" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub ↗</a>
           </td>
         </tr>`;

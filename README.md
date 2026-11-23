@@ -14,7 +14,7 @@
 
 **A 7-layer embodied brain, default-deny safety nervous system, and verifiable RL post-training stack for autonomous wet laboratories.**
 
-**Project Website & Interactive Lab:** [https://yaniguan.github.io/auto-lab/](https://yaniguan.github.io/auto-lab/) · [Interactive Sandbox](https://yaniguan.github.io/auto-lab/studio/) · [14-Repo Dossiers](https://yaniguan.github.io/auto-lab/repos/) · [322-Issue Audit](https://yaniguan.github.io/auto-lab/audit/)
+**Project Website & Interactive Lab:** [https://yaniguan.github.io/auto-lab/](https://yaniguan.github.io/auto-lab/) · [Interactive Sandbox](https://yaniguan.github.io/auto-lab/studio/) · [14-Repo Cards](https://yaniguan.github.io/auto-lab/repos/)
 
 [![Project Studio](https://img.shields.io/badge/project_page-live_7--layer_studio-b5d88e?style=flat&labelColor=101820)](https://yaniguan.github.io/auto-lab/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)

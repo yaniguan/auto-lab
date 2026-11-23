@@ -14,9 +14,9 @@
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=3">
-  <script defer src="shared.js?v=3"></script>
-  <script defer src="home.js?v=3"></script>
+  <link rel="stylesheet" href="styles.css?v=4">
+  <script defer src="shared.js?v=4"></script>
+  <script defer src="home.js?v=4"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -30,7 +30,6 @@
       <a class="nav-link active" href="./">Overview</a>
       <a class="nav-link" href="studio/">Interactive Lab</a>
       <a class="nav-link" href="repos/">14 Repos</a>
-      <a class="nav-link" href="audit/">322 Issues</a>
       <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
       <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
@@ -51,7 +50,6 @@
         <a class="button primary" href="#brain-stack">Inspect 7-Layer Brain ↓</a>
         <a class="button secondary" href="studio/">Interactive Lab →</a>
         <a class="button secondary" href="repos/">14 Repo Cards →</a>
-        <a class="button secondary" href="audit/">322 Issues →</a>
       </div>
       <div class="meta-strip">
         <span><strong>Yani Guan</strong></span>
@@ -82,10 +80,10 @@
           <div class="metric-big"><strong>22 / 22</strong> <span>&amp; 30 / 30</span></div>
           <p>SQL gate &amp; CP-SAT schedules.</p>
         </a>
-        <a class="metric-card" href="audit/">
-          <span class="small-label blue">Code Audit</span>
-          <div class="metric-big"><strong id="home-issue-total">322</strong> <span>live issues</span></div>
-          <p>22–24 issues filed per repo.</p>
+        <a class="metric-card" href="studio/#posttrain">
+          <span class="small-label blue">Throughput &amp; Edge</span>
+          <div class="metric-big"><strong>5.42x</strong> <span>&amp; 35x smaller</span></div>
+          <p>BF16 packing (92% useful) &amp; int8/4-bit edge.</p>
         </a>
       </div>
     </section>
@@ -161,24 +159,18 @@
           </article>
         </div>
 
-        <div class="portal-grid">
+        <div class="portal-grid" style="grid-template-columns:repeat(2, 1fr);">
           <a class="portal-card" href="studio/">
             <span class="small-label teal">Subpage 01</span>
             <h3>Interactive Lab</h3>
-            <p>Test default-deny blocks, BF16 packing, and CP-SAT Gantt schedules live.</p>
+            <p>Test default-deny blocks, BF16 sequence packing, conformal coverage, and CP-SAT Gantt schedules live.</p>
             <span class="portal-cta">Open Workbench →</span>
           </a>
           <a class="portal-card" href="repos/">
             <span class="small-label purple">Subpage 02</span>
             <h3>14 Repo Cards</h3>
-            <p>Scannable 6-tile visual specs (Object, Data, Model, Training, History, Property).</p>
+            <p>Scannable 6-tile visual specs (Object, Data, Model, Training, History, Unique Property) for every repo.</p>
             <span class="portal-cta">Browse Cards →</span>
-          </a>
-          <a class="portal-card" href="audit/">
-            <span class="small-label blue">Subpage 03</span>
-            <h3>322-Issue Audit</h3>
-            <p>Filterable engineering issues across all 14 repositories.</p>
-            <span class="portal-cta">Explore Issues →</span>
           </a>
         </div>
       </div>
@@ -247,8 +239,8 @@ autolab loop --scenario broken_tip_reuse</pre>
     <div style="display:flex;gap:16px;">
       <a href="studio/">Interactive Lab</a>
       <a href="repos/">14 Repos</a>
-      <a href="audit/">322 Issues</a>
       <a href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="audit/" style="opacity:0.55;" title="Internal maintainer issue backlog">Backlog</a>
     </div>
   </footer>
 </body>

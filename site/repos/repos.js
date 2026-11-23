@@ -52,7 +52,6 @@
           ${items.map(r => `
             <button type="button" class="sidebar-item ${activeRepo === r.repo ? 'active' : ''}" data-repo="${esc(r.repo)}">
               <span>${esc(r.repo)}</span>
-              <small style="font-size:11px;opacity:0.75;">${esc(r.issue_count)}</small>
             </button>`).join('')}
         </div>`;
     }).join('');
@@ -99,7 +98,7 @@
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <a class="button primary" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub ↗</a>
-          <a class="button secondary" href="../audit/?repo=${encodeURIComponent(r.repo)}">${esc(r.issue_count)} Issues →</a>
+          <a class="button secondary" href="${esc(r.url)}/blob/main/docs/ARCHITECTURE_AND_HISTORY.md" target="_blank" rel="noopener">Docs ↗</a>
         </div>
       </div>
 

@@ -1,10 +1,11 @@
-/* 322-Issue Paginated Engineering Audit Controller (/audit/) */
+/* Unlisted Maintainer Issue Backlog Controller (/audit/) */
 (() => {
   'use strict';
 
   const { esc, fmtMd, initThemeToggle, loadData } = window.AutoLabShared;
   const PAGE_SIZE = 20;
 
+  let BY_REPO = {};
   let ALL_ISSUES = [];
   let page = 1;
 
@@ -26,7 +27,34 @@
     });
   }
 
+  function renderRepoPills() {
+    const host = document.getElementById('repo-pill-grid');
+    const cur = document.getElementById('filter-repo')?.value || 'ALL';
+    if (!host) return;
+
+    host.innerHTML = Object.entries(BY_REPO).map(([name, info]) => {
+      const isSel = cur === name;
+      return `
+        <button type="button" data-pill-repo="${esc(name)}"
+          style="text-align:left;padding:9px 12px;border-radius:9px;background:${isSel ? 'var(--accent-soft)' : 'var(--surface)'};border:1px solid ${isSel ? 'var(--accent)' : 'var(--line)'};">
+          <strong style="display:block;font-size:12.6px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(name)}</strong>
+          <span style="font-size:11.2px;font-weight:700;color:var(--accent);">${esc(info.count)} issues</span>
+        </button>`;
+    }).join('');
+
+    host.querySelectorAll('[data-pill-repo]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sel = document.getElementById('filter-repo');
+        const target = btn.dataset.pillRepo;
+        sel.value = sel.value === target ? 'ALL' : target;
+        page = 1;
+        render();
+      });
+    });
+  }
+
   function render() {
+    renderRepoPills();
     const list = filteredIssues();
     const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
     if (page > totalPages) page = totalPages;
@@ -42,7 +70,7 @@
       const files = (it.files || []).slice(0, 3).map(f => `<code>${esc(f)}</code>`).join(' ');
       return `
         <tr>
-          <td><strong><a class="table-link" href="../repos/#${encodeURIComponent(it.repo)}">${esc(it.repo)}</a></strong></td>
+          <td><strong><a class="table-link" href="https://github.com/yaniguan/${encodeURIComponent(it.repo)}/issues" target="_blank" rel="noopener">${esc(it.repo)}</a></strong></td>
           <td><a class="table-link" href="${esc(url)}" target="_blank" rel="noopener">${esc(num)}</a></td>
           <td><span class="pill ${esc(it.severity)}">${esc(it.severity)}</span></td>
           <td><code>${esc(it.category)}</code></td>
@@ -56,9 +84,9 @@
     }).join('');
 
     document.getElementById('page-summary').textContent = list.length
-      ? `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, list.length)} of ${list.length} matching issues`
-      : 'No issues match the current filters';
-    document.getElementById('page-indicator').textContent = `Page ${page} of ${totalPages}`;
+      ? `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, list.length)} of ${list.length} issues`
+      : 'No matching issues';
+    document.getElementById('page-indicator').textContent = `Page ${page} / ${totalPages}`;
     document.getElementById('btn-prev').disabled = page <= 1;
     document.getElementById('btn-next').disabled = page >= totalPages;
   }
@@ -67,11 +95,11 @@
     initThemeToggle();
 
     const data = await loadData('../');
-    const byRepo = data?.issues?.repos || {};
+    BY_REPO = data?.issues?.repos || {};
     const repoSelect = document.getElementById('filter-repo');
 
     let high = 0, medium = 0, low = 0;
-    for (const [repoName, info] of Object.entries(byRepo)) {
+    for (const [repoName, info] of Object.entries(BY_REPO)) {
       const opt = document.createElement('option');
       opt.value = repoName;
       opt.textContent = `${repoName} (${info.count})`;
@@ -91,10 +119,9 @@
     document.getElementById('kpi-medium').textContent = String(medium);
     document.getElementById('kpi-low').textContent = String(low);
 
-    // Pre-select repository if ?repo=... query param is present
     const params = new URLSearchParams(location.search);
     const qRepo = params.get('repo');
-    if (qRepo && byRepo[qRepo]) {
+    if (qRepo && BY_REPO[qRepo]) {
       repoSelect.value = qRepo;
     }
 
