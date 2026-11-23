@@ -96,7 +96,7 @@
           "note": "n = 138 SUPPORT pairs (Hit@1 0.507) and n = 71 CONTRADICT pairs (Hit@1 0.465)"
         }
       ],
-      "commit_head": "bbef3b6",
+      "commit_head": "e8a033b",
       "issue_count": 22,
       "concise": {
         "hook": "Does not pick a winner—surfaces the evidence on each side and names the test that settles it.",
@@ -167,7 +167,7 @@
           "note": "Moves 20, 20, 10 nearest outside points into training (676 -> 726 train rows)"
         }
       ],
-      "commit_head": "6b03cfc",
+      "commit_head": "c19bca5",
       "issue_count": 22,
       "concise": {
         "hook": "Answers only inside its calibrated zone, says 'I don't know' outside, and grows with new data.",
@@ -243,7 +243,7 @@
           "note": "Source, Offer, Route, AvailabilityRecord, and RankResult aligned with assayfold hub primitives"
         }
       ],
-      "commit_head": "ff8e530",
+      "commit_head": "cc2d33e",
       "issue_count": 22,
       "concise": {
         "hook": "Buy it now or make it in N steps? Strict catalog lower bounds, never invented prices.",
@@ -319,7 +319,7 @@
           "note": "CP-SAT enforces deadlines as hard constraints; mean flow time 68.9 min (non-unique under pure makespan objective)"
         }
       ],
-      "commit_head": "6b78480",
+      "commit_head": "6985986",
       "issue_count": 24,
       "concise": {
         "hook": "Schedule multi-step wet-lab jobs across shared instruments without breaking wait windows.",
@@ -395,7 +395,7 @@
           "note": "Delegates license-gated dataset fetching and conversion to assayfold and buy-or-make"
         }
       ],
-      "commit_head": "7c65b97",
+      "commit_head": "49dafd9",
       "issue_count": 22,
       "concise": {
         "hook": "A checked, zero-hype map of lab robots, cloud foundries, protocol DSLs, and open datasets.",
@@ -471,7 +471,7 @@
           "note": "Covers Genesis, LeRobot, MuJoCo, IsaacLab, ManiSkill, PyLabRobot, Opentrons, LabUtopia, AutoBio, MATTERIX, and PRISM"
         }
       ],
-      "commit_head": "5e47a8f",
+      "commit_head": "85fe9dd",
       "issue_count": 22,
       "concise": {
         "hook": "Recall past crashes, dry-run on a virtual 96-well deck, block bad runs, write outcomes back.",
@@ -547,7 +547,7 @@
           "note": "12 experiments, 14 samples, and 4 instruments evaluated entirely in-memory on CPU"
         }
       ],
-      "commit_head": "775c3e9",
+      "commit_head": "ed775b6",
       "issue_count": 22,
       "concise": {
         "hook": "Trust nothing a model emits until a mechanical checker says yes: SQL, Lean, and protocols.",
@@ -577,6 +577,55 @@
           "training": "Deterministic verifier (serves as exact binary reward gate for RLVR).",
           "history": "3255ec7 4-layer SQL gate & curated resources -> 775c3e9 L4 spec.",
           "property": "Proves syntax/schema alone miss 50% of wrong queries; execution checks catch all 7."
+        }
+      }
+    },
+    {
+      "repo": "lab-attrib",
+      "url": "https://github.com/yaniguan/lab-attrib",
+      "layer": "L4",
+      "layer_name": "Digital-Twin Rehearsal & Default-Deny Gate",
+      "tagline": "Post-execution causal blame calculus, NNLS precursor ghost-peak deconvolution, EVOI orthogonal assay routing, and SHA-256 proof-carrying negative result ledgers in Python + Lean 4.",
+      "object": "Closes the post-execution epistemic blind spot of self-driving laboratories by separating robotic/timing execution artifacts and unreacted precursor diffraction overlap (A-Lab failure mode) from Proof-Carrying Positive and Negative Results before updating scientific memory or recalibrating Chem-RRT frontier shells.",
+      "data": "Evaluates NNLS precursor deconvolution across multi-phase powder diffraction suites and runs 9-round x 5-seed closed-loop active molecular discovery on the real 1,128-compound Delaney ESOL dataset (plus deterministic fallback descriptors).",
+      "model": "Exact 4-way causal blame classifier (LabAttribLean: 25 Lean 4.36.0 theorems, 0 sorry) paired with dual-backend projected-coordinate-descent NNLS spectral deconvolution, Bayesian EVOI secondary modality router (Raman / LC-MS / 1H-NMR / TEM), and SHA-256 hash-chained ledger.",
+      "training": "Zero parametric black-box drift in the core blame gate; exports contamination-free certified positive and negative pairs for downstream Bayesian surrogates and RLVR post-training.",
+      "history": "Created as the 15th Core Auto-Lab repository (8737ac9 -> 6b7f467 on main) with 25 machine-checked Lean 4 theorems, 42 passing unit tests, Ubuntu Python + Lean CI, and a standalone 5-page LaTeX monograph (paper/main.pdf).",
+      "unique_properties": [
+        "Machine-checked 25-theorem Lean 4.36.0 blame calculus (0 sorry) proving corrupted_run_never_poisons_memory and unidentifiable_spectrum_never_certified.",
+        "Dual-backend NNLS precursor peak-overlap solver eliminating 100% of precursor ghost-phase false discoveries (FDR 40.2% / 66.7% -> 0.0%).",
+        "Couples post-run causal attribution with micro-scale annular Chem-RRT stepping-stones (31.0 verified multi-ring hits, 96.4% conformal coverage, 0 poisoned ledger entries)."
+      ],
+      "commit_head": "6b7f467",
+      "issue_count": 0,
+      "concise": {
+        "hook": "Separate robot glitches and precursor ghost peaks from proof-carrying negative truth after every run.",
+        "flow": [
+          "Post-run telemetry + XRD",
+          "Lean 4 blame + NNLS",
+          "SHA-256 certified ledger"
+        ],
+        "kpis": [
+          [
+            "25",
+            "Lean 4 theorems"
+          ],
+          [
+            "0.0%",
+            "false discovery rate"
+          ],
+          [
+            "+44.9%",
+            "multi-ring hits"
+          ]
+        ],
+        "short": {
+          "object": "Prevent post-run hardware glitches and precursor peak overlap from poisoning scientific memory.",
+          "data": "1,128-compound Delaney ESOL 9-round active campaigns + multi-phase diffraction suites.",
+          "model": "4-way Lean 4 blame calculus + NNLS precursor deconvolver + EVOI orthogonal assay router.",
+          "training": "Deterministic formal gate exporting verified positive/negative pairs for BO & RLVR.",
+          "history": "Published as the 15th Core Auto-Lab repo with standalone LaTeX monograph (paper/main.pdf).",
+          "property": "0.0% FDR and 0 poisoned ledger entries while unlocking 31.0 multi-ring hits."
         }
       }
     },
@@ -623,7 +672,7 @@
           "note": "Tiny local byte-GPT-2 pipeline check; A100 Colab & NeMo-RL GPU runs PENDING"
         }
       ],
-      "commit_head": "a879d9d",
+      "commit_head": "c50955c",
       "issue_count": 22,
       "concise": {
         "hook": "Post-training stack turning raw models into verified Scientist and Operator policies.",
@@ -704,7 +753,7 @@
           "note": "Verified locally in sandbox with pytest 8.4.2 on Python 3.13.13 (CPU)"
         }
       ],
-      "commit_head": "b9b83fd",
+      "commit_head": "996a282",
       "issue_count": 24,
       "concise": {
         "hook": "Deterministic error twins for protocol steps—teaching models to spot mistakes and order DAGs.",
@@ -785,7 +834,7 @@
           "note": "Exact 0.1 uL volume conservation + geometric 2^-k dilution profile; 16/16 pytest unit tests passing"
         }
       ],
-      "commit_head": "68d329e",
+      "commit_head": "f969496",
       "issue_count": 24,
       "concise": {
         "hook": "Fill the plate, fill the GPU—batch thousands of protocol checks and pack short sequences.",
@@ -866,7 +915,7 @@
           "note": "Full WAV read + 64-bin log-mel + anomaly score per 10 s 16 kHz clip on 1 Xeon core"
         }
       ],
-      "commit_head": "082f2e1",
+      "commit_head": "2675971",
       "issue_count": 24,
       "concise": {
         "hook": "Listen to protocol text and bench machines—pull clean parameters and flag strange sounds.",
@@ -942,7 +991,7 @@
           "note": "Adds 33 regression tests for well-volume conservation, liquids, YAML 2.10, and multichannel guards"
         }
       ],
-      "commit_head": "9b18549",
+      "commit_head": "5012e29",
       "issue_count": 24,
       "concise": {
         "hook": "Compile tiny YAML/JSON step files into deterministic Opentrons Python protocols and simulate.",
@@ -1018,7 +1067,7 @@
           "note": "Mean joint-space path length reduction from 100 random shortcut iterations"
         }
       ],
-      "commit_head": "8213dab",
+      "commit_head": "ffd7b96",
       "issue_count": 24,
       "concise": {
         "hook": "Collision-free bench motion plus last-centimeter touch where clear glass fools cameras.",
@@ -1094,7 +1143,7 @@
           "note": "0.9889 (98.89%) prediction agreement with fp32 distilled student (7.09x smaller than student fp32)"
         }
       ],
-      "commit_head": "6a600de",
+      "commit_head": "4fe3495",
       "issue_count": 24,
       "concise": {
         "hook": "Distill big teachers into tiny int8 and 4-bit students that run right next to the bench.",

@@ -13,7 +13,7 @@ inductive LayerId where
   | L6 | L5 | L4 | L3 | L2 | L1 | L0
   deriving DecidableEq, Repr
 
-/-- Canonical repository identifier for all 14 Auto-Lab repositories. -/
+/-- Canonical repository identifier for all 15 Auto-Lab core repositories. -/
 inductive RepoId where
   | labAskWhy
   | labDecide
@@ -22,6 +22,7 @@ inductive RepoId where
   | labAutomationAtlas
   | labRehearsal
   | labVerify
+  | labAttrib
   | labbenchPosttrain
   | twinstep
   | labfill
@@ -39,6 +40,7 @@ def RepoId.name : RepoId → String
   | .labAutomationAtlas => "lab-automation-atlas"
   | .labRehearsal       => "lab-rehearsal"
   | .labVerify          => "lab-verify"
+  | .labAttrib          => "lab-attrib"
   | .labbenchPosttrain  => "labbench-posttrain"
   | .twinstep           => "twinstep"
   | .labfill            => "labfill"
@@ -55,6 +57,7 @@ def RepoId.layer : RepoId → LayerId
   | .labAutomationAtlas => .L5
   | .labRehearsal       => .L4
   | .labVerify          => .L4
+  | .labAttrib          => .L4
   | .labbenchPosttrain  => .L3
   | .twinstep           => .L3
   | .labfill            => .L3

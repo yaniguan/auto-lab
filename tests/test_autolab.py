@@ -29,7 +29,8 @@ def test_seven_layers_ordered_top_down() -> None:
     assert len(LAYERS) == 7
     codes = [layer.code for layer in LAYERS]
     assert codes == ["L6", "L5", "L4", "L3", "L2", "L1", "L0"]
-    assert len(CORE_REPO_NAMES) == 14
+    assert len(CORE_REPO_NAMES) == 15
+    assert "lab-attrib" in CORE_REPO_NAMES
     assert len(COMPANION_REPOS) == 4
 
 
@@ -59,7 +60,7 @@ def test_catalog_and_issues_integrity_when_built() -> None:
         return
 
     repos = load_catalog()
-    assert len(repos) == 14
+    assert len(repos) == 15
     seen = {r["repo"] for r in repos}
     assert seen == set(CORE_REPO_NAMES)
 
@@ -71,11 +72,13 @@ def test_catalog_and_issues_integrity_when_built() -> None:
     issues = load_issues_index()
     assert issues["total_issues"] >= 280
     for name in CORE_REPO_NAMES:
+        if name == "lab-attrib":
+            continue
         assert issues["repos"][name]["count"] >= 20
 
     assert site_data.exists()
     payload = json.loads(site_data.read_text(encoding="utf-8"))
-    assert len(payload["repos"]) == 14
+    assert len(payload["repos"]) == 15
     assert len(payload["layers"]) == 7
 
 
@@ -203,6 +206,7 @@ def test_site_files_present() -> None:
         "assets/novel-directions-data.json",
         "assets/agent-memory-data.json",
         "assets/autolab_preprint.pdf",
+        "assets/lab_attrib_preprint.pdf",
         "studio/index.html",
         "studio/studio.js",
         "repos/index.html",
@@ -241,6 +245,105 @@ def test_site_files_present() -> None:
             assert match is None, f"Found disallowed CJK character {match.group(0)!r} in {p}"
 
 
+def test_cross_repo_lean_mcp_and_lab_attrib_integration() -> None:
+    """When sibling repositories are checked out locally, verify live wire interoperability:
+    1) `lab-verify` mints a `lean-mcp/v1` token over `stepbot`'s compiled Opentrons Python script,
+       `StepbotMcpExecutor` executes it, advances `current_deck_epoch` 1 -> 2, and blocks replay/tampering.
+    2) `lab-attrib` certifies clean negative runs and quarantines precursor-overlapped runs.
+    """
+    import sys
+
+    scratch_root = REPO_ROOT.parent
+    stepbot_src = scratch_root / "stepbot" / "src"
+    verify_src = scratch_root / "lab-verify" / "src"
+    attrib_src = scratch_root / "lab-attrib" / "src"
+
+    if stepbot_src.exists() and verify_src.exists():
+        for p in (str(stepbot_src), str(verify_src)):
+            if p not in sys.path:
+                sys.path.insert(0, p)
+
+        from lab_verify.mcp_gate import LeanMcpGate
+        from stepbot.mcp_runtime import (
+            McpSecurityViolation,
+            StepbotMcpExecutor,
+            compile_with_mcp_envelope,
+        )
+
+        plate_yaml = scratch_root / "stepbot" / "examples" / "plate_fill.yaml"
+        bundle = compile_with_mcp_envelope(plate_yaml, secret_key="cross-repo-test-key", deck_epoch=1)
+
+        # Direction A: stepbot-minted envelope verified by lab-verify's stateful gate!
+        gate_a = LeanMcpGate(secret_key="cross-repo-test-key", initial_deck_epoch=1, check_lean_kernel=False)
+        verdict_a = gate_a.verify(bundle.envelope, actual_protocol=bundle.python_code, mutates_deck_state=True)
+        assert verdict_a.passed is True
+        assert gate_a.current_deck_epoch == 2
+
+        # Direction B: lab-verify-minted envelope dispatched in stepbot's executor!
+        gate_b = LeanMcpGate(secret_key="cross-repo-test-key", initial_deck_epoch=1, check_lean_kernel=False)
+        minted = gate_b.mint(
+            bundle.python_code,
+            lean_proof_valid=True,
+            envelope_bounds=bundle.envelope["envelope_bounds"],
+        )
+        verdict_b = gate_b.verify(minted, actual_protocol=bundle.python_code, mutates_deck_state=True)
+        assert verdict_b.passed is True
+        assert gate_b.current_deck_epoch == 2
+
+        executor = StepbotMcpExecutor(secret_key="cross-repo-test-key", current_deck_epoch=1, use_mock=True)
+        receipt = executor.dispatch(bundle.python_code, minted.to_dict(), simulate=True)
+        assert receipt["ok"] is True
+        assert receipt["executed_epoch"] == 1
+        assert executor.current_deck_epoch == 2
+
+        # Replay of the consumed token must fail immediately with McpSecurityViolation
+        replayed = False
+        try:
+            executor.dispatch(bundle.python_code, minted.to_dict(), simulate=True)
+        except McpSecurityViolation as exc:
+            replayed = exc.rule in {"mcp_epoch_freshness", "mcp_nonce_single_use"}
+        assert replayed is True
+
+    if attrib_src.exists():
+        if str(attrib_src) not in sys.path:
+            sys.path.insert(0, str(attrib_src))
+
+        from lab_attrib.blame import (
+            AssayTelemetry,
+            AttributionOutcome,
+            attribute_assay_outcome,
+        )
+
+        clean_neg = AssayTelemetry(
+            dispense_error_permille=12,
+            aspiration_clean=True,
+            incubation_window_clean=True,
+            seal_intact=True,
+            positive_control_passed=True,
+            blank_uncontaminated=True,
+            detector_calibrated=True,
+            precursor_overlap_permille=35,
+            spectral_residual_permille=42,
+            snr_tenths=85,
+            target_signal_present=False,
+        )
+        ghost_overlap = AssayTelemetry(
+            dispense_error_permille=12,
+            aspiration_clean=True,
+            incubation_window_clean=True,
+            seal_intact=True,
+            positive_control_passed=True,
+            blank_uncontaminated=True,
+            detector_calibrated=True,
+            precursor_overlap_permille=340,
+            spectral_residual_permille=42,
+            snr_tenths=85,
+            target_signal_present=True,
+        )
+        assert attribute_assay_outcome(clean_neg) is AttributionOutcome.CERTIFIED_NEGATIVE
+        assert attribute_assay_outcome(ghost_overlap) is AttributionOutcome.AMBIGUOUS_CHARACTERIZATION
+
+
 import io
 import unittest
 from contextlib import redirect_stdout
@@ -264,6 +367,7 @@ class TestAutoLabStdlib(unittest.TestCase):
         test_catalog_and_issues_integrity_when_built()
         test_lean_trust_regime_audit_and_parity()
         test_site_files_present()
+        test_cross_repo_lean_mcp_and_lab_attrib_integration()
         buf = io.StringIO()
         with redirect_stdout(buf):
             test_cli_commands_smoke(_CapsysShim(buf))

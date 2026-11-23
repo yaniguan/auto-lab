@@ -145,8 +145,8 @@
     },
     {
       side: 'R', y: 256, h: 104, groups: ['gate'], iconRepo: 'lab-verify',
-      tag: 'L4 · TWIN & GATE', title: 'Rehearse & Default-Deny',
-      repos: ['lab-rehearsal', 'lab-verify', 'WignerFlow'],
+      tag: 'L4 · TWIN, GATE & ATTRIB', title: 'Rehearse, Gate & Blame',
+      repos: ['lab-rehearsal', 'lab-verify', 'lab-attrib', 'WignerFlow'],
       leader: 'M 806 308 H 764 A 8 8 0 0 1 756 300 V 248 A 8 8 0 0 0 748 240 H 552',
       anchor: [552, 240],
     },
@@ -182,11 +182,12 @@
     { repo: 'stepbot', sub: 'Opentrons v2', x: 684, y: 262, w: 176 },
     { repo: 'lab-hands', sub: 'RRT + touch', x: 886, y: 262, w: 164 },
 
-    // Row 3 (y = 386): Edge Runtime & Post-Training Flywheel
-    { repo: 'lab-feet', sub: 'int8 / 4-bit edge', x: 76, y: 386, w: 196 },
-    { repo: 'twinstep', sub: 'seeded error twins', x: 342, y: 386, w: 204 },
-    { repo: 'labfill', sub: '5.42x BF16 + check', x: 602, y: 386, w: 208 },
-    { repo: 'labbench-posttrain', sub: 'labrl SFT -> GDPO ↺', x: 852, y: 386, w: 204 },
+    // Row 3 (y = 386): Post-Run Attribution, Edge Runtime & Post-Training Flywheel
+    { repo: 'lab-feet', sub: 'int8 / 4-bit edge', x: 36, y: 386, w: 180 },
+    { repo: 'lab-attrib', sub: 'post-run blame', x: 238, y: 386, w: 182 },
+    { repo: 'twinstep', sub: 'seeded error twins', x: 442, y: 386, w: 192 },
+    { repo: 'labfill', sub: '5.42x BF16 + check', x: 656, y: 386, w: 192 },
+    { repo: 'labbench-posttrain', sub: 'labrl SFT -> GDPO ↺', x: 870, y: 386, w: 190 },
   ];
 
   const DISPLAY_LAYER_ORDER = ['L6', 'L5', 'L4', 'L2', 'L1', 'L0', 'L3'];

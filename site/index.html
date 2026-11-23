@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f8fafc">
   <title>Auto-Lab — Embodied Brain, Safety Gate &amp; Post-Training</title>
-  <meta name="description" content="Fourteen modular repositories giving a wet-lab robot a calibrated brain, a default-deny safety gate, ears, hands, edge feet, and verifiable RL post-training.">
+  <meta name="description" content="Fifteen modular repositories giving a wet-lab robot a calibrated brain, a default-deny safety gate, causal negative-result attribution, ears, hands, edge feet, and verifiable RL post-training.">
   <link rel="canonical" href="https://yaniguan.github.io/auto-lab/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Auto-Lab — Embodied Lab Brain &amp; Post-Training">
-  <meta property="og:description" content="7 layers, 14 repositories, default-deny gates, and RLVR post-training.">
+  <meta property="og:description" content="7 layers, 15 repositories, default-deny gates, Lean 4 Trust Regime, and RLVR post-training.">
   <meta property="og:url" content="https://yaniguan.github.io/auto-lab/">
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=8">
-  <script defer src="shared.js?v=8"></script>
-  <script defer src="scheme_icons.js?v=8"></script>
-  <script defer src="repo_stories.js?v=8"></script>
-  <script defer src="home.js?v=8"></script>
+  <link rel="stylesheet" href="styles.css?v=11">
+  <script defer src="shared.js?v=11"></script>
+  <script defer src="scheme_icons.js?v=11"></script>
+  <script defer src="repo_stories.js?v=11"></script>
+  <script defer src="home.js?v=11"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -32,7 +32,7 @@
       <a class="nav-link active" href="./">Overview</a>
       <a class="nav-link" href="trust/">Trust Regime</a>
       <a class="nav-link" href="studio/">Interactive Lab</a>
-      <a class="nav-link" href="repos/">14 Repos</a>
+      <a class="nav-link" href="repos/">15 Repos</a>
       <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
       <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
@@ -47,12 +47,12 @@
         <span class="hero-title">Give a Lab Robot a Calibrated Brain, a Safety Gate, Hands, Ears, and Feet</span>
       </h1>
       <p class="hero-deck">
-        Fourteen small, checkable repositories—linked from high-level scientific reasoning (<code>L6</code>) down to edge quantized boards (<code>L0</code>) and verifiable RL post-training (<code>L3</code>).
+        Fifteen small, checkable repositories—linked from high-level scientific reasoning (<code>L6</code>) and causal post-run blame attribution (<code>L4</code>) down to edge quantized boards (<code>L0</code>) and verifiable RL post-training (<code>L3</code>).
       </p>
       <div class="hero-actions">
         <a class="button primary" href="#brain-stack">Explore Agent &amp; Repo Map ↓</a>
         <a class="button secondary" href="trust/">Lean 4 Trust Regime →</a>
-        <a class="button secondary" href="repos/">14 Repo Guides →</a>
+        <a class="button secondary" href="repos/">15 Repo Guides →</a>
       </div>
       <div class="meta-strip">
         <span><strong>Yani Guan</strong></span>
@@ -70,7 +70,7 @@
       <div class="metric-strip">
         <a class="metric-card" href="#brain-stack">
           <span class="small-label purple">Architecture</span>
-          <div class="metric-big"><strong>7</strong> <span>layers · 14 repos</span></div>
+          <div class="metric-big"><strong>7</strong> <span>layers · 15 repos</span></div>
           <p>Brain (L6) to edge boards (L0).</p>
         </a>
         <a class="metric-card" href="studio/#posttrain">
@@ -95,7 +95,7 @@
     <section class="section wrap" id="brain-stack">
       <div class="section-heading" style="margin-bottom:20px;">
         <p class="eyebrow">01 / Anatomy &amp; Repository Connections</p>
-        <h2>One agent, fourteen parts—click or hover any icon to trace how they connect.</h2>
+        <h2>One agent, fifteen parts—click or hover any icon to trace how they connect.</h2>
       </div>
 
       <!-- Sketch Figure A: Two-Armed Lab Agent Line Drawing -->
@@ -190,8 +190,8 @@
             <span class="portal-cta">Open Workbench →</span>
           </a>
           <a class="portal-card" href="repos/">
-            <span class="small-label purple">Subpage 03 · 14 Modules</span>
-            <h3>14 Interactive Repo Guides</h3>
+            <span class="small-label purple">Subpage 03 · 15 Modules</span>
+            <h3>15 Interactive Repo Guides</h3>
             <p>Plain-English problem stories, clickable real-world examples, and under-the-hood tabs for every repository.</p>
             <span class="portal-cta">Browse Repo Stories →</span>
           </a>
@@ -199,10 +199,10 @@
       </div>
     </section>
 
-    <!-- 03 / Clean 14-Repository Directory Table -->
+    <!-- 03 / Clean 15-Repository Directory Table -->
     <section class="section wrap" id="directory">
       <div class="section-heading" style="margin-bottom:22px;">
-        <p class="eyebrow">03 / All 14 Repositories</p>
+        <p class="eyebrow">03 / All 15 Repositories</p>
         <h2>One line per repo.</h2>
       </div>
 
@@ -227,7 +227,7 @@
       <div class="wrap">
         <div class="section-heading" style="margin-bottom:20px;">
           <p class="eyebrow">04 / Quickstart</p>
-          <h2>Pull and inspect all 14 repos.</h2>
+          <h2>Pull and inspect all 15 repos.</h2>
         </div>
 
         <pre class="code-block">git clone https://github.com/yaniguan/auto-lab.git &amp;&amp; cd auto-lab
@@ -258,10 +258,10 @@ autolab loop --scenario broken_tip_reuse</pre>
       <img src="assets/autolab-static.svg" width="44" height="22" alt="">
       <span>Auto-Lab</span>
     </a>
-    <p>7 Layers · 14 Core Repositories · MIT</p>
+    <p>7 Layers · 15 Core Repositories · MIT</p>
     <div style="display:flex;gap:16px;">
       <a href="studio/">Interactive Lab</a>
-      <a href="repos/">14 Repos</a>
+      <a href="repos/">15 Repos</a>
       <a href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
       <a href="audit/" style="opacity:0.55;" title="Internal maintainer issue backlog">Backlog</a>
     </div>

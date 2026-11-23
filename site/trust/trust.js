@@ -108,6 +108,18 @@ theorem sorry_proof_always_denied (p : LeanProofCheck) (hs : p.hasSorryOrAdmit =
     checkLeanProofGate p ≠ none`,
     },
     {
+      layer: 'L4', repo: 'lab-attrib', file: 'AutoLabLean/NovelDirections.lean',
+      theorem: 'corrupted_run_never_poisons_memory & unidentifiable_spectrum_never_certified',
+      boundary: 'Post-execution blame gate blocks robotic/timing/control artifacts and precursor-overlapped spectra from entering scientific memory or recalibrating Chem-RRT frontier shells.',
+      allowCase: ['AssayTelemetry { execClean=true, R_wp=42 <= 150, precursorOverlap=35 <= 120, signal=false }', 'ALLOW · CERTIFIED_NEGATIVE appended to SHA-256 ledger'],
+      denyCase: ['AssayTelemetry { execClean=true, precursorOverlap=964 > 120 (unreacted A+B ghost peaks) }', 'QUARANTINE [lab-attrib :: AMBIGUOUS_CHARACTERIZATION] -> EVOI Router'],
+      code: `theorem unidentifiable_spectrum_never_certified (t : AssayTelemetry)
+    (ham : t.maxResidualPermille < t.spectralResidualPermille ∨
+           t.maxOverlapPermille < t.precursorOverlapPermille) :
+    attributeAssayOutcome t ≠ .certifiedPositive ∧
+    attributeAssayOutcome t ≠ .certifiedNegative`,
+    },
+    {
       layer: 'L3', repo: 'labbench-posttrain', file: 'AutoLabLean/L3_PostTrain.lean',
       theorem: 'unverified_rollout_gets_zero_reward & splitGuard_no_train_test_overlap',
       boundary: '`SplitGuard` enforces zero group/scaffold/canary overlap across splits, and multiplicative reward gating zeroes out all format/reasoning bonuses unless the domain verifier passes within `<think>` cap.',

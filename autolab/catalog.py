@@ -89,6 +89,7 @@ CORE_REPO_NAMES: tuple[str, ...] = (
     "lab-automation-atlas",
     "lab-rehearsal",
     "lab-verify",
+    "lab-attrib",
     "labbench-posttrain",
     "twinstep",
     "labfill",

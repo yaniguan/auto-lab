@@ -660,6 +660,46 @@ Honest caveat   : NumPy dequantizes before matmul—storage drops 250x; real run
         status: 'Runnable CPU compression probe + curated edge-AI reference hub. Next: true `int8`/`int4` C++ runtime execution on a Raspberry Pi 5 / Jetson bench board.',
       },
     },
+
+    'lab-attrib': {
+      headline: 'After a wet-lab run finishes, separate robot glitches and unreacted precursor peaks from proof-carrying scientific truth.',
+      why: 'Pre-execution gates keep a robot from crashing, but raw readouts still lie: a dry pipette draw looks like a negative biochemical result, and overlapping precursor peaks look like a brand-new crystal phase.',
+      metrics: [
+        ['25', 'Lean 4 theorems (0 sorry)'],
+        ['0.0%', 'false discovery rate'],
+        ['+44.9%', 'verified multi-ring hits'],
+      ],
+      playgroundPrompt: 'Inspect how lab-attrib classifies post-run telemetry and spectra before touching scientific memory:',
+      demos: [
+        {
+          tab: 'Unreacted Precursor XRD (Quarantined)',
+          verdict: 'AMBIGUOUS · Route to Raman/TEM',
+          verdictTone: 'hold',
+          inputLabel: 'Clean robot run, but multi-peak diffractogram matches precursors A+B',
+          input: 'executionClean = true · NNLS precursor overlap = 96.4% (> 12.0% cap) · missing 41.5° target line',
+          outputLabel: 'LabAttribLean verdict & EVOI router',
+          output: `Outcome  : AMBIGUOUS_CHARACTERIZATION (admitToScientificMemory = false)
+Theorem  : unidentifiable_spectrum_never_certified (blocks A-Lab ghost-phase false positive!)
+Next step: EVOI router selects low-cost Raman check instead of writing a false hit.`,
+        },
+        {
+          tab: 'Cavitation Glitch vs True Negative',
+          verdict: 'PROOF-CARRYING NEGATIVE',
+          verdictTone: 'pass',
+          inputLabel: 'Clean acoustic, timing, tactile & +/- controls with flat optical signal',
+          input: 'acousticNormal=true · waitWindow<=15m · posCtrl=PASS · blank=CLEAN · R_wp=4.2% · signal < hitFloor',
+          outputLabel: 'Certified ledger receipt',
+          output: `Outcome  : CERTIFIED_NEGATIVE (admitToScientificMemory = true)
+Theorem  : certified_negative_sound (all 6 physical controls + 2 identifiability bounds verified)
+Ledger   : Appended with SHA-256 chain receipt -> safe constraint for BO & RLVR.`,
+        },
+      ],
+      tabs: {
+        how: 'Combines a 25-theorem Lean 4.36.0 blame calculus (`LabAttribLean`) with dual-backend projected-coordinate-descent NNLS spectral deconvolution, Expected Value of Information (`EVOI`) orthogonal assay routing, and SHA-256 hash-chained ledgers.',
+        guarantee: 'Proves `corrupted_run_never_poisons_memory`, `unidentifiable_spectrum_never_certified`, and `valid_tau_expansion_requires_certified_micro_probe`—preserving 96.4% conformal coverage across 9-round ESOL stepping-stone campaigns.',
+        status: 'Standalone 15th Core Repository (`yaniguan/lab-attrib`) with 42 passing tests, Ubuntu Python + Lean 4 CI, and a 5-page LaTeX monograph (`paper/main.pdf`).',
+      },
+    },
   };
 
   window.AutoLabStories = { STORIES };

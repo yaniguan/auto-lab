@@ -35,6 +35,10 @@
     'lab-verify': `
       <path d="M12 3l7 3v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V6l7-3z"/>
       <polyline points="8.8,12.2 11.1,14.5 15.5,9.8"/>`,
+    'lab-attrib': `
+      <path d="M3 18h18M6 18v-5l2.5-6 2.5 8 2.5-4 2.5 7"/>
+      <circle cx="18.2" cy="7.2" r="2.8"/>
+      <polyline points="17.1,7.2 18.0,8.1 19.6,6.3"/>`,
     'labbench-posttrain': `
       <path d="M19.5 10A8 8 0 0 0 6.2 6.5"/>
       <polyline points="6,3.8 6,6.8 9,6.8"/>
@@ -103,8 +107,11 @@
     ['WignerFlow', 'lab-rehearsal', '[physics] gate', 'ground'],
     ['labshift', 'lab-rehearsal', 'scheduled run', 'forward'],
     ['lab-rehearsal', 'lab-verify', 'twin state', 'forward'],
-    ['lab-verify', 'stepbot', 'verified steps', 'forward'],
+    ['lab-verify', 'stepbot', 'Lean-MCP token', 'forward'],
     ['lab-verify', 'lab-hands', 'safe bounds', 'forward'],
+    ['stepbot', 'lab-attrib', 'run telemetry', 'flywheel'],
+    ['lab-attrib', 'assayfold', 'certified +/-', 'flywheel'],
+    ['lab-attrib', 'lab-decide', 'recalibrate tau', 'flywheel'],
     ['stepbot', 'lab-feet', 'edge execution', 'forward'],
     ['lab-hands', 'lab-feet', 'quantized policy', 'forward'],
     ['lab-rehearsal', 'twinstep', 'failed runs.jsonl', 'flywheel'],
@@ -128,6 +135,7 @@
     'buy-or-make': 'chest',
     'lab-rehearsal': 'gate',
     'lab-verify': 'gate',
+    'lab-attrib': 'gate',
     'labshift': 'schedule',
     'stepbot': 'pipette',
     'lab-hands': 'arms',
