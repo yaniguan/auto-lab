@@ -1,0 +1,11 @@
+name = "autolablean"
+version = "0.1.0"
+defaultTargets = ["AutoLabLean", "autolab-lean"]
+
+[[lean_lib]]
+name = "AutoLabLean"
+globs = ["AutoLabLean", "AutoLabLean.+"]
+
+[[lean_exe]]
+name = "autolab-lean"
+root = "Main"

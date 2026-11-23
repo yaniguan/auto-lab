@@ -18,6 +18,7 @@ from autolab.catalog import (
     load_issues_index,
 )
 from autolab.loop_demo import SCENARIOS, run_closed_loop_scenario
+from autolab.trust_regime import audit_lean_sources, find_autolab_lean_binary
 
 
 def _cmd_layers(_args: argparse.Namespace) -> int:
@@ -165,7 +166,55 @@ def build_parser() -> argparse.ArgumentParser:
         help="Parent directory holding the 14 cloned repositories",
     )
     p_status.set_defaults(func=_cmd_status)
+
+    p_trust = sub.add_parser("trust", help="Inspect the Lean 4 AutoLabLean Trust Regime & empirical lift")
+    p_trust.add_argument("--json", action="store_true", help="Emit JSON summary")
+    p_trust.set_defaults(func=_cmd_trust)
     return parser
+
+
+def _cmd_trust(args: argparse.Namespace) -> int:
+    audit = audit_lean_sources()
+    bin_path = find_autolab_lean_binary()
+    results_file = REPO_ROOT / "benchmarks" / "results" / "trust_regime_results.json"
+    study = json.loads(results_file.read_text(encoding="utf-8")) if results_file.exists() else None
+
+    if args.json:
+        print(
+            json.dumps(
+                {
+                    "lean_audit": audit,
+                    "binary_compiled": bin_path is not None,
+                    "study": study["experiments"] if study else None,
+                },
+                indent=2,
+            )
+        )
+        return 0 if audit["zero_sorry_verified"] else 1
+
+    print("=== AutoLabLean Formal Trust Regime (leanprover/lean4:v4.36.0) ===")
+    print(f"Files    : {audit['file_count']} Lean 4 modules")
+    print(f"Theorems : {audit['theorem_count']} machine-checked theorems, {audit['guard_count']} #guard witnesses")
+    print(f"Hygiene  : zero_sorry_verified={audit['zero_sorry_verified']} | native_binary={'READY' if bin_path else 'NOT_BUILT'}")
+    if study:
+        e1 = study["experiments"]["exp1_molecular_discovery"]["regimes"]
+        e2 = study["experiments"]["exp2_protocol_synthesis"]["regimes"]
+        e5 = study["experiments"]["exp5_rlvr_posttraining"]["regimes"]
+        print("\nMeasured Empirical Lift:")
+        print(
+            f"  1. Molecular Discovery (ESOL) : violations {e1['ungated']['boundary_violation_pct']}% -> {e1['lean_trust']['boundary_violation_pct']}%, "
+            f"MAE {e1['ungated']['prediction_mae']} -> {e1['lean_trust']['prediction_mae']}, "
+            f"hit yield {e1['ungated']['verified_hit_yield_pct']}% -> {e1['lean_trust']['verified_hit_yield_pct']}%"
+        )
+        print(
+            f"  2. Protocol Synthesis (N=8)   : faults {e2['ungated_top1']['hardware_fault_pct']}% -> {e2['lean_best_of_8_plus_guided_repair']['hardware_fault_pct']}%, "
+            f"valid completion {e2['ungated_top1']['valid_completion_pct']}% -> {e2['lean_best_of_8_plus_guided_repair']['valid_completion_pct']}%"
+        )
+        print(
+            f"  5. RLVR GRPO Post-Training    : true verified acc {e5['soft_additive_reward_grpo']['true_verified_accuracy_pct']}% -> {e5['lean_trust_gated_grpo']['true_verified_accuracy_pct']}% "
+            f"(exploits {e5['soft_additive_reward_grpo']['reward_hack_exploit_pct']}% -> {e5['lean_trust_gated_grpo']['reward_hack_exploit_pct']}%)"
+        )
+    return 0 if audit["zero_sorry_verified"] else 1
 
 
 def main(argv: list[str] | None = None) -> int:

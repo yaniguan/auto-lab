@@ -122,20 +122,38 @@ auto-lab/
 │   ├── BRAIN_HIERARCHY.md        # Architectural specification of Layers L6 -> L0
 │   ├── POSTTRAIN_FLYWHEEL.md     # Execution-to-RLVR data & post-training flywheel
 │   ├── REPO_MATRIX.md            # Side-by-side 14-repository dossier matrix
+│   ├── TRUST_REGIME_STUDY.md     # Formal Lean 4 Trust Regime & 5-task empirical study
 │   └── ISSUES_AUDIT_INDEX.md     # Master index of all filed GitHub Issues across the 14 repos
+├── lean/                         # AutoLabLean: Lean 4.36.0 Trust Regime (38 theorems, 0 sorry)
+│   ├── AutoLabLean/              # L6 -> L0 specifications, checkers & bounded autonomy theorems
+│   ├── Main.lean                 # Native `autolab-lean` showcase & `--batch-tsv` runtime verifier
+│   └── lakefile.toml             # Zero-dependency Lake build configuration
+├── benchmarks/
+│   ├── trust_regime_study.py     # Reproducible 5-task empirical study via compiled `autolab-lean`
+│   └── results/                  # Measured JSON metrics (`trust_regime_results.json`)
 ├── scripts/
 │   ├── sync_all.py               # Clone, fetch, or check git cleanliness across all 14 repos
 │   └── build_site_data.py        # Compiles catalog/ and audit data into docs/ and site/assets/
-├── site/                         # Multi-page GitHub Pages website (Overview, Studio, Repos, Audit)
-│   ├── index.html                # Overview & 7-Layer Brain Architecture
+├── site/                         # Multi-page GitHub Pages website
+│   ├── index.html                # Overview, Monoline Robot Sketch & 18-Repo Topology
+│   ├── trust/index.html          # Interactive Lean 4 Trust Regime & Empirical Lift Explorer
 │   ├── studio/index.html         # Interactive Closed-Loop, Post-Train & Conformal Sandboxes
-│   ├── repos/index.html          # Master-detail 14-Repository Technical Dossiers
-│   ├── audit/index.html          # Paginated 322-Issue Codebase Audit Explorer
+│   ├── repos/index.html          # Interactive 14-Repository Problem Stories & Live Examples
+│   ├── audit/index.html          # Maintainer Issue Backlog Explorer
 │   ├── shared.js                 # Shared theme persistence, data loader & SVG chart primitives
 │   └── styles.css                # Clean daylight-first editorial stylesheet
 └── tests/
-    └── test_autolab.py           # Pytest suite verifying layers, closed-loop gating, CLI, and catalog
+    └── test_autolab.py           # Pytest suite verifying Lean proofs, parity, CLI, and site assets
 ```
+
+## Formal Trust Regime in Lean 4 (`AutoLabLean`)
+
+Every hard physical, statistical, stoichiometric, temporal, security, privacy, and licensing guardrail across the 14 repositories is formalized in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **38 machine-checked theorems**, **16 `#guard` witnesses**, **0 `sorry`**) and evaluated across five empirical tasks in [`docs/TRUST_REGIME_STUDY.md`](docs/TRUST_REGIME_STUDY.md):
+
+- **Bounded Molecular Discovery (`1,128` real Delaney ESOL compounds)**: Boundary violations drop from `72.0%` to **`0.0%`**, selected-run MAE drops **2.49x** (`0.978 -> 0.393` log mol/L), empirical 90% coverage reaches **`97.6%`**, and verified soluble hit yield climbs from `28.0%` to **`100.0%`**.
+- **Wet-Lab Protocol Synthesis & Counterexample Repair (`200 x 8` candidates @ `30,048` proto/s)**: Catastrophic hardware faults drop from `78.0%` to **`0.0%`**, while valid task completion rises from `22.0%` (ungated) / `23.5%` (coarse heuristic) to **`87.0%`** (Lean Best-of-8) and **`97.5%`** (with Lean counterexample-guided 1-step repair).
+- **Contended Fleet Scheduling (`30` `labshift` suites)**: Suite feasibility improves from `24/30` (`13` incubation window violations) to **`30/30` (`0` violations)** with **`10.2%` shorter mean makespan** (`129.8 -> 116.5 min`).
+- **Lab SQL Verification (`lab-verify`) & Anti-Hack RLVR (`labbench-posttrain`)**: Wrong-SQL false accepts drop from `55.6%` (`L1–L3` syntax/schema only) to **`0.0%`**, and 5-seed `GRPO` true verified accuracy climbs from `0.4%` (`99.6%` exploit collapse under soft rewards) to **`98.4%`** under multiplicative Lean reward gating.
 
 ## Scientific Honesty & Status
 

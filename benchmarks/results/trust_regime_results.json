@@ -1,0 +1,207 @@
+{
+  "generated_at_utc": "2026-11-23T08:02:47Z",
+  "lean_toolchain": "leanprover/lean4:v4.36.0",
+  "lean_audit": {
+    "lean_files": [
+      "AutoLabLean/Basic.lean",
+      "AutoLabLean/Examples.lean",
+      "AutoLabLean/L2_L1_L0_Embodied.lean",
+      "AutoLabLean/L3_PostTrain.lean",
+      "AutoLabLean/L4_TwinAndGate.lean",
+      "AutoLabLean/L5_Executive.lean",
+      "AutoLabLean/L6_Epistemic.lean",
+      "AutoLabLean/TrustRegime.lean",
+      "AutoLabLean.lean",
+      "Main.lean"
+    ],
+    "file_count": 10,
+    "theorem_count": 38,
+    "theorems": [
+      "firstViolation_none_iff",
+      "checkLabEars_strips_speech",
+      "stepbot_never_underflows_distribute_source",
+      "checkLabHands_guarantees_5mm_clearance",
+      "checkLabFeet_safe_for_edge",
+      "unverified_rollout_gets_zero_reward",
+      "splitGuard_no_train_test_overlap",
+      "violated_dag_edge_rejected",
+      "checkPackedBin_conserves_tokens",
+      "findWell_update_ne",
+      "totalWellsVol_update",
+      "step_conserves_total_liquid",
+      "runRehearsalSteps_conserves",
+      "mem_updateWell",
+      "findWell_mem",
+      "step_preserves_capacity",
+      "runRehearsalSteps_preserves_capacity",
+      "checkRehearsal_preserves_capacity",
+      "failed_hash_always_blocked",
+      "mutating_or_stacked_sql_denied",
+      "sorry_proof_always_denied",
+      "checkBuyOrMake_ok_iff",
+      "ring_cleavage_rejected",
+      "unpriced_never_passes_budget",
+      "checkSchedule_ok_iff",
+      "missed_incubation_window_rejected",
+      "eval_only_blocked_from_training",
+      "checkAskWhy_ok_iff",
+      "contested_claim_requires_experiment",
+      "checkDecide_ok_iff",
+      "out_of_domain_always_abstains",
+      "undersized_calib_always_abstains",
+      "conformalRank_pos",
+      "verifyCycle_ok_iff",
+      "shieldedStep_preserves_worldSafe",
+      "shieldedTrajectory_never_crosses_boundary",
+      "selectBestCertified_always_valid",
+      "selectBestCertified_dominates_all_valid"
+    ],
+    "guard_count": 16,
+    "zero_sorry_verified": true,
+    "violations": []
+  },
+  "total_runtime_sec": 36.55,
+  "experiments": {
+    "exp1_molecular_discovery": {
+      "task": "L6 + L5 Autonomous Molecular Discovery Campaign (ESOL + Retrosynthesis)",
+      "repos": [
+        "lab-ask-why",
+        "lab-decide",
+        "buy-or-make",
+        "lab-automation-atlas"
+      ],
+      "data_source": "real_esol (1128 compounds)",
+      "seeds": 5,
+      "lean_kernel_calls": 4680,
+      "regimes": {
+        "ungated": {
+          "boundary_violation_pct": 72.0,
+          "prediction_mae": 0.978,
+          "empirical_coverage_pct": 76.0,
+          "verified_hit_yield_pct": 28.0
+        },
+        "heuristic": {
+          "boundary_violation_pct": 59.2,
+          "prediction_mae": 0.957,
+          "empirical_coverage_pct": 78.4,
+          "verified_hit_yield_pct": 40.8
+        },
+        "lean_trust": {
+          "boundary_violation_pct": 0.0,
+          "prediction_mae": 0.393,
+          "empirical_coverage_pct": 97.6,
+          "verified_hit_yield_pct": 100.0
+        }
+      }
+    },
+    "exp2_protocol_synthesis": {
+      "task": "L4 + L1 Wet-Lab Protocol Synthesis & Counterexample-Guided Repair (200 Tasks x 8 Candidates)",
+      "repos": [
+        "lab-rehearsal",
+        "stepbot",
+        "twinstep",
+        "labfill"
+      ],
+      "candidates_verified_in_lean": 1626,
+      "lean_throughput_protocols_per_sec": 30047.7,
+      "regimes": {
+        "ungated_top1": {
+          "valid_completion_pct": 22.0,
+          "hardware_fault_pct": 78.0
+        },
+        "coarse_bitmask_heuristic": {
+          "valid_completion_pct": 23.5,
+          "hardware_fault_pct": 76.5
+        },
+        "lean_best_of_8": {
+          "valid_completion_pct": 87.0,
+          "hardware_fault_pct": 0.0
+        },
+        "lean_best_of_8_plus_guided_repair": {
+          "valid_completion_pct": 97.5,
+          "hardware_fault_pct": 0.0
+        }
+      }
+    },
+    "exp3_fleet_scheduling": {
+      "task": "L5 Contended 5-Pool Lab Fleet Scheduling (30 Real Benchmark Suites)",
+      "repos": [
+        "labshift"
+      ],
+      "instances": 30,
+      "regimes": {
+        "ungated_greedy": {
+          "feasible_instances": "24/30",
+          "feasible_pct": 80.0,
+          "window_violations": 13,
+          "mean_makespan_min": 129.8
+        },
+        "greedy_with_repair": {
+          "feasible_instances": "30/30",
+          "feasible_pct": 100.0,
+          "window_violations": 0,
+          "mean_makespan_min": 129.2
+        },
+        "lean_gated_cpsat": {
+          "feasible_instances": "30/30",
+          "feasible_pct": 100.0,
+          "window_violations": 0,
+          "mean_makespan_min": 116.5
+        }
+      }
+    },
+    "exp4_sql_verification": {
+      "task": "L4 Lab-Database SQL Candidate Selection & Adversarial Gate",
+      "repos": [
+        "lab-verify"
+      ],
+      "question_pools": 16,
+      "total_candidates_checked_in_lean": 30,
+      "wrong_candidates_total": 18,
+      "regimes": {
+        "ungated_noisy_top1": {
+          "verified_answer_accuracy_pct": 6.2,
+          "wrong_sql_false_accept_pct": 100.0
+        },
+        "syntax_readonly_schema_only_L1_L3": {
+          "verified_answer_accuracy_pct": 31.2,
+          "wrong_sql_false_accept_pct": 55.6
+        },
+        "lean_4layer_default_deny_L1_L4": {
+          "verified_answer_accuracy_pct": 75.0,
+          "wrong_sql_false_accept_pct": 0.0
+        }
+      }
+    },
+    "exp5_rlvr_posttraining": {
+      "task": "L3 RLVR Post-Training Policy Optimization (GRPO, 5 Seeds x 160 Steps)",
+      "repos": [
+        "labbench-posttrain",
+        "twinstep",
+        "labfill"
+      ],
+      "lean_rewards_permille": [
+        1000.0,
+        950.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "regimes": {
+        "untrained_init": {
+          "true_verified_accuracy_pct": 11.2,
+          "reward_hack_exploit_pct": 88.8
+        },
+        "soft_additive_reward_grpo": {
+          "true_verified_accuracy_pct": 0.4,
+          "reward_hack_exploit_pct": 99.6
+        },
+        "lean_trust_gated_grpo": {
+          "true_verified_accuracy_pct": 98.4,
+          "reward_hack_exploit_pct": 1.6
+        }
+      }
+    }
+  }
+}

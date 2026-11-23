@@ -35,3 +35,32 @@ jobs:
           pip install -e ".[dev]"
       - name: Run unit and catalog integrity tests
         run: python -m pytest -q
+
+  lean-trust-regime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Cache Lean 4 toolchain and build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            lean/.lake
+          key: lean4-${{ runner.os }}-${{ hashFiles('lean/lean-toolchain', 'lean/lakefile.toml') }}
+      - name: Install elan and build AutoLabLean (zero sorry)
+        run: |
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          export PATH="$HOME/.elan/bin:$PATH"
+          cd lean
+          lake build
+          lake exe autolab-lean
+      - name: Verify Python <-> Lean 4 kernel parity & zero-sorry audit
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m pytest -q

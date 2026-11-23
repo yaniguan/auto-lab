@@ -14,11 +14,11 @@
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=7">
-  <script defer src="shared.js?v=7"></script>
-  <script defer src="scheme_icons.js?v=7"></script>
-  <script defer src="repo_stories.js?v=7"></script>
-  <script defer src="home.js?v=7"></script>
+  <link rel="stylesheet" href="styles.css?v=8">
+  <script defer src="shared.js?v=8"></script>
+  <script defer src="scheme_icons.js?v=8"></script>
+  <script defer src="repo_stories.js?v=8"></script>
+  <script defer src="home.js?v=8"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -30,6 +30,7 @@
     </a>
     <nav aria-label="Main navigation">
       <a class="nav-link active" href="./">Overview</a>
+      <a class="nav-link" href="trust/">Trust Regime</a>
       <a class="nav-link" href="studio/">Interactive Lab</a>
       <a class="nav-link" href="repos/">14 Repos</a>
       <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
@@ -50,8 +51,8 @@
       </p>
       <div class="hero-actions">
         <a class="button primary" href="#brain-stack">Explore Agent &amp; Repo Map ↓</a>
-        <a class="button secondary" href="studio/">Interactive Lab →</a>
-        <a class="button secondary" href="repos/">14 Repo Cards →</a>
+        <a class="button secondary" href="trust/">Lean 4 Trust Regime →</a>
+        <a class="button secondary" href="repos/">14 Repo Guides →</a>
       </div>
       <div class="meta-strip">
         <span><strong>Yani Guan</strong></span>
@@ -175,15 +176,21 @@
           </article>
         </div>
 
-        <div class="portal-grid" style="grid-template-columns:repeat(2, 1fr);">
+        <div class="portal-grid">
+          <a class="portal-card" href="trust/">
+            <span class="small-label amber">Subpage 01 · Lean 4.36.0</span>
+            <h3>Formal Trust Regime</h3>
+            <p>38 machine-checked Lean 4 theorems (0 <code>sorry</code>) across all 14 repos, plus measured performance lift across 5 benchmarks.</p>
+            <span class="portal-cta">Explore Theorems &amp; Lift →</span>
+          </a>
           <a class="portal-card" href="studio/">
-            <span class="small-label teal">Subpage 01</span>
+            <span class="small-label teal">Subpage 02 · Simulators</span>
             <h3>Interactive Lab</h3>
             <p>Test default-deny blocks, BF16 sequence packing, conformal coverage, and CP-SAT Gantt schedules live.</p>
             <span class="portal-cta">Open Workbench →</span>
           </a>
           <a class="portal-card" href="repos/">
-            <span class="small-label purple">Subpage 02</span>
+            <span class="small-label purple">Subpage 03 · 14 Modules</span>
             <h3>14 Interactive Repo Guides</h3>
             <p>Plain-English problem stories, clickable real-world examples, and under-the-hood tabs for every repository.</p>
             <span class="portal-cta">Browse Repo Stories →</span>
