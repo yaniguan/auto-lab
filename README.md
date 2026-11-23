@@ -14,7 +14,7 @@
 
 **A 7-layer embodied brain, default-deny safety nervous system, and verifiable RL post-training stack for autonomous wet laboratories.**
 
-**Interactive Project Studio (EN / 中文):** [https://yaniguan.github.io/auto-lab/](https://yaniguan.github.io/auto-lab/)
+**Project Website & Interactive Lab:** [https://yaniguan.github.io/auto-lab/](https://yaniguan.github.io/auto-lab/) · [Interactive Sandbox](https://yaniguan.github.io/auto-lab/studio/) · [14-Repo Dossiers](https://yaniguan.github.io/auto-lab/repos/) · [322-Issue Audit](https://yaniguan.github.io/auto-lab/audit/)
 
 [![Project Studio](https://img.shields.io/badge/project_page-live_7--layer_studio-b5d88e?style=flat&labelColor=101820)](https://yaniguan.github.io/auto-lab/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -126,12 +126,13 @@ auto-lab/
 ├── scripts/
 │   ├── sync_all.py               # Clone, fetch, or check git cleanliness across all 14 repos
 │   └── build_site_data.py        # Compiles catalog/ and audit data into docs/ and site/assets/
-├── site/                         # Interactive GitHub Pages Studio (Light/Dark + EN/中文)
-│   ├── index.html                # 7-Layer Studio UI
-│   ├── brain_cinema.js           # 60-s animated Brain & Nervous System HTML5 Canvas Cinema
-│   ├── charts.js                 # Native SVG conformal, GPU packing, and CP-SAT Gantt charts
-│   ├── app.js                    # Organ Inspector, 3 Sandboxes, 14-Repo Matrix, Issues Explorer
-│   └── styles.css                # Clean daylight-first research stylesheet
+├── site/                         # Multi-page GitHub Pages website (Overview, Studio, Repos, Audit)
+│   ├── index.html                # Overview & 7-Layer Brain Architecture
+│   ├── studio/index.html         # Interactive Closed-Loop, Post-Train & Conformal Sandboxes
+│   ├── repos/index.html          # Master-detail 14-Repository Technical Dossiers
+│   ├── audit/index.html          # Paginated 322-Issue Codebase Audit Explorer
+│   ├── shared.js                 # Shared theme persistence, data loader & SVG chart primitives
+│   └── styles.css                # Clean daylight-first editorial stylesheet
 └── tests/
     └── test_autolab.py           # Pytest suite verifying layers, closed-loop gating, CLI, and catalog
 ```

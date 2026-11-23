@@ -63,7 +63,7 @@ def build_all(scratch_json_dir: Path, workspace_root: Path) -> None:
         prof["url"] = f"https://github.com/yaniguan/{name}"
         layer_code = prof["layer"].split()[0].strip()
         prof["layer"] = layer_code
-        prof["layer_name"] = layer_lookup[layer_code].name_en
+        prof["layer_name"] = layer_lookup[layer_code].name
         prof["commit_head"] = head_sha
         prof["issue_count"] = len(issues_raw)
         repos_out.append(prof)

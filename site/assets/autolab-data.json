@@ -3,79 +3,58 @@
     {
       "code": "L6",
       "order": 6,
-      "name_en": "Metacognitive & Epistemic Brain",
-      "name_zh": "高层元认知与校准决策脑",
-      "brain_analogy_en": "Prefrontal & Anterior Cingulate Cortex",
-      "brain_analogy_zh": "前额叶与前扣带皮层（追问、校准与弃权）",
+      "name": "Metacognitive & Epistemic Brain",
+      "brain_analogy": "Prefrontal & Anterior Cingulate Cortex",
       "color": "purple",
-      "summary_en": "Surfaces opposing scientific rationales, proposes discriminating experiments, and abstains outside conformal trust regions.",
-      "summary_zh": "不盲目站队，检索正反双方证据并设计鉴别实验；仅在共形预测校准可信域内作答，域外明确拒答并随新数据安全扩张。"
+      "summary": "Surfaces opposing scientific rationales, proposes discriminating experiments, and abstains outside calibrated conformal trust regions."
     },
     {
       "code": "L5",
       "order": 5,
-      "name_en": "Executive Planning, Procurement & Fleet Scheduling",
-      "name_zh": "执行规划、采购逆合成与多机排程层",
-      "brain_analogy_en": "Dorsolateral Prefrontal & Basal Ganglia",
-      "brain_analogy_zh": "背外侧前额叶与基底节（资源权衡与时序调度）",
+      "name": "Executive Planning, Procurement & Scheduling",
+      "brain_analogy": "Dorsolateral Prefrontal & Basal Ganglia",
       "color": "blue",
-      "summary_en": "Triages make-vs-buy molecular availability with strict listed-price lower bounds, maps the automation ecosystem, and schedules multi-instrument time windows via CP-SAT.",
-      "summary_zh": "基于公开目录实价估算分子采购或 N 步合成下界，维护自动化生态语义图谱，并用 CP-SAT 求解多仪器时间窗排程。"
+      "summary": "Triages make-vs-buy molecular availability with listed-price lower bounds, maps lab standards, and schedules shared instrument pools via CP-SAT."
     },
     {
       "code": "L4",
       "order": 4,
-      "name_en": "Digital-Twin Rehearsal & Default-Deny Verification",
-      "name_zh": "数字孪生预演与默认拒绝安全门",
-      "brain_analogy_en": "Premotor Simulation & Inhibitory Safety Gate",
-      "brain_analogy_zh": "前运动皮层心理预演与基底节抑制门控",
+      "name": "Digital-Twin Rehearsal & Default-Deny Gate",
+      "brain_analogy": "Premotor Simulation & Inhibitory Gate",
       "color": "teal",
-      "summary_en": "Recalls historical failures, dry-runs deck operations in a digital twin, enforces multi-layer default-deny checks (Lean, SQL, protocol), and writes outcomes back to episodic memory.",
-      "summary_zh": "执行前检索历史事故、在数字孪生甲板预演体积与枪头状态、通过四层默认拒绝校验门（Lean/SQL/协议规则），并将结果写回情景记忆。"
+      "summary": "Recalls historical failures, dry-runs deck operations in a digital twin, enforces default-deny checks (Lean, SQL, protocol), and writes outcomes back to memory."
     },
     {
       "code": "L3",
       "order": 3,
-      "name_en": "Post-Training RLVR, Error Twins & GPU Throughput",
-      "name_zh": "突触可塑性、可验证强化学习后训练与吞吐引擎",
-      "brain_analogy_en": "Hippocampal Replay & Cerebellar Plasticity Flywheel",
-      "brain_analogy_zh": "海马体经验回放与小脑突触可塑性飞轮",
+      "name": "Post-Training RLVR, Error Twins & GPU Packing",
+      "brain_analogy": "Hippocampal Replay & Cerebellar Plasticity",
       "color": "amber",
-      "summary_en": "Generates seeded protocol error twins, batches validation and packed BF16 training on a single GPU, and runs SFT -> DPO/MPO/TROPD -> PPO/GRPO/GDPO+DAPO with cryptographic SplitGuard.",
-      "summary_zh": "确定性注入协议错误孪生对，将校验与序列打包 BF16 训练张量化，并通过防作弊可验证奖励模板运行全栈后训练。"
+      "summary": "Generates seeded protocol error twins, batches validation and packed BF16 training on a single GPU, and runs SFT -> DPO/MPO/TROPD -> PPO/GRPO/GDPO+DAPO with SplitGuard."
     },
     {
       "code": "L2",
       "order": 2,
-      "name_en": "Multimodal Sensory & Protocol Cortex",
-      "name_zh": "听觉与协议多模态感知皮层",
-      "brain_analogy_en": "Auditory & Language Comprehension Cortex",
-      "brain_analogy_zh": "听觉皮层与语言理解区（协议槽位解析与仪器异响监测）",
+      "name": "Multimodal Sensory & Protocol Cortex",
+      "brain_analogy": "Auditory & Language Comprehension Cortex",
       "color": "blue",
-      "summary_en": "Extracts structured amounts, temperatures, times, and speeds from wet-lab text and monitors instrument acoustic anomalies with speech-band privacy filtering.",
-      "summary_zh": "从湿实验文本提取体积、温度、时间与转速，并以滤除人声频段的隐私安全方式检测实验室仪器异常声学特征。"
+      "summary": "Extracts structured amounts, temperatures, times, and speeds from wet-lab text and monitors machine acoustic anomalies with speech-band privacy filtering."
     },
     {
       "code": "L1",
       "order": 1,
-      "name_en": "Protocol Compiler & Visuo-Tactile Manipulation",
-      "name_zh": "确定性协议编译与灵巧触觉操作皮层",
-      "brain_analogy_en": "Primary Motor & Somatosensory Cortex",
-      "brain_analogy_zh": "初级运动皮层与躯体触觉皮层（硬件编译、避障与透明器皿触觉）",
+      "name": "Protocol Compiler & Visuo-Tactile Manipulation",
+      "brain_analogy": "Primary Motor & Somatosensory Cortex",
       "color": "teal",
-      "summary_en": "Compiles YAML/JSON steps into deterministic Opentrons Python API v2 code with volume accounting, and plans collision-free joint-space RRT paths with last-centimeter tactile sensing.",
-      "summary_zh": "将声明式 YAML/JSON 编译为确定性 Opentrons API v2 协议并追踪孔板液量，同时规划无碰撞关节空间轨迹并用触觉补足透明器皿最后一厘米操作。"
+      "summary": "Compiles declarative YAML/JSON steps into deterministic Opentrons API v2 code with volume tracking, and plans collision-free RRT paths with last-centimeter touch."
     },
     {
       "code": "L0",
       "order": 0,
-      "name_en": "Edge Body & Quantized Runtime",
-      "name_zh": "边缘算力躯干与量化蒸馏推理层",
-      "brain_analogy_en": "Spinal Cord & Peripheral Nervous System",
-      "brain_analogy_zh": "脊髓反射弧与外周边缘算力（蒸馏 + INT8/4-bit 台边推理）",
+      "name": "Edge Body & Quantized Runtime",
+      "brain_analogy": "Spinal Cord & Peripheral Compute",
       "color": "purple",
-      "summary_en": "Distills teacher models into compact students quantized to int8 and 4-bit so routine bench loops run locally on low-power CPU/NPU boards.",
-      "summary_zh": "通过知识蒸馏与 INT8/4-bit 权重量化压缩模型，使常规实验闭环可在实验台旁低功耗单板机本地运行。"
+      "summary": "Distills teacher models into compact students quantized to int8 and 4-bit so routine bench loops execute locally on low-power edge boards."
     }
   ],
   "repos": [
@@ -165,7 +144,7 @@
       "repo": "buy-or-make",
       "url": "https://github.com/yaniguan/buy-or-make",
       "layer": "L5",
-      "layer_name": "Executive Planning, Procurement & Fleet Scheduling",
+      "layer_name": "Executive Planning, Procurement & Scheduling",
       "tagline": "Cost-aware chemical vendor availability and N-step retrosynthetic reachability triage with conservative listed-price lower bounds, strict null/unknown honesty, and assayfold-aligned schemas.",
       "object": "Verifies whether candidate molecules proposed by L6/L5 scientific planners (lab-ask-why, lab-decide) are directly purchasable from chemical vendors or makeable in N steps from purchasable building blocks, computing conservative leaf-only stoichiometric cost lower bounds strictly from real listed catalog prices while keeping missing prices null and unverified molecules unknown.",
       "data": "Twelve license-audited external data and model sources in buyormake/sources.py (PubChem PUG-REST/PUG-View, ZINC, Enamine, eMolecules, Mcule, AiZynthFinder models & ZINC stock, USPTO Lowe CC0-1.0, Open Reaction Database CC-BY-SA-4.0, RDKit SA_Score, Coley SCScore, RAscore; non-redistributable caches/catalogs isolated in gitignored data/), 5 Pydantic v2 / JSON Schema contracts (extra='forbid', schema/), and a 20-molecule CPU benchmark (examples/demo.py, examples/demo_output.md).",
@@ -211,7 +190,7 @@
       "repo": "labshift",
       "url": "https://github.com/yaniguan/labshift",
       "layer": "L5",
-      "layer_name": "Executive Planning, Procurement & Fleet Scheduling",
+      "layer_name": "Executive Planning, Procurement & Scheduling",
       "tagline": "Synthetic multi-instrument lab scheduling benchmark, sweep-line verifier, greedy baseline, and OR-Tools CP-SAT solver with coupled min/max wait windows.",
       "object": "Models and solves executive multi-job laboratory scheduling across shared finite-capacity instrument pools (liquid_handler, incubator, plate_reader, centrifuge, washer) under integer-minute operation chains, job release times, hard deadlines, minimum equilibration waits (min_wait), and upper perishability windows (max_wait).",
       "data": "Frozen JSON-serializable dataclasses (Instance, Job, Operation, Schedule, ScheduledOp), a seeded workflow generator spanning 6 liquid-handling assay templates (3..6 ops/job across small [6 jobs], medium [12 jobs], and large [20 jobs] presets), and a committed 30-instance MIT-licensed benchmark suite in benchmarks/ (seeds 1000..1009, 1100..1109, 1200..1209).",
@@ -257,7 +236,7 @@
       "repo": "lab-automation-atlas",
       "url": "https://github.com/yaniguan/lab-automation-atlas",
       "layer": "L5",
-      "layer_name": "Executive Planning, Procurement & Fleet Scheduling",
+      "layer_name": "Executive Planning, Procurement & Scheduling",
       "tagline": "Curated, zero-copy ecosystem map of automated-lab hardware, cloud foundries, open-source protocol/scheduling software, and protocol benchmarks with automated link verification.",
       "object": "Provides a neutral, license-aware semantic world map and pointer registry grounding hardware platform selection, protocol intermediate representation (IR) targeting, combinatorial solver choice, and open protocol dataset discovery across the Auto-Lab stack without copying external data or ranking commercial vendors.",
       "data": "Five structured domain tables in README.md cataloging 30 platforms, software stacks, and protocol corpora (3 sibling Auto-Lab tools, 5 liquid-handling robot platforms, 4 cloud labs/foundries, 12 open-source lab automation software packages, and 6 open protocol datasets) verified on 2026-11-18 under a strict zero-copy policy with per-source license warnings.",
@@ -303,7 +282,7 @@
       "repo": "lab-rehearsal",
       "url": "https://github.com/yaniguan/lab-rehearsal",
       "layer": "L4",
-      "layer_name": "Digital-Twin Rehearsal & Default-Deny Verification",
+      "layer_name": "Digital-Twin Rehearsal & Default-Deny Gate",
       "tagline": "Pre-execution liquid-handling digital-twin rehearsal loop: content-addressed episodic recall, deck simulation, default-deny verification gate, mock dispatch, and JSONL memory write-back.",
       "object": "Prevents unsafe or malformed liquid-handling protocols from reaching physical benchtop robots by running every candidate protocol through a closed five-stage safety loop (recall -> rehearse -> verify -> run -> write_back) between L5 protocol planners/compilers (lab-decide, labshift, stepbot) and L1/L2 hardware executors (lab-hands, Opentrons, PyLabRobot).",
       "data": "Five deterministic JSON liquid-handling protocols in demo/protocols/ (one valid 43-step 8-well 1:2 serial dilution and four targeted failure fixtures: aspirate from empty, out-of-range pipette volume, well overfill, and cross-reagent tip reuse), a 10-run two-pass episodic ledger in demo/memory/runs.jsonl, captured reference stdout (demo/output.txt), and a zero-copy curated catalog of 4 embodied lab benchmarks (LabUtopia, AutoBio, Chemistry3D, Labimus) and 10 open-source robotics/automation simulators.",
@@ -349,7 +328,7 @@
       "repo": "lab-verify",
       "url": "https://github.com/yaniguan/lab-verify",
       "layer": "L4",
-      "layer_name": "Digital-Twin Rehearsal & Default-Deny Verification",
+      "layer_name": "Digital-Twin Rehearsal & Default-Deny Gate",
       "tagline": "Strict mechanical default-deny verification gate across SQL lab queries (4-layer AST + execution filter), Lean 4 formal proofs (linked to YLM/lean), and bench protocols.",
       "object": "Enforces zero-trust mechanical verification on LLM-generated structured artifacts—stopping malformed syntax, write/DDL injection, hallucinated schema columns, and silent semantic query errors before results touch laboratory databases (assayfold) or closed-loop experiment planners (lab-decide, lab-ask-why).",
       "data": "Deterministic 30-row synthetic in-memory SQLite lab database (12 experiments, 14 samples, 4 instruments), 12 lab analytics questions paired with gold SQL and 22 labeled candidate queries (8 semantically equivalent correct queries and 14 realistic model error modes in demo/candidates.json), reference gate output (demo/output.txt), and curated catalogs of 5 text-to-SQL/Lean benchmarks and 11 verification repositories.",
@@ -395,7 +374,7 @@
       "repo": "labbench-posttrain",
       "url": "https://github.com/yaniguan/labbench-posttrain",
       "layer": "L3",
-      "layer_name": "Post-Training RLVR, Error Twins & GPU Throughput",
+      "layer_name": "Post-Training RLVR, Error Twins & GPU Packing",
       "tagline": "End-to-end SFT-to-RLVR post-training SDK, CLI, and anti-hack verifiable reward suite for wet-lab science, protocol reasoning, and robot execution",
       "object": "Unified post-training, benchmark evaluation, and reward-hacking audit stack (`labrl` v0.2.0) bridging multimodal scientific reasoning (Scientist track), robotic/liquid-handler execution (Operator track), biological protocol QA/repair (LAB-Bench & BioProBench), and experimental electrolyte design (CALiSol-23) across CPU/1xGPU PyTorch (`TorchLocalEngine`) and multi-node Ray/vLLM/Megatron (`NeMoRLEngine`).",
       "data": "49,139 provenance-separated Lab v0 records from 20 sources (40,790 train / 4,189 val / 4,160 test, 0 group overlap) + 20,517 Open-X robot frames, 23,880 SFT rows, and 9,867 preference pairs; 13,228 clean CALiSol-23 electrolyte conductivity measurements across 27 DOIs (zero-DOI-leakage splits, CC-BY-4.0); 2,000 train sample + 4,333 test BioProBench items (CC BY-NC 4.0); 1,967 evaluation-only public LAB-Bench questions with canary guards (CC-BY-SA-4.0); and a 205-entry benchmark catalog.",
@@ -441,7 +420,7 @@
       "repo": "twinstep",
       "url": "https://github.com/yaniguan/twinstep",
       "layer": "L3",
-      "layer_name": "Post-Training RLVR, Error Twins & GPU Throughput",
+      "layer_name": "Post-Training RLVR, Error Twins & GPU Packing",
       "tagline": "Zero-dependency seeded-error twin generator, reference-blind baseline, and evaluator for liquid-handling protocol error detection and step ordering.",
       "object": "Deterministically synthesizes labeled corrupted protocol twins (error detection + step-index fault localization) and shuffled partial-order step sequences (step ordering under transitive-reduced dependency constraints) from valid JSON/YAML liquid-handling protocols, paired with a strict reference-blind baseline and multi-metric evaluator.",
       "data": "Validated frozen-dataclass schema covering 5 generic liquid-handling step types (transfer, mix, incubate, wash, read) with JSON and PyYAML/stdlib-fallback YAML loaders, bundled with 3 MIT-licensed example protocols in examples/ (dilution_series.json [13 steps], wash_and_read.json [8 steps], mix_incubate_read.json [8 steps]) producing 33 deterministic JSONL records at --n 5 --seed 0.",
@@ -492,7 +471,7 @@
       "repo": "labfill",
       "url": "https://github.com/yaniguan/labfill",
       "layer": "L3",
-      "layer_name": "Post-Training RLVR, Error Twins & GPU Throughput",
+      "layer_name": "Post-Training RLVR, Error Twins & GPU Packing",
       "tagline": "Fill the plate, fill the GPU: batched PyTorch tensor recipes for wet-lab protocol checking, error-twin repair, DAG planning, 96-well rehearsal, and single-GPU training saturation.",
       "object": "Reformulates small discrete laboratory protocol tasks—physical rule validation, seeded-error twin injection, verifier-gated candidate filtering, single-edit protocol repair, step-DAG beam planning, multi-instrument annealing, 96-well plate rehearsal, and short skewed-length Transformer training—into unit-stride batched PyTorch tensor operations running identically on CPU and CUDA.",
       "data": "100% deterministic, MIT-licensed synthetic protocol and token-sequence generators matching LabLean units (0.1 uL integer volumes, whole-degree C temperatures, whole-second durations, A1..H12 row-major 96-well indexing): 13-container PCR master-mix protocol (T=46), random/corrupted batches (T=24, C=8), 7-class error twins, 16-step precedence DAG, 96x8 heterogeneous job schedules, lognormal 8..512 token traces (VOCAB_SIZE=256, 8 error classes), and 128-plate serial dilutions (T=104).",
@@ -735,47 +714,38 @@
       "url": "https://github.com/yaniguan/YLM",
       "page": "https://yaniguan.github.io/YLM/",
       "layer": "L6",
-      "organ_en": "3D Geometry + Language Core Brain & LabLean Ledger",
-      "organ_zh": "三维等变分子语言核心大脑与 LabLean 账本",
-      "summary_en": "SE(3)-equivariant cross-attention where text tokens query l >= 1 spherical tensors directly, plus the canonical LabLean 4 protocol specification.",
-      "summary_zh": "文本直接查询 SE(3) 高阶球谐特征的三维化学语言模型，同时承载 LabLean 形式化协议语言与统一账本规范。"
+      "organ": "3D Geometry + Language Core Brain & LabLean Ledger",
+      "summary": "SE(3)-equivariant cross-attention where text tokens query l >= 1 spherical tensors directly, plus the canonical LabLean 4 protocol specification."
     },
     {
       "repo": "WignerFlow",
       "url": "https://github.com/yaniguan/WignerFlow",
       "page": "https://yaniguan.github.io/WignerFlow/",
       "layer": "L4",
-      "organ_en": "50-fs Equivariant Physics World Model & [physics] Gate",
-      "organ_zh": "50 fs 等变分子动力学世界模型与物理门控",
-      "summary_en": "Integrator-free O(3)-equivariant flow matching jumping 50 fs/step, serving sub-second FrameSplit CPU rollouts and strict [physics] domain checks.",
-      "summary_zh": "无需数值积分器的 50 fs 大步长等变流匹配动力学，为推理大脑提供亚秒级 CPU 物理先验与严格域外拒答。"
+      "organ": "50-fs Equivariant Physics World Model & [physics] Gate",
+      "summary": "Integrator-free O(3)-equivariant flow matching jumping 50 fs/step, serving sub-second FrameSplit CPU rollouts and strict [physics] domain checks."
     },
     {
       "repo": "ouroboros-ocsr",
       "url": "https://github.com/yaniguan/ouroboros-ocsr",
       "page": "https://yaniguan.github.io/ouroboros-ocsr/",
       "layer": "L2",
-      "organ_en": "SE(2)-Equivariant Chemical Vision (Eyes)",
-      "organ_zh": "SE(2) 旋转等变化学结构视觉皮层（眼睛）",
-      "summary_en": "Reads rotated 2D chemical drawings from papers and patents into stereochemically aware SMILES verified against 3D conformers.",
-      "summary_zh": "任意旋转角度下从文献与专利插图识别带立体化学信息的 SMILES，并与三维构象能量对齐。"
+      "organ": "SE(2)-Equivariant Chemical Vision (Eyes)",
+      "summary": "Reads rotated 2D chemical drawings from papers and patents into stereochemically aware SMILES verified against 3D conformers."
     },
     {
       "repo": "assayfold",
       "url": "https://github.com/yaniguan/assayfold",
       "page": "",
       "layer": "L2",
-      "organ_en": "License-Gated Open Science Data Schema & Ingestion",
-      "organ_zh": "许可证门控的开放实验数据统一底座",
-      "summary_en": "Normalizes open protocols, reactions, QM9/DFT, LabPics images, and benchmarks into one SHA-256-sealed, UCUM-unit, SPDX-gated schema.",
-      "summary_zh": "将开放科学协议、反应、量化计算与实验图像统一为带 SHA-256 签名、UCUM 单位归一化与商用许可证门控的标准记录。"
+      "organ": "License-Gated Open Science Data Schema & Ingestion",
+      "summary": "Normalizes open protocols, reactions, QM9/DFT, LabPics images, and benchmarks into one SHA-256-sealed, UCUM-unit, SPDX-gated schema."
     }
   ],
   "scenarios": {
     "serial_dilution__1__1": {
       "scenario_id": "serial_dilution",
-      "title_en": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
-      "title_zh": "合规 8 孔二倍梯度稀释与吸光度读板（全链路通过）",
+      "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -925,8 +895,7 @@
     },
     "serial_dilution__1__0": {
       "scenario_id": "serial_dilution",
-      "title_en": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
-      "title_zh": "合规 8 孔二倍梯度稀释与吸光度读板（全链路通过）",
+      "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -1076,8 +1045,7 @@
     },
     "serial_dilution__0__1": {
       "scenario_id": "serial_dilution",
-      "title_en": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
-      "title_zh": "合规 8 孔二倍梯度稀释与吸光度读板（全链路通过）",
+      "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -1227,8 +1195,7 @@
     },
     "serial_dilution__0__0": {
       "scenario_id": "serial_dilution",
-      "title_en": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
-      "title_zh": "合规 8 孔二倍梯度稀释与吸光度读板（全链路通过）",
+      "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -1378,8 +1345,7 @@
     },
     "broken_tip_reuse__1__1": {
       "scenario_id": "broken_tip_reuse",
-      "title_en": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
-      "title_zh": "带样枪头重复插入缓冲液槽（L4 预演与校验门拦截）",
+      "title": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
       "protocol_hash": "9994bf8f0a30",
       "final_status": "BLOCKED_AT_L4_GATE",
       "total_simulated_ms": 50.0,
@@ -1502,8 +1468,7 @@
     },
     "broken_tip_reuse__1__0": {
       "scenario_id": "broken_tip_reuse",
-      "title_en": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
-      "title_zh": "带样枪头重复插入缓冲液槽（L4 预演与校验门拦截）",
+      "title": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
       "protocol_hash": "9994bf8f0a30",
       "final_status": "BLOCKED_AT_L4_GATE",
       "total_simulated_ms": 50.0,
@@ -1624,8 +1589,7 @@
     },
     "broken_tip_reuse__0__1": {
       "scenario_id": "broken_tip_reuse",
-      "title_en": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
-      "title_zh": "带样枪头重复插入缓冲液槽（L4 预演与校验门拦截）",
+      "title": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
       "protocol_hash": "9994bf8f0a30",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -1775,8 +1739,7 @@
     },
     "broken_tip_reuse__0__0": {
       "scenario_id": "broken_tip_reuse",
-      "title_en": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
-      "title_zh": "带样枪头重复插入缓冲液槽（L4 预演与校验门拦截）",
+      "title": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
       "protocol_hash": "9994bf8f0a30",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -1926,8 +1889,7 @@
     },
     "uncalibrated_molecule__1__1": {
       "scenario_id": "uncalibrated_molecule",
-      "title_en": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
-      "title_zh": "分布外含氟大环溶解度预测（L6 共形可信域主动拒答）",
+      "title": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
       "protocol_hash": "44022d4a43bc",
       "final_status": "ABSTAINED_AT_L6",
       "total_simulated_ms": 24.3,
@@ -1999,8 +1961,7 @@
     },
     "uncalibrated_molecule__1__0": {
       "scenario_id": "uncalibrated_molecule",
-      "title_en": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
-      "title_zh": "分布外含氟大环溶解度预测（L6 共形可信域主动拒答）",
+      "title": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
       "protocol_hash": "44022d4a43bc",
       "final_status": "ABSTAINED_AT_L6",
       "total_simulated_ms": 24.3,
@@ -2072,8 +2033,7 @@
     },
     "uncalibrated_molecule__0__1": {
       "scenario_id": "uncalibrated_molecule",
-      "title_en": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
-      "title_zh": "分布外含氟大环溶解度预测（L6 共形可信域主动拒答）",
+      "title": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
       "protocol_hash": "44022d4a43bc",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -2223,8 +2183,7 @@
     },
     "uncalibrated_molecule__0__0": {
       "scenario_id": "uncalibrated_molecule",
-      "title_en": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
-      "title_zh": "分布外含氟大环溶解度预测（L6 共形可信域主动拒答）",
+      "title": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
       "protocol_hash": "44022d4a43bc",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -2374,8 +2333,7 @@
     },
     "over_budget_analog__1__1": {
       "scenario_id": "over_budget_analog",
-      "title_en": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
-      "title_zh": "新颖联苯酰胺类似物：无现货但 2 步可合成（L5 采购/合成决策）",
+      "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -2525,8 +2483,7 @@
     },
     "over_budget_analog__1__0": {
       "scenario_id": "over_budget_analog",
-      "title_en": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
-      "title_zh": "新颖联苯酰胺类似物：无现货但 2 步可合成（L5 采购/合成决策）",
+      "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -2676,8 +2633,7 @@
     },
     "over_budget_analog__0__1": {
       "scenario_id": "over_budget_analog",
-      "title_en": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
-      "title_zh": "新颖联苯酰胺类似物：无现货但 2 步可合成（L5 采购/合成决策）",
+      "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,
@@ -2827,8 +2783,7 @@
     },
     "over_budget_analog__0__0": {
       "scenario_id": "over_budget_analog",
-      "title_en": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
-      "title_zh": "新颖联苯酰胺类似物：无现货但 2 步可合成（L5 采购/合成决策）",
+      "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
       "total_simulated_ms": 127.0,

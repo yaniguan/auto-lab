@@ -83,9 +83,33 @@ def test_cli_commands_smoke(capsys) -> None:
 
 
 def test_site_files_present() -> None:
+    import re
+
     site = REPO_ROOT / "site"
-    for fname in ("index.html", "styles.css", "app.js", "charts.js", "brain_cinema.js", ".nojekyll"):
-        assert (site / fname).exists(), f"Missing site/{fname}"
+    required = (
+        "index.html",
+        "styles.css",
+        "shared.js",
+        "home.js",
+        ".nojekyll",
+        "studio/index.html",
+        "studio/studio.js",
+        "repos/index.html",
+        "repos/repos.js",
+        "audit/index.html",
+        "audit/audit.js",
+    )
+    for rel in required:
+        assert (site / rel).exists(), f"Missing site/{rel}"
+
+    cjk_re = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
+    for p in [*site.rglob("*"), REPO_ROOT / "README.md", *(REPO_ROOT / "autolab").rglob("*.py")]:
+        if p.is_file() and p.suffix in {".html", ".js", ".css", ".json", ".svg", ".md", ".py"}:
+            if p.name == "test_autolab.py":
+                continue
+            text = p.read_text(encoding="utf-8")
+            match = cjk_re.search(text)
+            assert match is None, f"Found disallowed CJK character {match.group(0)!r} in {p}"
 
 
 import io

@@ -29,13 +29,13 @@ def _cmd_layers(_args: argparse.Namespace) -> int:
 
     for layer in LAYERS:
         members = ", ".join(by_layer.get(layer.code, [])) or "(loading)"
-        print(f"[{layer.code}] {layer.name_en}  ({layer.brain_analogy_en})")
+        print(f"[{layer.code}] {layer.name}  ({layer.brain_analogy})")
         print(f"     Repos : {members}")
-        print(f"     Role  : {layer.summary_en}\n")
+        print(f"     Role  : {layer.summary}\n")
 
     print("Connected Companion Organs:")
     for comp in COMPANION_REPOS:
-        print(f"  - [{comp['layer']}] {comp['repo']:16s} : {comp['organ_en']} ({comp['url']})")
+        print(f"  - [{comp['layer']}] {comp['repo']:16s} : {comp['organ']} ({comp['url']})")
     return 0
 
 
@@ -89,7 +89,7 @@ def _cmd_loop(args: argparse.Namespace) -> int:
         print(json.dumps(report, indent=2, ensure_ascii=False))
         return 0
 
-    print(f"Scenario : {report['title_en']} (hash={report['protocol_hash']})")
+    print(f"Scenario : {report['title']} (hash={report['protocol_hash']})")
     print(f"Outcome  : {report['final_status']} ({report['total_simulated_ms']} ms simulated)\n")
     for idx, step in enumerate(report["steps"], start=1):
         print(

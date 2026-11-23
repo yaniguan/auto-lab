@@ -27,8 +27,7 @@ class TraceStep:
 SCENARIOS: dict[str, dict[str, Any]] = {
     "serial_dilution": {
         "id": "serial_dilution",
-        "title_en": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
-        "title_zh": "合规 8 孔二倍梯度稀释与吸光度读板（全链路通过）",
+        "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
         "goal_text": "Prepare 100 uL 2-fold aspirin dye serial dilution across A1-H1 at 25 C for 10 min, then read 450 nm absorbance.",
         "candidate_smiles": "CC(=O)Oc1ccccc1C(=O)O",
         "knn_distance": 0.412,
@@ -51,8 +50,7 @@ SCENARIOS: dict[str, dict[str, Any]] = {
     },
     "broken_tip_reuse": {
         "id": "broken_tip_reuse",
-        "title_en": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
-        "title_zh": "带样枪头重复插入缓冲液槽（L4 预演与校验门拦截）",
+        "title": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
         "goal_text": "Transfer 100 uL sample into A1, keep tip, and aspirate 100 uL buffer from reservoir:1 into A2.",
         "candidate_smiles": "CC(=O)Oc1ccccc1C(=O)O",
         "knn_distance": 0.412,
@@ -77,8 +75,7 @@ SCENARIOS: dict[str, dict[str, Any]] = {
     },
     "uncalibrated_molecule": {
         "id": "uncalibrated_molecule",
-        "title_en": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
-        "title_zh": "分布外含氟大环溶解度预测（L6 共形可信域主动拒答）",
+        "title": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
         "goal_text": "Predict aqueous solubility of perfluorinated macrocycle candidate and launch 37 C assay at 1200 rpm for 30 min.",
         "candidate_smiles": "FC1(F)CCCC(F)(F)CCCC(F)(F)CCCC1(F)F",
         "knn_distance": 1.384,
@@ -101,8 +98,7 @@ SCENARIOS: dict[str, dict[str, Any]] = {
     },
     "over_budget_analog": {
         "id": "over_budget_analog",
-        "title_en": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
-        "title_zh": "新颖联苯酰胺类似物：无现货但 2 步可合成（L5 采购/合成决策）",
+        "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
         "goal_text": "Screen biphenyl amide analog at 50 uL across 4 wells, incubate 37 C for 30 min, wash 3 cycles with 200 uL buffer.",
         "candidate_smiles": "COc1ccc(C(=O)Nc2ccc(-c3ccccn3)cc2)cc1",
         "knn_distance": 0.641,
@@ -140,7 +136,6 @@ def run_closed_loop_scenario(
     digest = hashlib.sha256(sc["goal_text"].encode("utf-8")).hexdigest()[:12]
     steps: list[TraceStep] = []
 
-    # 1. L2 Sensory Cortex: lab-ears
     steps.append(
         TraceStep(
             layer="L2",
@@ -158,7 +153,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 2. L6 Metacognitive Brain: lab-ask-why
     steps.append(
         TraceStep(
             layer="L6",
@@ -175,7 +169,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 3. L6 Epistemic Brain: lab-decide
     in_trust = sc["knn_distance"] <= sc["knn_threshold"]
     if not in_trust and strict_gate:
         steps.append(
@@ -229,7 +222,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 4. L5 Executive Procurement: buy-or-make
     proc_status = "buyable" if sc["buyable"] else ("makeable" if sc.get("route_steps") else "unknown")
     steps.append(
         TraceStep(
@@ -255,7 +247,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 5. L5 Multi-Instrument Scheduling: labshift
     greedy_ok = sc["greedy_wait_min"] <= sc["max_wait_min"]
     steps.append(
         TraceStep(
@@ -281,7 +272,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 6. L4 Digital-Twin Rehearsal & Verify: lab-rehearsal + lab-verify
     violations = list(sc["rehearsal_violations"])
     recalled = list(sc["prior_failures"]) if use_episodic_recall else []
     if violations and strict_gate:
@@ -335,7 +325,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 7. L1 Motor Compilation & Manipulation: stepbot + lab-hands
     steps.append(
         TraceStep(
             layer="L1",
@@ -354,7 +343,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 8. L0 Edge Execution: lab-feet
     steps.append(
         TraceStep(
             layer="L0",
@@ -367,7 +355,6 @@ def run_closed_loop_scenario(
         )
     )
 
-    # 9. L3 Post-Training Flywheel: labfill + labbench-posttrain
     steps.append(
         TraceStep(
             layer="L3",
@@ -398,8 +385,7 @@ def _finalize(
     total_ms = round(sum(s.latency_ms for s in steps), 2)
     return {
         "scenario_id": sc["id"],
-        "title_en": sc["title_en"],
-        "title_zh": sc["title_zh"],
+        "title": sc["title"],
         "protocol_hash": digest,
         "final_status": final_status,
         "total_simulated_ms": total_ms,

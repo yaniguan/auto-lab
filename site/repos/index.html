@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8fafc">
+  <title>14-Repository Technical Dossiers — Auto-Lab</title>
+  <meta name="description" content="Complete technical specifications (Object, Data, Model, Training, History, and Unique Properties) for all 14 repositories in the Auto-Lab 7-layer architecture.">
+  <link rel="canonical" href="https://yaniguan.github.io/auto-lab/repos/">
+  <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+  <script defer src="../shared.js"></script>
+  <script defer src="repos.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Auto-Lab home">
+      <img src="../assets/autolab-animated.svg" width="52" height="26" alt="">
+      <span>Auto-Lab <small>Repositories</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a class="nav-link" href="../">Overview</a>
+      <a class="nav-link" href="../studio/">Interactive Lab</a>
+      <a class="nav-link active" href="./">14 Repositories</a>
+      <a class="nav-link" href="../audit/">Issue Audit</a>
+      <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
+      <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="subpage-hero">
+      <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;">
+        <div>
+          <p class="eyebrow"><span class="status-dot"></span> Complete Specifications · 14 Core Repositories</p>
+          <h1>Repository Technical Dossiers</h1>
+          <p>
+            Select any repository in the sidebar to inspect its <strong>Object</strong>, <strong>Data</strong>, <strong>Model</strong>, <strong>Training</strong>, <strong>History</strong>, and <strong>Unique Properties</strong>, or switch to the side-by-side matrix.
+          </p>
+        </div>
+        <div class="seg-pills" id="view-mode-pills">
+          <button type="button" data-view="detail" class="active">Dossier Reader</button>
+          <button type="button" data-view="matrix">Comparison Matrix (All 14)</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" style="padding-top:36px;">
+      <!-- Reader View -->
+      <div class="catalog-layout" id="reader-view">
+        <aside class="catalog-sidebar" aria-label="Repository navigation">
+          <input type="search" id="sidebar-search" class="input-ctrl" style="width:100%;margin-bottom:12px;"
+                 placeholder="Filter repositories…" aria-label="Filter repositories">
+          <div id="sidebar-groups"></div>
+        </aside>
+
+        <article class="dossier-sheet" id="dossier-host">
+          <p style="color:var(--muted);">Loading repository dossier…</p>
+        </article>
+      </div>
+
+      <!-- Matrix View -->
+      <div id="matrix-view" style="display:none;">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Repository</th>
+                <th>Object</th>
+                <th>Data</th>
+                <th>Model</th>
+                <th>Training</th>
+                <th>Primary Unique Property</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <a class="brand" href="../">
+      <img src="../assets/autolab-static.svg" width="44" height="22" alt="">
+      <span>Auto-Lab</span>
+    </a>
+    <p>14 Core Repositories · Documented with README.md &amp; ARCHITECTURE_AND_HISTORY.md</p>
+    <div style="display:flex;gap:16px;">
+      <a href="../">Overview</a>
+      <a href="../studio/">Interactive Lab</a>
+      <a href="../audit/">Issue Audit</a>
+    </div>
+  </footer>
+</body>
+</html>
