@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#0B1118"/>
+  <rect x="44" y="44" width="1112" height="542" rx="24" fill="#111B27" stroke="#223142" stroke-width="2"/>
+  <text x="88" y="132" fill="#2DD4BF" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="3">7-LAYER EMBODIED CO-SCIENTIST · INFRASTRUCTURE &amp; RLVR POST-TRAINING</text>
+  <text x="88" y="216" fill="#F1F5F9" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="800" letter-spacing="-2">Auto-Lab Brain &amp; Body</text>
+  <text x="88" y="276" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="500">14 Core Repositories · L6 Metacognitive Cortex to L0 Edge Boards · Default-Deny Safety</text>
+  <g transform="translate(88, 336)" font-family="Inter, Arial, sans-serif">
+    <rect x="0" y="0" width="240" height="108" rx="14" fill="#162231" stroke="#7C3AED" stroke-width="2"/>
+    <text x="20" y="34" fill="#A78BFA" font-size="15" font-weight="700">L6 · BRAIN</text>
+    <text x="20" y="64" fill="#F1F5F9" font-size="20" font-weight="700">Ask-Why · Decide</text>
+    <text x="20" y="88" fill="#94A3B8" font-size="14">Socratic + Conformal Trust</text>
+
+    <rect x="264" y="0" width="240" height="108" rx="14" fill="#162231" stroke="#2563EB" stroke-width="2"/>
+    <text x="284" y="34" fill="#60A5FA" font-size="15" font-weight="700">L5–L4 · PLAN &amp; GATE</text>
+    <text x="284" y="64" fill="#F1F5F9" font-size="20" font-weight="700">Rehearse · Verify · Shift</text>
+    <text x="284" y="88" fill="#94A3B8" font-size="14">Twin Dry-Run + Default-Deny</text>
+
+    <rect x="528" y="0" width="240" height="108" rx="14" fill="#162231" stroke="#0D9488" stroke-width="2"/>
+    <text x="548" y="34" fill="#2DD4BF" font-size="15" font-weight="700">L2–L0 · EMBODIED</text>
+    <text x="548" y="64" fill="#F1F5F9" font-size="20" font-weight="700">Ears · StepBot · Hands · Feet</text>
+    <text x="548" y="88" fill="#94A3B8" font-size="14">Opentrons + RRT + INT8/4-bit</text>
+
+    <rect x="792" y="0" width="232" height="108" rx="14" fill="#162231" stroke="#D97706" stroke-width="2"/>
+    <text x="812" y="34" fill="#FBBF24" font-size="15" font-weight="700">L3 · POST-TRAIN</text>
+    <text x="812" y="64" fill="#F1F5F9" font-size="20" font-weight="700">labrl · TwinStep · LabFill</text>
+    <text x="812" y="88" fill="#94A3B8" font-size="14">SFT → MPO → GDPO/DAPO</text>
+  </g>
+  <text x="88" y="528" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600">Yani Guan · yaniguan.github.io/auto-lab/ · Supported by Google Antigravity for Science</text>
+</svg>

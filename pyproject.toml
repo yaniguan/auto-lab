@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autolab-hub"
+version = "0.1.0"
+description = "Unified architecture hub, catalog CLI, closed-loop simulator, and audit index for the 7-layer Robot AI Auto-Lab stack."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+  {name = "Yani Guan"}
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+]
+
+[project.scripts]
+autolab = "autolab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["autolab*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

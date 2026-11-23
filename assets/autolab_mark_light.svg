@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+  <rect x="6" y="6" width="84" height="84" rx="20" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <!-- Cortical Brain Arcs (L6 -> L4) -->
+  <path d="M26 38 C26 22, 70 22, 70 38" stroke="#7C3AED" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M32 42 C32 30, 64 30, 64 42" stroke="#2563EB" stroke-width="2.8" stroke-linecap="round"/>
+  <circle cx="48" cy="24" r="4.2" fill="#7C3AED"/>
+  <circle cx="32" cy="30" r="3.4" fill="#2563EB"/>
+  <circle cx="64" cy="30" r="3.4" fill="#2563EB"/>
+  <!-- Safety Gate Bar (L4) -->
+  <line x1="22" y1="50" x2="74" y2="50" stroke="#0D9488" stroke-width="2.6" stroke-dasharray="4 3"/>
+  <circle cx="48" cy="50" r="4.5" fill="#0D9488"/>
+  <!-- Embodied Pipette / Arm & 96-Well Bench (L2 -> L0) -->
+  <path d="M48 54 L48 68" stroke="#0F172A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M44 62 L52 62 L50 70 L46 70 Z" fill="#0D9488"/>
+  <rect x="24" y="74" width="48" height="8" rx="3" fill="#E2E8F0" stroke="#64748B" stroke-width="1.5"/>
+  <circle cx="32" cy="78" r="2" fill="#0D9488"/>
+  <circle cx="40" cy="78" r="2" fill="#2563EB"/>
+  <circle cx="48" cy="78" r="2.3" fill="#E11D48"/>
+  <circle cx="56" cy="78" r="2" fill="#0D9488"/>
+  <circle cx="64" cy="78" r="2" fill="#7C3AED"/>
+  <!-- Post-Training Flywheel Return Arc (L3) -->
+  <path d="M74 76 C84 64, 84 36, 72 28" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="3 3"/>
+</svg>
