@@ -42,10 +42,10 @@ LAYERS: tuple[LayerSpec, ...] = (
     LayerSpec(
         code="L4",
         order=4,
-        name="Digital-Twin Rehearsal & Default-Deny Gate",
-        brain_analogy="Premotor Simulation & Inhibitory Gate",
+        name="Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
+        brain_analogy="Premotor Simulation, Inhibitory Gate & Error-Monitoring Cortex",
         color="teal",
-        summary="Recalls historical failures, dry-runs deck operations in a digital twin, enforces default-deny checks (Lean, SQL, protocol), and writes outcomes back to memory.",
+        summary="Recalls historical failures, dry-runs deck operations in a digital twin, enforces default-deny checks (Lean, SQL, lean-mcp/v1), and separates post-run robot artifacts or precursor ghost peaks from proof-carrying negative results.",
     ),
     LayerSpec(
         code="L3",

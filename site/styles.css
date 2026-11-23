@@ -479,7 +479,7 @@ tbody tr:hover { background: var(--surface2); }
 .pill.hold, .pill.ABSTAIN, .pill.TRIAGE, .pill.ABSTAINED_AT_L6, .pill.medium {
   background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber-border);
 }
-.pill.fail, .pill.BLOCK, .pill.BLOCKED_AT_L4_GATE, .pill.high {
+.pill.fail, .pill.BLOCK, .pill.BLOCKED_AT_L4_GATE, .pill.QUARANTINED_AT_L4_ATTRIB, .pill.high {
   background: var(--rose-soft); color: var(--rose); border: 1px solid var(--rose-border);
 }
 .pill.low {

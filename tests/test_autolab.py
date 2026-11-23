@@ -49,7 +49,13 @@ def test_closed_loop_scenarios_behave_honestly() -> None:
 
     makeable = run_closed_loop_scenario("over_budget_analog", strict_gate=True)
     assert makeable["final_status"] == "EXECUTED_AND_WRITTEN_BACK"
-    assert len(SCENARIOS) == 4
+    assert any(s["repo"] == "lab-attrib" and s["verdict"] == "PASS" for s in makeable["steps"])
+
+    ghost = run_closed_loop_scenario("precursor_ghost_peak", strict_gate=True)
+    assert ghost["final_status"] == "QUARANTINED_AT_L4_ATTRIB"
+    assert any(s["repo"] == "lab-attrib" and s["verdict"] == "BLOCK" for s in ghost["steps"])
+
+    assert len(SCENARIOS) == 5
 
 
 def test_catalog_and_issues_integrity_when_built() -> None:

@@ -8,9 +8,9 @@
   <meta name="description" content="Simulate Auto-Lab closed-loop default-deny safety gates, inspect LabFill sequence-packed BF16 throughput, and explore ESOL conformal calibration and CP-SAT multi-instrument schedules.">
   <link rel="canonical" href="https://yaniguan.github.io/auto-lab/studio/">
   <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css?v=8">
-  <script defer src="../shared.js?v=8"></script>
-  <script defer src="studio.js?v=8"></script>
+  <link rel="stylesheet" href="../styles.css?v=12">
+  <script defer src="../shared.js?v=12"></script>
+  <script defer src="studio.js?v=12"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -57,6 +57,7 @@
               <div class="seg-pills" id="scenario-pills">
                 <button type="button" data-scenario="serial_dilution" class="active">Serial Dilution (GO)</button>
                 <button type="button" data-scenario="broken_tip_reuse">Tip Reuse (L4 BLOCK)</button>
+                <button type="button" data-scenario="precursor_ghost_peak">Ghost XRD Peak (lab-attrib BLOCK)</button>
                 <button type="button" data-scenario="uncalibrated_molecule">OOD Macrocycle (L6 ABSTAIN)</button>
                 <button type="button" data-scenario="over_budget_analog">2-Step Analog (L5 MAKE)</button>
               </div>

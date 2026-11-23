@@ -14,11 +14,11 @@
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=11">
-  <script defer src="shared.js?v=11"></script>
-  <script defer src="scheme_icons.js?v=11"></script>
-  <script defer src="repo_stories.js?v=11"></script>
-  <script defer src="home.js?v=11"></script>
+  <link rel="stylesheet" href="styles.css?v=12">
+  <script defer src="shared.js?v=12"></script>
+  <script defer src="scheme_icons.js?v=12"></script>
+  <script defer src="repo_stories.js?v=12"></script>
+  <script defer src="home.js?v=12"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -52,7 +52,7 @@
       <div class="hero-actions">
         <a class="button primary" href="#brain-stack">Explore Agent &amp; Repo Map ↓</a>
         <a class="button secondary" href="trust/">Lean 4 Trust Regime →</a>
-        <a class="button secondary" href="repos/">15 Repo Guides →</a>
+        <a class="button secondary" href="repos/#lab-attrib">New: lab-attrib (15th Repo) →</a>
       </div>
       <div class="meta-strip">
         <span><strong>Yani Guan</strong></span>
@@ -107,11 +107,11 @@
         <div class="sketch-svg-wrap" id="robot-sketch-host" aria-label="Line-art drawing of a two-armed lab robot mapped to Auto-Lab repositories"></div>
       </figure>
 
-      <!-- Sketch Figure B: 18-Repo Scheme-Icon Relationship & Dataflow Map -->
+      <!-- Sketch Figure B: 19-Repo Scheme-Icon Relationship & Dataflow Map -->
       <figure class="sketch-frame">
         <div class="sketch-head">
-          <h3>Part II · How the Repositories Feed and Train Each Other</h3>
-          <span class="sketch-hint">Teal = perception, gating &amp; execution · Amber = post-training flywheel ↺</span>
+          <h3>Part II · How All 15 Core + 4 Companion Repositories Connect</h3>
+          <span class="sketch-hint">Teal = perception, gating &amp; execution · Amber = attribution &amp; post-training flywheel ↺</span>
         </div>
         <div class="sketch-svg-wrap" id="repo-network-host" aria-label="Scheme-icon relationship diagram connecting all Auto-Lab repositories"></div>
         <div class="conn-bar" id="conn-trace-bar"></div>
@@ -146,18 +146,20 @@
 
         <div class="dual-loops">
           <article class="loop-box">
-            <span class="small-label teal">Before Every Bench Run · L4</span>
-            <h3>Pre-Experiment Safety Loop</h3>
+            <span class="small-label teal">Before &amp; After Every Bench Run · L4</span>
+            <h3>Pre-Run Gate &amp; Post-Run Blame Loop</h3>
             <div class="step-chain">
-              <span class="step-chip">Recall memory</span>
+              <span class="step-chip">Recall</span>
               <span class="step-sep">→</span>
-              <span class="step-chip">Rehearse in twin</span>
+              <span class="step-chip">Rehearse</span>
               <span class="step-sep">→</span>
-              <span class="step-chip">Default-deny verify</span>
+              <span class="step-chip">Lean-MCP gate</span>
               <span class="step-sep">→</span>
               <span class="step-chip">Run</span>
               <span class="step-sep">→</span>
-              <span class="step-chip">Write back</span>
+              <span class="step-chip">Blame (<code>lab-attrib</code>)</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">SHA-256 ledger</span>
             </div>
           </article>
 

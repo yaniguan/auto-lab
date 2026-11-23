@@ -3,6 +3,7 @@
 Demonstrates how a single wet-lab goal traverses:
   L2 (lab-ears) -> L6 (lab-ask-why + lab-decide) -> L5 (buy-or-make + labshift)
   -> L4 (lab-rehearsal + lab-verify) -> L1 (stepbot + lab-hands) -> L0 (lab-feet)
+  -> L4 (lab-attrib post-run causal blame & NNLS deconvolution)
   -> L3 (twinstep + labfill + labbench-posttrain write-back).
 """
 
@@ -119,6 +120,32 @@ SCENARIOS: dict[str, dict[str, Any]] = {
         "rrt_shortcut_rad": 2.14,
         "edge_int8_us": 3.86,
         "rlvr_reward": 0.92,
+    },
+    "precursor_ghost_peak": {
+        "id": "precursor_ghost_peak",
+        "title": "Unreacted Precursor XRD Ghost-Peak Overlap (lab-attrib Quarantine)",
+        "goal_text": "Synthesize solid-state oxide candidate from precursors A + B at 50 uL, anneal and acquire powder XRD diffractogram.",
+        "candidate_smiles": "O=[Ti]=O.O=[Sr]",
+        "knn_distance": 0.528,
+        "knn_threshold": 0.758,
+        "conformal_interval_logS": [-3.65, -0.95],
+        "buyable": True,
+        "listed_price_usd_per_g": 1.15,
+        "route_steps": 0,
+        "budget_usd": 25.0,
+        "max_wait_min": 15,
+        "greedy_wait_min": 10,
+        "cpsat_makespan_min": 78,
+        "rehearsal_violations": [],
+        "prior_failures": [],
+        "sql_layers_passed": 4,
+        "opentrons_commands": 64,
+        "rrt_shortcut_rad": 1.92,
+        "edge_int8_us": 3.86,
+        "precursor_overlap_permille": 340,
+        "r_wp_permille": 42,
+        "orthogonal_modality": "Raman",
+        "rlvr_reward": 0.0,
     },
 }
 
@@ -329,14 +356,15 @@ def run_closed_loop_scenario(
         TraceStep(
             layer="L1",
             repo="stepbot + lab-hands",
-            stage="Opentrons v2 Compilation & Collision-Free RRT",
+            stage="Lean-MCP Compilation & Collision-Free RRT",
             verdict="PASS",
             latency_ms=71.8,
             summary=(
-                f"Compiled {sc['opentrons_commands']} deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to {sc['rrt_shortcut_rad']:.2f} rad."
+                f"Verified lean-mcp/v1 epoch-bound envelope, compiled {sc['opentrons_commands']} deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to {sc['rrt_shortcut_rad']:.2f} rad."
             ),
             artifact={
                 "api_level": "2.16",
+                "mcp_schema": "lean-mcp/v1",
                 "simulated_commands": sc["opentrons_commands"],
                 "rrt_path_rad": sc["rrt_shortcut_rad"],
             },
@@ -352,6 +380,52 @@ def run_closed_loop_scenario(
             latency_ms=0.4,
             summary=f"Executed local int8 student monitor ({sc['edge_int8_us']:.2f} us median forward pass, 35x parameter reduction).",
             artifact={"quantization": "int8", "median_latency_us": sc["edge_int8_us"]},
+        )
+    )
+
+    overlap_permille = sc.get("precursor_overlap_permille", 35)
+    r_wp_permille = sc.get("r_wp_permille", 42)
+    if overlap_permille > 150 and strict_gate:
+        ortho = sc.get("orthogonal_modality", "Raman")
+        steps.append(
+            TraceStep(
+                layer="L4",
+                repo="lab-attrib",
+                stage="Post-Run Blame & NNLS Precursor Deconvolution",
+                verdict="BLOCK",
+                latency_ms=2.8,
+                summary=(
+                    f"AMBIGUOUS_CHARACTERIZATION: NNLS precursor peak overlap {overlap_permille / 10:.1f}% > 15.0% ceiling; "
+                    f"blocked false-positive memory write and routed to orthogonal {ortho} assay via EVOI."
+                ),
+                artifact={
+                    "outcome": "AMBIGUOUS_CHARACTERIZATION",
+                    "precursor_overlap_permille": overlap_permille,
+                    "r_wp_permille": r_wp_permille,
+                    "admit_to_memory": False,
+                    "orthogonal_route": ortho,
+                },
+            )
+        )
+        return _finalize(sc, digest, "QUARANTINED_AT_L4_ATTRIB", steps)
+
+    steps.append(
+        TraceStep(
+            layer="L4",
+            repo="lab-attrib",
+            stage="Post-Run Blame & SHA-256 Certified Ledger",
+            verdict="PASS",
+            latency_ms=2.6,
+            summary=(
+                f"Execution clean and NNLS precursor overlap {overlap_permille / 10:.1f}% <= 15.0% (R_wp {r_wp_permille / 10:.1f}%); "
+                "appended proof-carrying certificate to SHA-256 ledger."
+            ),
+            artifact={
+                "outcome": "CERTIFIED_POSITIVE",
+                "precursor_overlap_permille": overlap_permille,
+                "r_wp_permille": r_wp_permille,
+                "admit_to_memory": True,
+            },
         )
     )
 

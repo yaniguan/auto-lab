@@ -4,10 +4,11 @@ Autonomous wet-lab agents fail when trained solely on static next-token predicti
 
 The Auto-Lab stack closes this gap with a four-stage **Execution-to-RLVR Flywheel**:
 
-## 1. Episodic Logging & Seeded Contrastive Twins (`lab-rehearsal` → `twinstep`)
+## 1. Episodic Logging, Causal Blame Filtering & Seeded Contrastive Twins (`lab-rehearsal` + `lab-attrib` → `twinstep`)
 
 1. Every dry-run and mock/hardware run in [`lab-rehearsal`](https://github.com/yaniguan/lab-rehearsal) records structured violation traces (`enough_liquid`, `volume_in_range`, `no_overfill`, `no_tip_reuse`) into `runs.jsonl`.
-2. [`twinstep`](https://github.com/yaniguan/twinstep) takes valid liquid-handling protocols (`transfer`, `mix`, `incubate`, `wash`, `read`) and deterministically injects six typed failure modes (`swap_order`, `wrong_volume`, `wrong_unit`, `missing_step`, `wrong_temperature`, `wrong_time`), paired with minimal liquid-flow and stage-barrier ordering DAGs.
+2. After physical or simulated bench execution, [`lab-attrib`](https://github.com/yaniguan/lab-attrib) runs its 25-theorem Lean 4 blame calculus and NNLS precursor ghost-peak deconvolver—quarantining robotic execution glitches (`EXECUTION_ARTIFACT`) and ambiguous diffraction overlap (`AMBIGUOUS_CHARACTERIZATION`) so only **Proof-Carrying Positive and Negative Results** enter the SHA-256 scientific ledger (`0.0%` FDR, `0` poisoned memory entries).
+3. [`twinstep`](https://github.com/yaniguan/twinstep) takes valid liquid-handling protocols (`transfer`, `mix`, `incubate`, `wash`, `read`) and deterministically injects six typed failure modes (`swap_order`, `wrong_volume`, `wrong_unit`, `missing_step`, `wrong_temperature`, `wrong_time`), paired with minimal liquid-flow and stage-barrier ordering DAGs.
 
 ## 2. Tensorized Filtering, Repair & GPU Packing (`labfill`)
 

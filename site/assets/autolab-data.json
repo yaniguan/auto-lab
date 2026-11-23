@@ -19,10 +19,10 @@
     {
       "code": "L4",
       "order": 4,
-      "name": "Digital-Twin Rehearsal & Default-Deny Gate",
-      "brain_analogy": "Premotor Simulation & Inhibitory Gate",
+      "name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
+      "brain_analogy": "Premotor Simulation, Inhibitory Gate & Error-Monitoring Cortex",
       "color": "teal",
-      "summary": "Recalls historical failures, dry-runs deck operations in a digital twin, enforces default-deny checks (Lean, SQL, protocol), and writes outcomes back to memory."
+      "summary": "Recalls historical failures, dry-runs deck operations in a digital twin, enforces default-deny checks (Lean, SQL, lean-mcp/v1), and separates post-run robot artifacts or precursor ghost peaks from proof-carrying negative results."
     },
     {
       "code": "L3",
@@ -432,7 +432,7 @@
       "repo": "lab-rehearsal",
       "url": "https://github.com/yaniguan/lab-rehearsal",
       "layer": "L4",
-      "layer_name": "Digital-Twin Rehearsal & Default-Deny Gate",
+      "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
       "tagline": "Pre-execution liquid-handling digital-twin rehearsal loop: content-addressed episodic recall, deck simulation, default-deny verification gate, mock dispatch, and JSONL memory write-back.",
       "object": "Prevents unsafe or malformed liquid-handling protocols from reaching physical benchtop robots by running every candidate protocol through a closed five-stage safety loop (recall -> rehearse -> verify -> run -> write_back) between L5 protocol planners/compilers (lab-decide, labshift, stepbot) and L1/L2 hardware executors (lab-hands, Opentrons, PyLabRobot).",
       "data": "Five deterministic JSON liquid-handling protocols in demo/protocols/ (one valid 43-step 8-well 1:2 serial dilution and four targeted failure fixtures: aspirate from empty, out-of-range pipette volume, well overfill, and cross-reagent tip reuse), a 10-run two-pass episodic ledger in demo/memory/runs.jsonl, captured reference stdout (demo/output.txt), and a zero-copy curated catalog of 4 embodied lab benchmarks (LabUtopia, AutoBio, Chemistry3D, Labimus) and 10 open-source robotics/automation simulators.",
@@ -508,7 +508,7 @@
       "repo": "lab-verify",
       "url": "https://github.com/yaniguan/lab-verify",
       "layer": "L4",
-      "layer_name": "Digital-Twin Rehearsal & Default-Deny Gate",
+      "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
       "tagline": "Strict mechanical default-deny verification gate across SQL lab queries (4-layer AST + execution filter), Lean 4 formal proofs (linked to YLM/lean), and bench protocols.",
       "object": "Enforces zero-trust mechanical verification on LLM-generated structured artifacts—stopping malformed syntax, write/DDL injection, hallucinated schema columns, and silent semantic query errors before results touch laboratory databases (assayfold) or closed-loop experiment planners (lab-decide, lab-ask-why).",
       "data": "Deterministic 30-row synthetic in-memory SQLite lab database (12 experiments, 14 samples, 4 instruments), 12 lab analytics questions paired with gold SQL and 22 labeled candidate queries (8 semantically equivalent correct queries and 14 realistic model error modes in demo/candidates.json), reference gate output (demo/output.txt), and curated catalogs of 5 text-to-SQL/Lean benchmarks and 11 verification repositories.",
@@ -584,7 +584,7 @@
       "repo": "lab-attrib",
       "url": "https://github.com/yaniguan/lab-attrib",
       "layer": "L4",
-      "layer_name": "Digital-Twin Rehearsal & Default-Deny Gate",
+      "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
       "tagline": "Post-execution causal blame calculus, NNLS precursor ghost-peak deconvolution, EVOI orthogonal assay routing, and SHA-256 proof-carrying negative result ledgers in Python + Lean 4.",
       "object": "Closes the post-execution epistemic blind spot of self-driving laboratories by separating robotic/timing execution artifacts and unreacted precursor diffraction overlap (A-Lab failure mode) from Proof-Carrying Positive and Negative Results before updating scientific memory or recalibrating Chem-RRT frontier shells.",
       "data": "Evaluates NNLS precursor deconvolution across multi-phase powder diffraction suites and runs 9-round x 5-seed closed-loop active molecular discovery on the real 1,128-compound Delaney ESOL dataset (plus deterministic fallback descriptors).",
@@ -1217,7 +1217,7 @@
       "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -1227,6 +1227,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -1325,12 +1326,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 86 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.08 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 86 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.08 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 86,
             "rrt_path_rad": 2.08
           }
@@ -1345,6 +1347,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -1367,7 +1383,7 @@
       "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -1377,6 +1393,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -1475,12 +1492,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 86 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.08 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 86 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.08 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 86,
             "rrt_path_rad": 2.08
           }
@@ -1495,6 +1513,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -1517,7 +1549,7 @@
       "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -1527,6 +1559,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -1625,12 +1658,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 86 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.08 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 86 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.08 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 86,
             "rrt_path_rad": 2.08
           }
@@ -1645,6 +1679,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -1667,7 +1715,7 @@
       "title": "Clean 8-Well 2-Fold Serial Dilution + Absorbance Read",
       "protocol_hash": "21b51c3ce5c4",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -1677,6 +1725,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -1775,12 +1824,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 86 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.08 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 86 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.08 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 86,
             "rrt_path_rad": 2.08
           }
@@ -1795,6 +1845,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -2061,7 +2125,7 @@
       "title": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
       "protocol_hash": "9994bf8f0a30",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -2071,6 +2135,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -2169,12 +2234,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 0 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 0.00 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 0 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 0.00 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 0,
             "rrt_path_rad": 0.0
           }
@@ -2189,6 +2255,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -2211,7 +2291,7 @@
       "title": "Cross-Contaminating Tip Reuse in Buffer Reservoir",
       "protocol_hash": "9994bf8f0a30",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -2221,6 +2301,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -2319,12 +2400,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 0 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 0.00 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 0 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 0.00 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 0,
             "rrt_path_rad": 0.0
           }
@@ -2339,6 +2421,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -2505,7 +2601,7 @@
       "title": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
       "protocol_hash": "44022d4a43bc",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -2515,6 +2611,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -2613,12 +2710,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 0 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 0.00 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 0 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 0.00 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 0,
             "rrt_path_rad": 0.0
           }
@@ -2633,6 +2731,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -2655,7 +2767,7 @@
       "title": "Out-of-Domain Fluorinated Macrocycle Solubility Proposal",
       "protocol_hash": "44022d4a43bc",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -2665,6 +2777,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -2763,12 +2876,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 0 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 0.00 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 0 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 0.00 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 0,
             "rrt_path_rad": 0.0
           }
@@ -2783,6 +2897,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -2805,7 +2933,7 @@
       "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -2815,6 +2943,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -2913,12 +3042,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 109 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.14 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 109 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.14 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 109,
             "rrt_path_rad": 2.14
           }
@@ -2933,6 +3063,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -2955,7 +3099,7 @@
       "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -2965,6 +3109,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -3063,12 +3208,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 109 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.14 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 109 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.14 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 109,
             "rrt_path_rad": 2.14
           }
@@ -3083,6 +3229,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -3105,7 +3265,7 @@
       "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -3115,6 +3275,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -3213,12 +3374,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 109 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.14 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 109 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.14 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 109,
             "rrt_path_rad": 2.14
           }
@@ -3233,6 +3395,20 @@
           "artifact": {
             "quantization": "int8",
             "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
           }
         },
         {
@@ -3255,7 +3431,7 @@
       "title": "Novel Biphenyl Amide Analog — 2-Step Makeable Triage",
       "protocol_hash": "a7c7da5d2a19",
       "final_status": "EXECUTED_AND_WRITTEN_BACK",
-      "total_simulated_ms": 127.0,
+      "total_simulated_ms": 129.6,
       "layers_traversed": [
         "L2",
         "L6",
@@ -3265,6 +3441,7 @@
         "L4",
         "L1",
         "L0",
+        "L4",
         "L3"
       ],
       "steps": [
@@ -3363,12 +3540,13 @@
         {
           "layer": "L1",
           "repo": "stepbot + lab-hands",
-          "stage": "Opentrons v2 Compilation & Collision-Free RRT",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
           "verdict": "PASS",
           "latency_ms": 71.8,
-          "summary": "Compiled 109 deterministic apiLevel 2.16 commands and shortcut 2-link RRT trajectory to 2.14 rad.",
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 109 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 2.14 rad.",
           "artifact": {
             "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
             "simulated_commands": 109,
             "rrt_path_rad": 2.14
           }
@@ -3386,6 +3564,20 @@
           }
         },
         {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 3.5% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 35,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
+          }
+        },
+        {
           "layer": "L3",
           "repo": "labfill + labbench-posttrain",
           "stage": "Sequence-Packed BF16 Replay & RLVR Update",
@@ -3396,6 +3588,644 @@
             "useful_token_pct": 92.1,
             "split_guard": "zero_group_leakage",
             "rlvr_reward": 0.92
+          }
+        }
+      ]
+    },
+    "precursor_ghost_peak__1__1": {
+      "scenario_id": "precursor_ghost_peak",
+      "title": "Unreacted Precursor XRD Ghost-Peak Overlap (lab-attrib Quarantine)",
+      "protocol_hash": "5fba4f0e8d9f",
+      "final_status": "QUARANTINED_AT_L4_ATTRIB",
+      "total_simulated_ms": 110.9,
+      "layers_traversed": [
+        "L2",
+        "L6",
+        "L6",
+        "L5",
+        "L5",
+        "L4",
+        "L1",
+        "L0",
+        "L4"
+      ],
+      "steps": [
+        {
+          "layer": "L2",
+          "repo": "lab-ears",
+          "stage": "Protocol Span & Acoustic Check",
+          "verdict": "PASS",
+          "latency_ms": 4.2,
+          "summary": "Extracted Amount/Temperature/Time/Speed spans; centrifuge-01 log-mel score below threshold (speech band dropped).",
+          "artifact": {
+            "protocol_hash": "5fba4f0e8d9f",
+            "slots": {
+              "Amount": "100 uL",
+              "Temperature": "25-37 C",
+              "Time": "10-30 min"
+            },
+            "acoustic_flagged": false,
+            "speech_band_dropped": true
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-ask-why",
+          "stage": "Socratic Evidence & Discriminating Test",
+          "verdict": "PASS",
+          "latency_ms": 6.8,
+          "summary": "Retrieved top-3 supporting/contradicting rationale sentences (BM25) and formulated falsifiable control question.",
+          "artifact": {
+            "support_recall_at_3": 0.797,
+            "contradict_recall_at_3": 0.775,
+            "discriminating_question": "Does blank buffer control in H1 remain at baseline OD450 without carryover?"
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-decide",
+          "stage": "Conformal Trust-Region Gate",
+          "verdict": "PASS",
+          "latency_ms": 1.9,
+          "summary": "Inside calibrated kNN trust region (0.528 <= 0.758); 90% split-conformal interval [-3.65, -0.95] logS.",
+          "artifact": {
+            "knn_distance": 0.528,
+            "threshold": 0.758,
+            "interval_90pct": [
+              -3.65,
+              -0.95
+            ]
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "buy-or-make",
+          "stage": "Availability & Listed-Price Triage",
+          "verdict": "PASS",
+          "latency_ms": 5.0,
+          "summary": "Candidate classified as 'buyable' (listed $1.15/g).",
+          "artifact": {
+            "smiles": "O=[Ti]=O.O=[Sr]",
+            "status": "buyable",
+            "n_steps": 0,
+            "price_basis": "listed_catalog"
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "labshift",
+          "stage": "Multi-Instrument Window Scheduling",
+          "verdict": "SCHEDULED",
+          "latency_ms": 14.6,
+          "summary": "CP-SAT found zero-violation schedule (makespan 78 min)",
+          "artifact": {
+            "solver": "cpsat",
+            "makespan_min": 78,
+            "window_violations": 0,
+            "greedy_would_violate": false
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-rehearsal + lab-verify",
+          "stage": "Digital Twin Dry-Run & 4-Layer Default-Deny Gate",
+          "verdict": "PASS",
+          "latency_ms": 3.4,
+          "summary": "0 liquid-handling violations across 96-well twin; SQL ledger audit passed all 4/4 layers.",
+          "artifact": {
+            "rehearsal_violations": 0,
+            "sql_gate_layers": [
+              "parse",
+              "read_only",
+              "schema",
+              "execution_match"
+            ]
+          }
+        },
+        {
+          "layer": "L1",
+          "repo": "stepbot + lab-hands",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
+          "verdict": "PASS",
+          "latency_ms": 71.8,
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 64 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 1.92 rad.",
+          "artifact": {
+            "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
+            "simulated_commands": 64,
+            "rrt_path_rad": 1.92
+          }
+        },
+        {
+          "layer": "L0",
+          "repo": "lab-feet",
+          "stage": "Quantized Bench-Side Policy Runtime",
+          "verdict": "PASS",
+          "latency_ms": 0.4,
+          "summary": "Executed local int8 student monitor (3.86 us median forward pass, 35x parameter reduction).",
+          "artifact": {
+            "quantization": "int8",
+            "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & NNLS Precursor Deconvolution",
+          "verdict": "BLOCK",
+          "latency_ms": 2.8,
+          "summary": "AMBIGUOUS_CHARACTERIZATION: NNLS precursor peak overlap 34.0% > 15.0% ceiling; blocked false-positive memory write and routed to orthogonal Raman assay via EVOI.",
+          "artifact": {
+            "outcome": "AMBIGUOUS_CHARACTERIZATION",
+            "precursor_overlap_permille": 340,
+            "r_wp_permille": 42,
+            "admit_to_memory": false,
+            "orthogonal_route": "Raman"
+          }
+        }
+      ]
+    },
+    "precursor_ghost_peak__1__0": {
+      "scenario_id": "precursor_ghost_peak",
+      "title": "Unreacted Precursor XRD Ghost-Peak Overlap (lab-attrib Quarantine)",
+      "protocol_hash": "5fba4f0e8d9f",
+      "final_status": "QUARANTINED_AT_L4_ATTRIB",
+      "total_simulated_ms": 110.9,
+      "layers_traversed": [
+        "L2",
+        "L6",
+        "L6",
+        "L5",
+        "L5",
+        "L4",
+        "L1",
+        "L0",
+        "L4"
+      ],
+      "steps": [
+        {
+          "layer": "L2",
+          "repo": "lab-ears",
+          "stage": "Protocol Span & Acoustic Check",
+          "verdict": "PASS",
+          "latency_ms": 4.2,
+          "summary": "Extracted Amount/Temperature/Time/Speed spans; centrifuge-01 log-mel score below threshold (speech band dropped).",
+          "artifact": {
+            "protocol_hash": "5fba4f0e8d9f",
+            "slots": {
+              "Amount": "100 uL",
+              "Temperature": "25-37 C",
+              "Time": "10-30 min"
+            },
+            "acoustic_flagged": false,
+            "speech_band_dropped": true
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-ask-why",
+          "stage": "Socratic Evidence & Discriminating Test",
+          "verdict": "PASS",
+          "latency_ms": 6.8,
+          "summary": "Retrieved top-3 supporting/contradicting rationale sentences (BM25) and formulated falsifiable control question.",
+          "artifact": {
+            "support_recall_at_3": 0.797,
+            "contradict_recall_at_3": 0.775,
+            "discriminating_question": "Does blank buffer control in H1 remain at baseline OD450 without carryover?"
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-decide",
+          "stage": "Conformal Trust-Region Gate",
+          "verdict": "PASS",
+          "latency_ms": 1.9,
+          "summary": "Inside calibrated kNN trust region (0.528 <= 0.758); 90% split-conformal interval [-3.65, -0.95] logS.",
+          "artifact": {
+            "knn_distance": 0.528,
+            "threshold": 0.758,
+            "interval_90pct": [
+              -3.65,
+              -0.95
+            ]
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "buy-or-make",
+          "stage": "Availability & Listed-Price Triage",
+          "verdict": "PASS",
+          "latency_ms": 5.0,
+          "summary": "Candidate classified as 'buyable' (listed $1.15/g).",
+          "artifact": {
+            "smiles": "O=[Ti]=O.O=[Sr]",
+            "status": "buyable",
+            "n_steps": 0,
+            "price_basis": "listed_catalog"
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "labshift",
+          "stage": "Multi-Instrument Window Scheduling",
+          "verdict": "SCHEDULED",
+          "latency_ms": 14.6,
+          "summary": "CP-SAT found zero-violation schedule (makespan 78 min)",
+          "artifact": {
+            "solver": "cpsat",
+            "makespan_min": 78,
+            "window_violations": 0,
+            "greedy_would_violate": false
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-rehearsal + lab-verify",
+          "stage": "Digital Twin Dry-Run & 4-Layer Default-Deny Gate",
+          "verdict": "PASS",
+          "latency_ms": 3.4,
+          "summary": "0 liquid-handling violations across 96-well twin; SQL ledger audit passed all 4/4 layers.",
+          "artifact": {
+            "rehearsal_violations": 0,
+            "sql_gate_layers": [
+              "parse",
+              "read_only",
+              "schema",
+              "execution_match"
+            ]
+          }
+        },
+        {
+          "layer": "L1",
+          "repo": "stepbot + lab-hands",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
+          "verdict": "PASS",
+          "latency_ms": 71.8,
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 64 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 1.92 rad.",
+          "artifact": {
+            "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
+            "simulated_commands": 64,
+            "rrt_path_rad": 1.92
+          }
+        },
+        {
+          "layer": "L0",
+          "repo": "lab-feet",
+          "stage": "Quantized Bench-Side Policy Runtime",
+          "verdict": "PASS",
+          "latency_ms": 0.4,
+          "summary": "Executed local int8 student monitor (3.86 us median forward pass, 35x parameter reduction).",
+          "artifact": {
+            "quantization": "int8",
+            "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & NNLS Precursor Deconvolution",
+          "verdict": "BLOCK",
+          "latency_ms": 2.8,
+          "summary": "AMBIGUOUS_CHARACTERIZATION: NNLS precursor peak overlap 34.0% > 15.0% ceiling; blocked false-positive memory write and routed to orthogonal Raman assay via EVOI.",
+          "artifact": {
+            "outcome": "AMBIGUOUS_CHARACTERIZATION",
+            "precursor_overlap_permille": 340,
+            "r_wp_permille": 42,
+            "admit_to_memory": false,
+            "orthogonal_route": "Raman"
+          }
+        }
+      ]
+    },
+    "precursor_ghost_peak__0__1": {
+      "scenario_id": "precursor_ghost_peak",
+      "title": "Unreacted Precursor XRD Ghost-Peak Overlap (lab-attrib Quarantine)",
+      "protocol_hash": "5fba4f0e8d9f",
+      "final_status": "EXECUTED_AND_WRITTEN_BACK",
+      "total_simulated_ms": 129.6,
+      "layers_traversed": [
+        "L2",
+        "L6",
+        "L6",
+        "L5",
+        "L5",
+        "L4",
+        "L1",
+        "L0",
+        "L4",
+        "L3"
+      ],
+      "steps": [
+        {
+          "layer": "L2",
+          "repo": "lab-ears",
+          "stage": "Protocol Span & Acoustic Check",
+          "verdict": "PASS",
+          "latency_ms": 4.2,
+          "summary": "Extracted Amount/Temperature/Time/Speed spans; centrifuge-01 log-mel score below threshold (speech band dropped).",
+          "artifact": {
+            "protocol_hash": "5fba4f0e8d9f",
+            "slots": {
+              "Amount": "100 uL",
+              "Temperature": "25-37 C",
+              "Time": "10-30 min"
+            },
+            "acoustic_flagged": false,
+            "speech_band_dropped": true
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-ask-why",
+          "stage": "Socratic Evidence & Discriminating Test",
+          "verdict": "PASS",
+          "latency_ms": 6.8,
+          "summary": "Retrieved top-3 supporting/contradicting rationale sentences (BM25) and formulated falsifiable control question.",
+          "artifact": {
+            "support_recall_at_3": 0.797,
+            "contradict_recall_at_3": 0.775,
+            "discriminating_question": "Does blank buffer control in H1 remain at baseline OD450 without carryover?"
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-decide",
+          "stage": "Conformal Trust-Region Gate",
+          "verdict": "PASS",
+          "latency_ms": 1.9,
+          "summary": "Inside calibrated kNN trust region (0.528 <= 0.758); 90% split-conformal interval [-3.65, -0.95] logS.",
+          "artifact": {
+            "knn_distance": 0.528,
+            "threshold": 0.758,
+            "interval_90pct": [
+              -3.65,
+              -0.95
+            ]
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "buy-or-make",
+          "stage": "Availability & Listed-Price Triage",
+          "verdict": "PASS",
+          "latency_ms": 5.0,
+          "summary": "Candidate classified as 'buyable' (listed $1.15/g).",
+          "artifact": {
+            "smiles": "O=[Ti]=O.O=[Sr]",
+            "status": "buyable",
+            "n_steps": 0,
+            "price_basis": "listed_catalog"
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "labshift",
+          "stage": "Multi-Instrument Window Scheduling",
+          "verdict": "SCHEDULED",
+          "latency_ms": 14.6,
+          "summary": "CP-SAT found zero-violation schedule (makespan 78 min)",
+          "artifact": {
+            "solver": "cpsat",
+            "makespan_min": 78,
+            "window_violations": 0,
+            "greedy_would_violate": false
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-rehearsal + lab-verify",
+          "stage": "Digital Twin Dry-Run & 4-Layer Default-Deny Gate",
+          "verdict": "PASS",
+          "latency_ms": 3.4,
+          "summary": "0 liquid-handling violations across 96-well twin; SQL ledger audit passed all 4/4 layers.",
+          "artifact": {
+            "rehearsal_violations": 0,
+            "sql_gate_layers": [
+              "parse",
+              "read_only",
+              "schema",
+              "execution_match"
+            ]
+          }
+        },
+        {
+          "layer": "L1",
+          "repo": "stepbot + lab-hands",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
+          "verdict": "PASS",
+          "latency_ms": 71.8,
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 64 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 1.92 rad.",
+          "artifact": {
+            "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
+            "simulated_commands": 64,
+            "rrt_path_rad": 1.92
+          }
+        },
+        {
+          "layer": "L0",
+          "repo": "lab-feet",
+          "stage": "Quantized Bench-Side Policy Runtime",
+          "verdict": "PASS",
+          "latency_ms": 0.4,
+          "summary": "Executed local int8 student monitor (3.86 us median forward pass, 35x parameter reduction).",
+          "artifact": {
+            "quantization": "int8",
+            "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 34.0% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 340,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
+          }
+        },
+        {
+          "layer": "L3",
+          "repo": "labfill + labbench-posttrain",
+          "stage": "Sequence-Packed BF16 Replay & RLVR Update",
+          "verdict": "LEARNED",
+          "latency_ms": 18.9,
+          "summary": "Packed verified execution trace (92.1% useful tokens, 5.42x CPU BF16 throughput) into SplitGuard-checked labrl reward=0.00.",
+          "artifact": {
+            "useful_token_pct": 92.1,
+            "split_guard": "zero_group_leakage",
+            "rlvr_reward": 0.0
+          }
+        }
+      ]
+    },
+    "precursor_ghost_peak__0__0": {
+      "scenario_id": "precursor_ghost_peak",
+      "title": "Unreacted Precursor XRD Ghost-Peak Overlap (lab-attrib Quarantine)",
+      "protocol_hash": "5fba4f0e8d9f",
+      "final_status": "EXECUTED_AND_WRITTEN_BACK",
+      "total_simulated_ms": 129.6,
+      "layers_traversed": [
+        "L2",
+        "L6",
+        "L6",
+        "L5",
+        "L5",
+        "L4",
+        "L1",
+        "L0",
+        "L4",
+        "L3"
+      ],
+      "steps": [
+        {
+          "layer": "L2",
+          "repo": "lab-ears",
+          "stage": "Protocol Span & Acoustic Check",
+          "verdict": "PASS",
+          "latency_ms": 4.2,
+          "summary": "Extracted Amount/Temperature/Time/Speed spans; centrifuge-01 log-mel score below threshold (speech band dropped).",
+          "artifact": {
+            "protocol_hash": "5fba4f0e8d9f",
+            "slots": {
+              "Amount": "100 uL",
+              "Temperature": "25-37 C",
+              "Time": "10-30 min"
+            },
+            "acoustic_flagged": false,
+            "speech_band_dropped": true
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-ask-why",
+          "stage": "Socratic Evidence & Discriminating Test",
+          "verdict": "PASS",
+          "latency_ms": 6.8,
+          "summary": "Retrieved top-3 supporting/contradicting rationale sentences (BM25) and formulated falsifiable control question.",
+          "artifact": {
+            "support_recall_at_3": 0.797,
+            "contradict_recall_at_3": 0.775,
+            "discriminating_question": "Does blank buffer control in H1 remain at baseline OD450 without carryover?"
+          }
+        },
+        {
+          "layer": "L6",
+          "repo": "lab-decide",
+          "stage": "Conformal Trust-Region Gate",
+          "verdict": "PASS",
+          "latency_ms": 1.9,
+          "summary": "Inside calibrated kNN trust region (0.528 <= 0.758); 90% split-conformal interval [-3.65, -0.95] logS.",
+          "artifact": {
+            "knn_distance": 0.528,
+            "threshold": 0.758,
+            "interval_90pct": [
+              -3.65,
+              -0.95
+            ]
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "buy-or-make",
+          "stage": "Availability & Listed-Price Triage",
+          "verdict": "PASS",
+          "latency_ms": 5.0,
+          "summary": "Candidate classified as 'buyable' (listed $1.15/g).",
+          "artifact": {
+            "smiles": "O=[Ti]=O.O=[Sr]",
+            "status": "buyable",
+            "n_steps": 0,
+            "price_basis": "listed_catalog"
+          }
+        },
+        {
+          "layer": "L5",
+          "repo": "labshift",
+          "stage": "Multi-Instrument Window Scheduling",
+          "verdict": "SCHEDULED",
+          "latency_ms": 14.6,
+          "summary": "CP-SAT found zero-violation schedule (makespan 78 min)",
+          "artifact": {
+            "solver": "cpsat",
+            "makespan_min": 78,
+            "window_violations": 0,
+            "greedy_would_violate": false
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-rehearsal + lab-verify",
+          "stage": "Digital Twin Dry-Run & 4-Layer Default-Deny Gate",
+          "verdict": "PASS",
+          "latency_ms": 3.4,
+          "summary": "0 liquid-handling violations across 96-well twin; SQL ledger audit passed all 4/4 layers.",
+          "artifact": {
+            "rehearsal_violations": 0,
+            "sql_gate_layers": [
+              "parse",
+              "read_only",
+              "schema",
+              "execution_match"
+            ]
+          }
+        },
+        {
+          "layer": "L1",
+          "repo": "stepbot + lab-hands",
+          "stage": "Lean-MCP Compilation & Collision-Free RRT",
+          "verdict": "PASS",
+          "latency_ms": 71.8,
+          "summary": "Verified lean-mcp/v1 epoch-bound envelope, compiled 64 deterministic apiLevel 2.16 commands, and shortcut 2-link RRT to 1.92 rad.",
+          "artifact": {
+            "api_level": "2.16",
+            "mcp_schema": "lean-mcp/v1",
+            "simulated_commands": 64,
+            "rrt_path_rad": 1.92
+          }
+        },
+        {
+          "layer": "L0",
+          "repo": "lab-feet",
+          "stage": "Quantized Bench-Side Policy Runtime",
+          "verdict": "PASS",
+          "latency_ms": 0.4,
+          "summary": "Executed local int8 student monitor (3.86 us median forward pass, 35x parameter reduction).",
+          "artifact": {
+            "quantization": "int8",
+            "median_latency_us": 3.86
+          }
+        },
+        {
+          "layer": "L4",
+          "repo": "lab-attrib",
+          "stage": "Post-Run Blame & SHA-256 Certified Ledger",
+          "verdict": "PASS",
+          "latency_ms": 2.6,
+          "summary": "Execution clean and NNLS precursor overlap 34.0% <= 15.0% (R_wp 4.2%); appended proof-carrying certificate to SHA-256 ledger.",
+          "artifact": {
+            "outcome": "CERTIFIED_POSITIVE",
+            "precursor_overlap_permille": 340,
+            "r_wp_permille": 42,
+            "admit_to_memory": true
+          }
+        },
+        {
+          "layer": "L3",
+          "repo": "labfill + labbench-posttrain",
+          "stage": "Sequence-Packed BF16 Replay & RLVR Update",
+          "verdict": "LEARNED",
+          "latency_ms": 18.9,
+          "summary": "Packed verified execution trace (92.1% useful tokens, 5.42x CPU BF16 throughput) into SplitGuard-checked labrl reward=0.00.",
+          "artifact": {
+            "useful_token_pct": 92.1,
+            "split_guard": "zero_group_leakage",
+            "rlvr_reward": 0.0
           }
         }
       ]

@@ -14,7 +14,7 @@
 
 **A 7-layer embodied brain, default-deny safety nervous system, and verifiable RL post-training stack for autonomous wet laboratories.**
 
-**Project Website & Interactive Lab:** [https://yaniguan.github.io/auto-lab/](https://yaniguan.github.io/auto-lab/) · [Interactive Sandbox](https://yaniguan.github.io/auto-lab/studio/) · [14-Repo Cards](https://yaniguan.github.io/auto-lab/repos/)
+**Project Website & Interactive Lab:** [https://yaniguan.github.io/auto-lab/](https://yaniguan.github.io/auto-lab/) · [Lean 4 Trust Regime & Papers](https://yaniguan.github.io/auto-lab/trust/) · [Interactive Sandbox](https://yaniguan.github.io/auto-lab/studio/) · [15-Repo Cards](https://yaniguan.github.io/auto-lab/repos/)
 
 [![Project Studio](https://img.shields.io/badge/project_page-live_7--layer_studio-b5d88e?style=flat&labelColor=101820)](https://yaniguan.github.io/auto-lab/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -34,45 +34,48 @@ Wiring a free-form language model directly to a liquid handler or robotic arm fa
 flowchart TB
     L6["L6 · Metacognitive & Epistemic Brain<br/>lab-ask-why · lab-decide (+ YLM)"]
     L5["L5 · Executive Planning, Make-vs-Buy & Fleet Scheduling<br/>buy-or-make · labshift · lab-automation-atlas"]
-    L4["L4 · Digital-Twin Rehearsal & Default-Deny Gate<br/>lab-rehearsal · lab-verify (+ WignerFlow)"]
+    L4["L4 · Twin Rehearsal, Default-Deny Gate & Post-Run Attribution<br/>lab-rehearsal · lab-verify · lab-attrib (+ WignerFlow)"]
     L2["L2 · Multimodal Sensory & Protocol Cortex<br/>lab-ears (+ ouroboros-ocsr · assayfold)"]
-    L1["L1 · Deterministic Protocol Compiler & Tactile Manipulation<br/>stepbot · lab-hands"]
+    L1["L1 · Lean-MCP Protocol Compiler & Tactile Manipulation<br/>stepbot · lab-hands"]
     L0["L0 · Edge Distillation & Quantized Runtime<br/>lab-feet"]
     L3["L3 · RLVR Post-Training, Error Twins & GPU Packing Flywheel<br/>labbench-posttrain (labrl) · twinstep · labfill"]
 
     L2 --> L6
     L6 --> L5
     L5 --> L4
-    L4 -- "PASS only (default-deny)" --> L1
+    L4 -- "lean-mcp/v1 PASS only" --> L1
     L1 --> L0
-    L0 == "episodic traces & violations" ==> L3
-    L4 -. "blocked twin pairs" .-> L3
+    L0 == "post-run telemetry & spectra" ==> L4
+    L4 == "SHA-256 certified +/- & twin pairs" ==> L3
+    L4 -. "attributed Chem-RRT shells" .-> L6
     L3 == "aligned & distilled checkpoints" ==> L6
     L3 == "int8 / 4-bit students" ==> L0
 ```
 
 ## Quickstart
 
-Clone the hub, install the zero-dependency `autolab` CLI, and pull or inspect all 14 sibling repositories:
+Clone the hub, install the zero-dependency `autolab` CLI, and pull or inspect all 15 sibling repositories:
 
 ```bash
 git clone https://github.com/yaniguan/auto-lab.git && cd auto-lab
 pip install -e ".[dev]"
 
-# Clone or fetch all 14 Auto-Lab repositories into the parent workspace directory
+# Clone or fetch all 15 Auto-Lab repositories into the parent workspace directory
 python scripts/sync_all.py --action clone-or-fetch
 
 # Inspect the 7-layer Brain -> Body hierarchy and per-repo dossiers
 autolab layers
 autolab list
+autolab inspect lab-attrib
 autolab inspect labbench-posttrain
 
-# Run deterministic 7-layer closed-loop traces (GO vs L4 Safety Block vs L6 Abstention)
+# Run deterministic 7-layer closed-loop traces (GO vs L4 Block vs L6 Abstain vs lab-attrib Ghost-Peak Quarantine)
 autolab loop --scenario serial_dilution
 autolab loop --scenario broken_tip_reuse
+autolab loop --scenario precursor_ghost_peak
 autolab loop --scenario uncalibrated_molecule
 
-# Run hub integrity tests
+# Run hub integrity & cross-repo lean-mcp/v1 wire tests
 pytest
 ```
 
@@ -118,18 +121,18 @@ auto-lab/
 │   ├── memory.py                 # 4-Layer 'Undergrad' Agent Memory + Bottom Reasoning Traces + Dreaming
 │   └── cli.py                    # `autolab layers | list | inspect | loop | status | trust | memory`
 ├── catalog/
-│   ├── repos.json                # Verified Object, Data, Model, Training, History, Properties for all 14 repos
+│   ├── repos.json                # Verified Object, Data, Model, Training, History, Properties for all 15 repos
 │   ├── issues_index.json         # Structured index of all 300+ deep audit issues & live URLs
 │   └── workspace.manifest.json   # Git URLs, branches, HEAD SHAs, and sibling checkout layout
 ├── docs/
 │   ├── BRAIN_HIERARCHY.md        # Architectural specification of Layers L6 -> L0
 │   ├── POSTTRAIN_FLYWHEEL.md     # Execution-to-RLVR data & post-training flywheel
-│   ├── REPO_MATRIX.md            # Side-by-side 14-repository dossier matrix
+│   ├── REPO_MATRIX.md            # Side-by-side 15-repository dossier matrix
 │   ├── TRUST_REGIME_STUDY.md     # Formal Lean 4 Trust Regime & 5-task empirical study
 │   ├── NOVEL_DIRECTIONS_FROM_COMMUNITY.md # 4 next-gen directions synthesized from 2025-2026 discourse
 │   ├── AGENT_MEMORY_ARCHITECTURE.md # 4-Layer Undergrad Memory, Bottom Reasoning Traces & Dreaming
-│   └── ISSUES_AUDIT_INDEX.md     # Master index of all filed GitHub Issues across the 14 repos
-├── lean/                         # AutoLabLean Hub Kernel: Lean 4.36.0 (50 theorems, 0 sorry; synced to 14 sub-repos)
+│   └── ISSUES_AUDIT_INDEX.md     # Master index of all filed GitHub Issues across the audited repos
+├── lean/                         # AutoLabLean Hub Kernel: Lean 4.36.0 (50 theorems, 0 sorry; synced to 15 sub-repos)
 │   ├── AutoLabLean/              # L6 -> L0 specs, bounded autonomy, frontiers & agent memory theorems
 │   ├── Main.lean                 # Native `autolab-lean` showcase & `--batch-tsv` runtime verifier
 │   └── lakefile.toml             # Zero-dependency Lake build configuration
@@ -137,7 +140,7 @@ auto-lab/
 │   ├── main.tex                  # Manuscript source
 │   ├── autolab_preprint.sty      # Modern editorial preprint layout & Page-1 banner
 │   ├── generate_figures.py       # Reproducible matplotlib vector PDF generator
-│   └── main.pdf                  # Compiled 9-page preprint PDF
+│   └── main.pdf                  # Compiled 9-page preprint PDF (+ lab-attrib monograph in site/assets/)
 ├── benchmarks/
 │   ├── trust_regime_study.py     # Reproducible 5-task empirical study via compiled `autolab-lean`
 │   ├── novel_directions_study.py # Empirical evaluation of the 4 next-gen frontier directions
@@ -145,23 +148,23 @@ auto-lab/
 │   ├── twenty_community_ideas_study.py # Unified harness running all 20 sub-repo `community_extensions/`
 │   └── results/                  # Measured JSON metrics
 ├── scripts/
-│   ├── sync_all.py               # Clone, fetch, or check git cleanliness across all 14 repos
+│   ├── sync_all.py               # Clone, fetch, or check git cleanliness across all 15 repos
 │   └── build_site_data.py        # Compiles catalog/ and audit data into docs/ and site/assets/
 ├── site/                         # Multi-page GitHub Pages website
-│   ├── index.html                # Overview, Monoline Robot Sketch & 18-Repo Topology
+│   ├── index.html                # Overview, Monoline Robot Sketch & 19-Repo Topology
 │   ├── trust/index.html          # Interactive Lean 4 Trust Regime & Empirical Lift Explorer
 │   ├── studio/index.html         # Interactive Closed-Loop, Post-Train & Conformal Sandboxes
-│   ├── repos/index.html          # Interactive 14-Repository Problem Stories & Live Examples
+│   ├── repos/index.html          # Interactive 15-Repository Problem Stories & Live Examples
 │   ├── audit/index.html          # Maintainer Issue Backlog Explorer
 │   ├── shared.js                 # Shared theme persistence, data loader & SVG chart primitives
 │   └── styles.css                # Clean daylight-first editorial stylesheet
 └── tests/
-    └── test_autolab.py           # Pytest suite verifying Lean proofs, parity, CLI, and site assets
+    └── test_autolab.py           # Pytest suite verifying Lean proofs, cross-repo lean-mcp/v1 parity, CLI, and site assets
 ```
 
-## Formal Trust Regime (`AutoLabLean`), Undergraduate Memory & Preprint
+## Formal Trust Regime (`AutoLabLean`), Undergraduate Memory & Preprints
 
-Every hard physical, statistical, stoichiometric, temporal, security, privacy, licensing, and memory-hygiene guardrail across the 14 repositories is formalized centrally in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **50 machine-checked theorems**, **27 `#guard` witnesses**, **0 `sorry`**), mirrored as standalone Lake packages (`<repo>/lean/`) across all 14 sub-repositories (**140 sub-repo theorems**), and documented in our standalone LaTeX preprint ([`paper/main.pdf`](paper/main.pdf) · [`paper/main.tex`](paper/main.tex)):
+Every hard physical, statistical, stoichiometric, temporal, security, privacy, licensing, post-run attribution, and memory-hygiene guardrail across the 15 repositories is formalized centrally in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **50 machine-checked theorems**, **27 `#guard` witnesses**, **0 `sorry`**), mirrored as standalone Lake packages (`<repo>/lean/`) across all 15 sub-repositories (**165+ sub-repo theorems**, including 25 in [`lab-attrib`](https://github.com/yaniguan/lab-attrib)), and documented in two standalone LaTeX monographs ([`paper/main.pdf`](paper/main.pdf) and [`lab-attrib/paper/main.pdf`](https://yaniguan.github.io/auto-lab/assets/lab_attrib_preprint.pdf)):
 
 - **Bounded Molecular Discovery (`1,128` real Delaney ESOL compounds)**: Boundary violations drop from `72.0%` to **`0.0%`**, selected-run MAE drops **2.49x** (`0.978 -> 0.393` log mol/L), empirical 90% coverage reaches **`97.6%`**, and verified soluble hit yield climbs from `28.0%` to **`100.0%`**.
 - **Wet-Lab Protocol Synthesis & Counterexample Repair (`200 x 8` candidates @ `30,048` proto/s)**: Catastrophic hardware faults drop from `78.0%` to **`0.0%`**, while valid task completion rises from `22.0%` (ungated) / `23.5%` (coarse heuristic) to **`87.0%`** (Lean Best-of-8) and **`97.5%`** (with Lean counterexample-guided 1-step repair).
@@ -171,7 +174,7 @@ Every hard physical, statistical, stoichiometric, temporal, security, privacy, l
 
 ## Scientific Honesty & Status
 
-- **CPU vs GPU**: Every benchmark reported in `auto-lab` and its 14 child repositories distinguishes completed CPU measurements (`labfill`, `labshift`, `twinstep`, `stepbot`, `buy-or-make`, `lab-ears`, `lab-decide`, `lab-verify`, `lab-rehearsal`, `lab-hands`, `lab-feet`, and `labbench-posttrain` smoke runs) from full A100/H100 post-training campaigns, which remain explicitly marked `PENDING` until executed.
+- **CPU vs GPU**: Every benchmark reported in `auto-lab` and its 15 child repositories distinguishes completed CPU measurements (`labfill`, `labshift`, `twinstep`, `stepbot`, `buy-or-make`, `lab-ears`, `lab-decide`, `lab-verify`, `lab-rehearsal`, `lab-attrib`, `lab-hands`, `lab-feet`, and `labbench-posttrain` smoke runs) from full A100/H100 post-training campaigns, which remain explicitly marked `PENDING` until executed.
 - **License Discipline**: Non-commercial benchmarks and datasets (`BioProBench`, `SciFact`, `TransCG`, `Touch-Slide`) and ShareAlike evaluation suites (`LAB-Bench` with canary strings) retain their upstream licenses and are never laundered into MIT/commercial exports.
 
 ## Citation

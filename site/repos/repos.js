@@ -199,6 +199,7 @@
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <a class="button primary" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub ↗</a>
+          ${r.repo === 'lab-attrib' ? '<a class="button secondary" href="../assets/lab_attrib_preprint.pdf" target="_blank" rel="noopener">Monograph PDF ↗</a>' : ''}
           <a class="button secondary" href="${esc(r.url)}/blob/main/docs/ARCHITECTURE_AND_HISTORY.md" target="_blank" rel="noopener">Architecture Doc ↗</a>
         </div>
       </div>

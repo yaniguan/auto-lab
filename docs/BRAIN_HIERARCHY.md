@@ -1,6 +1,6 @@
 # The 7-Layer Embodied Co-Scientist Brain & Nervous System
 
-`auto-lab` organizes **14 core infrastructure and post-training repositories** (together with **4 connected companion repositories**: [`YLM`](https://github.com/yaniguan/YLM), [`WignerFlow`](https://github.com/yaniguan/WignerFlow), [`ouroboros-ocsr`](https://github.com/yaniguan/ouroboros-ocsr), and [`assayfold`](https://github.com/yaniguan/assayfold)) into an explicit **7-layer neuro-embodied hierarchy (`L6` down to `L0`)**.
+`auto-lab` organizes **15 core infrastructure and post-training repositories** (together with **4 connected companion repositories**: [`YLM`](https://github.com/yaniguan/YLM), [`WignerFlow`](https://github.com/yaniguan/WignerFlow), [`ouroboros-ocsr`](https://github.com/yaniguan/ouroboros-ocsr), and [`assayfold`](https://github.com/yaniguan/assayfold)) into an explicit **7-layer neuro-embodied hierarchy (`L6` down to `L0`)**.
 
 Instead of wiring an unconstrained language model directly to a liquid handler or robotic arm, every scientific goal passes downward through calibrated epistemic reasoning, resource triage, multi-instrument scheduling, digital-twin rehearsal, and mechanical default-deny verification before compiled commands reach physical actuators—and every outcome writes back upward into the post-training flywheel.
 
@@ -18,9 +18,10 @@ flowchart TB
         AT["lab-automation-atlas<br/>Verified platform, DSL & dataset ontology"]
     end
 
-    subgraph L4["L4 · Mental Rehearsal & Inhibitory Safety Gate"]
+    subgraph L4["L4 · Mental Rehearsal, Inhibitory Safety Gate & Post-Run Attribution"]
         LR["lab-rehearsal<br/>Recall → Twin Dry-Run → Verify → Write-Back"]
-        LV["lab-verify<br/>4-layer default-deny SQL / Lean / protocol gate"]
+        LV["lab-verify<br/>4-layer default-deny SQL / Lean / lean-mcp/v1 gate"]
+        LA["lab-attrib<br/>Post-run blame, NNLS XRD & SHA-256 negative ledger"]
         WF["WignerFlow (Companion)<br/>50-fs equivariant MD & [physics] gate"]
     end
 
@@ -58,7 +59,9 @@ flowchart TB
     LV --> LH
     SB --> LF
     LH --> LF
-    LF == "episodic run logs & outcomes" ==> TS
+    LF == "post-run telemetry & spectra" ==> LA
+    LA == "SHA-256 certified +/- & blocked twins" ==> TS
+    LA -. "attributed Chem-RRT shells" .-> LD
     TS --> LFL
     LFL --> PT
     PT == "updated policy & distilled weights" ==> LD
@@ -71,7 +74,7 @@ flowchart TB
 |---|---|---|---|
 | **L6** | Prefrontal & Anterior Cingulate Cortex | `lab-ask-why`, `lab-decide` *(+ `YLM`)* | Never picks an ungrounded winner; surfaces opposing rationales and abstains outside calibrated kNN conformal trust bounds. |
 | **L5** | Dorsolateral Prefrontal & Basal Ganglia | `buy-or-make`, `labshift`, `lab-automation-atlas` | Never invents catalog prices (`null` when unlisted); enforces `min_wait`/`max_wait` and pool capacity via exact sweep-line & CP-SAT. |
-| **L4** | Premotor Twin & Basal Ganglia Inhibition | `lab-rehearsal`, `lab-verify` *(+ `WignerFlow`)* | **Default deny**: zero commands reach the robot unless episodic recall, digital-twin volume/tip simulation, and execution-level checks pass. |
+| **L4** | Premotor Twin, Inhibition & Error-Monitoring | `lab-rehearsal`, `lab-verify`, `lab-attrib` *(+ `WignerFlow`)* | **Default deny + post-run blame**: zero commands reach the robot without `lean-mcp/v1` verification, and zero unidentifiable/ghost-peak outcomes enter scientific memory. |
 | **L3** | Hippocampal Replay & Cerebellar Plasticity | `labbench-posttrain`, `twinstep`, `labfill` | Cryptographic `SplitGuard` (0 group leakage; `LAB-Bench` eval-only), anti-hack reward composers, and packed `bf16` high-useful-token training. |
 | **L2** | Auditory, Language & Visual Sensory Cortex | `lab-ears` *(+ `ouroboros-ocsr`, `assayfold`)* | Parses structured protocol quantities (`Amount`, `Temp`, `Time`, `Speed`) and drops speech frequencies (`300–3400 Hz`) by default on audio monitors. |
 | **L1** | Primary Motor & Somatosensory Cortex | `stepbot`, `lab-hands` | Deterministic `apiLevel 2.16` Opentrons Python codegen with compile-time well-volume bounds, plus obstacle-free RRT paths and tactile alignment. |

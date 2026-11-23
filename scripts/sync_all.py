@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Clone, fetch, or inspect all 14 Auto-Lab repositories side-by-side."""
+"""Clone, fetch, or inspect all 15 Auto-Lab repositories side-by-side."""
 
 from __future__ import annotations
 
@@ -8,7 +8,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-from autolab.catalog import CORE_REPO_NAMES, REPO_ROOT
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from autolab.catalog import CORE_REPO_NAMES, REPO_ROOT  # noqa: E402
 
 
 def run_git(args: list[str], cwd: Path | None = None) -> tuple[int, str]:
@@ -24,7 +26,7 @@ def run_git(args: list[str], cwd: Path | None = None) -> tuple[int, str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Clone, fetch, or check status of all 14 Auto-Lab sibling repositories."
+        description="Clone, fetch, or check status of all 15 Auto-Lab sibling repositories."
     )
     parser.add_argument(
         "--root",
@@ -36,7 +38,7 @@ def main() -> int:
         "--action",
         choices=("status", "fetch", "clone-or-fetch"),
         default="status",
-        help="Action to run across all 14 repositories",
+        help="Action to run across all 15 repositories",
     )
     parser.add_argument(
         "--org",

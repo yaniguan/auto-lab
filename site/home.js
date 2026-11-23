@@ -144,7 +144,7 @@
       anchor: [700, 296],
     },
     {
-      side: 'R', y: 256, h: 104, groups: ['gate'], iconRepo: 'lab-verify',
+      side: 'R', y: 256, h: 104, groups: ['gate', 'attrib'], iconRepo: 'lab-attrib',
       tag: 'L4 · TWIN, GATE & ATTRIB', title: 'Rehearse, Gate & Blame',
       repos: ['lab-rehearsal', 'lab-verify', 'lab-attrib', 'WignerFlow'],
       leader: 'M 806 308 H 764 A 8 8 0 0 1 756 300 V 248 A 8 8 0 0 0 748 240 H 552',
@@ -343,6 +343,13 @@
     gSched.addEventListener('click', () => selectRepo('labshift'));
     svg.append(gSched);
 
+    // 7b. Benchtop Diffraction Spectrometer & Post-Run Blame Organ (lab-attrib)
+    const gAttrib = el('g', { style: 'cursor:pointer' });
+    gAttrib.append(el('rect', { x: 436, y: 332, width: 28, height: 22, rx: 3, class: organBox('attrib') }));
+    gAttrib.append(el('polyline', { points: '440,349 445,342 449,347 453,337 459,349', class: organCls('attrib') }));
+    gAttrib.addEventListener('click', () => selectRepo('lab-attrib'));
+    svg.append(gAttrib);
+
     // 8. Benchtop Slab
     svg.append(el('rect', { x: 338, y: 354, width: 404, height: 10, rx: 3, class: 'sk-box' }));
 
@@ -484,7 +491,7 @@
       [14, 'SENSES & DATA'],
       [130, 'BRAIN & PROCUREMENT'],
       [250, 'SCHEDULE, GATE & HANDS'],
-      [374, 'EDGE & POST-TRAINING ↺'],
+      [374, 'EDGE, ATTRIBUTION & POST-TRAINING ↺'],
     ];
     rowLabels.forEach(([ry, txt]) => {
       svg.append(el('text', {
@@ -764,6 +771,7 @@
             <a class="table-link" href="repos/#${encodeURIComponent(r.repo)}">Story</a>
             <span style="color:var(--subtle);margin:0 6px;">·</span>
             <a class="table-link" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub ↗</a>
+            ${r.repo === 'lab-attrib' ? '<span style="color:var(--subtle);margin:0 6px;">·</span><a class="table-link" href="assets/lab_attrib_preprint.pdf" target="_blank" rel="noopener">Paper ↗</a>' : ''}
           </td>
         </tr>`;
     }).join('');
