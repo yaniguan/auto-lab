@@ -14,9 +14,9 @@
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=4">
-  <script defer src="shared.js?v=4"></script>
-  <script defer src="home.js?v=4"></script>
+  <link rel="stylesheet" href="styles.css?v=5">
+  <script defer src="shared.js?v=5"></script>
+  <script defer src="home.js?v=5"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -47,7 +47,7 @@
         Fourteen small, checkable repositories organized from high-level scientific reasoning (<code>L6</code>) down to edge quantized boards (<code>L0</code>) and verifiable RL post-training (<code>L3</code>).
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="#brain-stack">Inspect 7-Layer Brain ↓</a>
+        <a class="button primary" href="#brain-stack">Explore Architecture ↓</a>
         <a class="button secondary" href="studio/">Interactive Lab →</a>
         <a class="button secondary" href="repos/">14 Repo Cards →</a>
       </div>
@@ -83,48 +83,71 @@
         <a class="metric-card" href="studio/#posttrain">
           <span class="small-label blue">Throughput &amp; Edge</span>
           <div class="metric-big"><strong>5.42x</strong> <span>&amp; 35x smaller</span></div>
-          <p>BF16 packing (92% useful) &amp; int8/4-bit edge.</p>
+          <p>BF16 packing &amp; int8/4-bit edge.</p>
         </a>
       </div>
     </section>
 
-    <!-- 01 / Interactive 7-Layer Brain & Organ Cards -->
+    <!-- 01 / Clean Orthogonal 7-Layer Brain & Flywheel Diagram -->
     <section class="section wrap" id="brain-stack">
-      <div class="section-heading">
-        <p class="eyebrow">01 / Anatomy of the Agent</p>
-        <h2>Click any part of the brain or body.</h2>
+      <div class="section-heading" style="margin-bottom:22px;">
+        <p class="eyebrow">01 / Seven-Layer Brain &amp; Nervous System</p>
+        <h2>Click a chapter to trace a layer, or click any module to inspect it.</h2>
       </div>
 
-      <div class="brain-explorer">
-        <div class="stack-panel" id="stack-panel-host" aria-label="Seven-layer Auto-Lab stack"></div>
+      <div class="arch-cinema-card">
+        <div class="cinema-topbar">
+          <p class="cinema-caption" id="cinema-caption-line">
+            <strong>Full Organism:</strong> Proposals descend through calibrated and default-deny gates (L6 → L0); verified outcomes replay up the L3 flywheel.
+          </p>
+          <button type="button" class="theme-btn" id="cinema-cycle-btn" style="margin:0;">▶ Auto-Tour</button>
+        </div>
 
-        <aside class="inspector-card" id="organ-inspector">
-          <div>
-            <span class="small-label" id="insp-badge">LAYER L6 · BRAIN</span>
-            <h3 id="insp-name">lab-decide</h3>
-            <p class="inspector-tagline" id="insp-hook">Loading…</p>
-          </div>
-          <div class="flow-strip" id="insp-flow"></div>
-          <div class="mini-spec-grid" id="insp-mini-specs"></div>
-          <div class="inspector-actions">
-            <a class="button primary" id="insp-dossier-link" href="repos/#lab-decide">Open Repo Card →</a>
-            <a class="button secondary" id="insp-github-link" href="https://github.com/yaniguan/lab-decide" target="_blank" rel="noopener">GitHub ↗</a>
-          </div>
-        </aside>
+        <div class="arch-svg-stage" id="brain-svg-host" aria-label="Orthogonal seven-layer Auto-Lab architecture diagram"></div>
+
+        <div class="chapter-strip" role="tablist" aria-label="Architecture layers">
+          <button type="button" class="chapter-btn active" data-chap="0">
+            <small>All Layers</small>Full L6–L0 Loop
+          </button>
+          <button type="button" class="chapter-btn" data-chap="1">
+            <small>L6 · Brain</small>Why &amp; Conformal
+          </button>
+          <button type="button" class="chapter-btn" data-chap="2">
+            <small>L5 · Executive</small>Buy/Make &amp; Shift
+          </button>
+          <button type="button" class="chapter-btn" data-chap="3">
+            <small>L4 · Safety Gate</small>Twin &amp; Verify
+          </button>
+          <button type="button" class="chapter-btn" data-chap="4">
+            <small>L2–L0 · Body</small>Ears, Hands, Feet
+          </button>
+          <button type="button" class="chapter-btn" data-chap="5">
+            <small>L3 · Flywheel</small>Twins, Pack &amp; RLVR
+          </button>
+        </div>
+      </div>
+
+      <!-- Compact Selected-Module Bar -->
+      <div class="organ-bar" id="organ-inspector">
+        <div>
+          <span class="small-label" id="insp-badge">L6 · BRAIN</span>
+          <h3 id="insp-name" style="font-size:21px;font-weight:760;margin:3px 0 5px;">lab-decide</h3>
+          <p id="insp-hook" style="font-size:13.6px;color:var(--muted);line-height:1.5;">Loading…</p>
+        </div>
+        <div class="mini-spec-grid" id="insp-mini-specs"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:148px;">
+          <a class="button primary" id="insp-dossier-link" href="repos/#lab-decide">Open Card →</a>
+          <a class="button secondary" id="insp-github-link" href="https://github.com/yaniguan/lab-decide" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
       </div>
     </section>
 
-    <!-- 02 / Two Loops -->
+    <!-- 02 / Two Clean Loops & Subpages -->
     <section class="section alt-section" id="loop">
       <div class="wrap">
-        <div class="section-heading">
-          <p class="eyebrow">02 / Closed Loops</p>
+        <div class="section-heading" style="margin-bottom:24px;">
+          <p class="eyebrow">02 / Core Loops</p>
           <h2>Rehearse before running. Verify before training.</h2>
-        </div>
-
-        <div class="flow-shell" style="margin-bottom:22px;">
-          <div id="closed-loop-svg-host"></div>
-          <p id="closed-loop-stage-note" style="font-size:13.5px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--line);"></p>
         </div>
 
         <div class="dual-loops">
@@ -178,7 +201,7 @@
 
     <!-- 03 / Clean 14-Repository Directory Table -->
     <section class="section wrap" id="directory">
-      <div class="section-heading">
+      <div class="section-heading" style="margin-bottom:22px;">
         <p class="eyebrow">03 / All 14 Repositories</p>
         <h2>One line per repo.</h2>
       </div>
@@ -202,7 +225,7 @@
     <!-- 04 / Quickstart & Citation -->
     <section class="section alt-section" id="quickstart">
       <div class="wrap">
-        <div class="section-heading">
+        <div class="section-heading" style="margin-bottom:20px;">
           <p class="eyebrow">04 / Quickstart</p>
           <h2>Pull and inspect all 14 repos.</h2>
         </div>

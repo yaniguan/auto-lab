@@ -829,3 +829,109 @@ details.deep-drawer summary:hover { color: var(--accent); }
   .flow-arrow { display: none; }
   .bento-6, .mini-spec-grid, .dual-loops { grid-template-columns: 1fr; }
 }
+
+/* Clean Orthogonal SVG Architecture Cinema (Zero Crossing Lines) */
+.arch-cinema-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px 22px 18px;
+  box-shadow: var(--shadow);
+}
+.cinema-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.cinema-caption {
+  font-size: 14px;
+  color: var(--muted);
+}
+.cinema-caption strong {
+  color: var(--accent);
+  font-weight: 720;
+  margin-right: 6px;
+}
+.arch-svg-stage {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+}
+.arch-svg-stage svg {
+  width: 100%;
+  min-width: 860px;
+  height: auto;
+  display: block;
+}
+@keyframes dash-flow {
+  to { stroke-dashoffset: -24; }
+}
+.flow-pulse-line {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1.1s linear infinite;
+}
+.chapter-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+.chapter-btn {
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 11px;
+  text-align: left;
+  font-size: 12.2px;
+  font-weight: 620;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.chapter-btn small {
+  display: block;
+  font-size: 10.2px;
+  font-weight: 720;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--subtle);
+  margin-bottom: 2px;
+}
+.chapter-btn:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.chapter-btn.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.chapter-btn.active small { color: var(--accent); }
+
+/* Horizontal Selected-Organ Bar under the Diagram */
+.organ-bar {
+  margin-top: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) auto;
+  gap: 22px;
+  align-items: center;
+}
+@media (max-width: 980px) {
+  .chapter-strip { grid-template-columns: repeat(3, 1fr); }
+  .organ-bar { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .chapter-strip { grid-template-columns: repeat(2, 1fr); }
+}
