@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f8fafc">
-  <title>Auto-Lab — 7-Layer Embodied Brain, Safety Gate &amp; Post-Training</title>
+  <title>Auto-Lab — Embodied Brain, Safety Gate &amp; Post-Training</title>
   <meta name="description" content="Fourteen modular repositories giving a wet-lab robot a calibrated brain, a default-deny safety gate, ears, hands, edge feet, and verifiable RL post-training.">
   <link rel="canonical" href="https://yaniguan.github.io/auto-lab/">
   <meta property="og:type" content="website">
@@ -14,9 +14,10 @@
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=5">
-  <script defer src="shared.js?v=5"></script>
-  <script defer src="home.js?v=5"></script>
+  <link rel="stylesheet" href="styles.css?v=6">
+  <script defer src="shared.js?v=6"></script>
+  <script defer src="scheme_icons.js?v=6"></script>
+  <script defer src="home.js?v=6"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -44,10 +45,10 @@
         <span class="hero-title">Give a Lab Robot a Calibrated Brain, a Safety Gate, Hands, Ears, and Feet</span>
       </h1>
       <p class="hero-deck">
-        Fourteen small, checkable repositories organized from high-level scientific reasoning (<code>L6</code>) down to edge quantized boards (<code>L0</code>) and verifiable RL post-training (<code>L3</code>).
+        Fourteen small, checkable repositories—linked from high-level scientific reasoning (<code>L6</code>) down to edge quantized boards (<code>L0</code>) and verifiable RL post-training (<code>L3</code>).
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="#brain-stack">Explore Architecture ↓</a>
+        <a class="button primary" href="#brain-stack">Explore Agent &amp; Repo Map ↓</a>
         <a class="button secondary" href="studio/">Interactive Lab →</a>
         <a class="button secondary" href="repos/">14 Repo Cards →</a>
       </div>
@@ -88,50 +89,40 @@
       </div>
     </section>
 
-    <!-- 01 / Clean Orthogonal 7-Layer Brain & Flywheel Diagram -->
+    <!-- 01 / Synchronized Line-Art Agent Sketch + Scheme-Icon Repo Relationship Map -->
     <section class="section wrap" id="brain-stack">
-      <div class="section-heading" style="margin-bottom:22px;">
-        <p class="eyebrow">01 / Seven-Layer Brain &amp; Nervous System</p>
-        <h2>Click a chapter to trace a layer, or click any module to inspect it.</h2>
+      <div class="section-heading" style="margin-bottom:20px;">
+        <p class="eyebrow">01 / Anatomy &amp; Repository Connections</p>
+        <h2>One agent, fourteen parts—click or hover any icon to trace how they connect.</h2>
       </div>
 
-      <div class="arch-cinema-card">
-        <div class="cinema-topbar">
-          <p class="cinema-caption" id="cinema-caption-line">
-            <strong>Full Organism:</strong> Proposals descend through calibrated and default-deny gates (L6 → L0); verified outcomes replay up the L3 flywheel.
-          </p>
-          <button type="button" class="theme-btn" id="cinema-cycle-btn" style="margin:0;">▶ Auto-Tour</button>
+      <!-- Sketch Figure A: Two-Armed Lab Agent Line Drawing -->
+      <figure class="sketch-frame">
+        <div class="sketch-head">
+          <h3>Part I · Where Each Repo Lives on the Lab Agent</h3>
+          <span class="sketch-hint">Tap an organ or callout box to highlight its connected repos below</span>
         </div>
+        <div class="sketch-svg-wrap" id="robot-sketch-host" aria-label="Line-art drawing of a two-armed lab robot mapped to Auto-Lab repositories"></div>
+      </figure>
 
-        <div class="arch-svg-stage" id="brain-svg-host" aria-label="Orthogonal seven-layer Auto-Lab architecture diagram"></div>
-
-        <div class="chapter-strip" role="tablist" aria-label="Architecture layers">
-          <button type="button" class="chapter-btn active" data-chap="0">
-            <small>All Layers</small>Full L6–L0 Loop
-          </button>
-          <button type="button" class="chapter-btn" data-chap="1">
-            <small>L6 · Brain</small>Why &amp; Conformal
-          </button>
-          <button type="button" class="chapter-btn" data-chap="2">
-            <small>L5 · Executive</small>Buy/Make &amp; Shift
-          </button>
-          <button type="button" class="chapter-btn" data-chap="3">
-            <small>L4 · Safety Gate</small>Twin &amp; Verify
-          </button>
-          <button type="button" class="chapter-btn" data-chap="4">
-            <small>L2–L0 · Body</small>Ears, Hands, Feet
-          </button>
-          <button type="button" class="chapter-btn" data-chap="5">
-            <small>L3 · Flywheel</small>Twins, Pack &amp; RLVR
-          </button>
+      <!-- Sketch Figure B: 18-Repo Scheme-Icon Relationship & Dataflow Map -->
+      <figure class="sketch-frame">
+        <div class="sketch-head">
+          <h3>Part II · How the Repositories Feed and Train Each Other</h3>
+          <span class="sketch-hint">Teal = perception, gating &amp; execution · Amber = post-training flywheel ↺</span>
         </div>
-      </div>
+        <div class="sketch-svg-wrap" id="repo-network-host" aria-label="Scheme-icon relationship diagram connecting all Auto-Lab repositories"></div>
+        <div class="conn-bar" id="conn-trace-bar"></div>
+      </figure>
 
       <!-- Compact Selected-Module Bar -->
       <div class="organ-bar" id="organ-inspector">
         <div>
           <span class="small-label" id="insp-badge">L6 · BRAIN</span>
-          <h3 id="insp-name" style="font-size:21px;font-weight:760;margin:3px 0 5px;">lab-decide</h3>
+          <div style="display:flex;align-items:center;gap:9px;margin:4px 0 6px;">
+            <span id="insp-icon" style="color:var(--accent);display:inline-flex;"></span>
+            <h3 id="insp-name" style="font-size:21px;font-weight:760;margin:0;">lab-decide</h3>
+          </div>
           <p id="insp-hook" style="font-size:13.6px;color:var(--muted);line-height:1.5;">Loading…</p>
         </div>
         <div class="mini-spec-grid" id="insp-mini-specs"></div>
@@ -192,7 +183,7 @@
           <a class="portal-card" href="repos/">
             <span class="small-label purple">Subpage 02</span>
             <h3>14 Repo Cards</h3>
-            <p>Scannable 6-tile visual specs (Object, Data, Model, Training, History, Unique Property) for every repo.</p>
+            <p>Scannable 6-tile visual specs and upstream/downstream links for every repository.</p>
             <span class="portal-cta">Browse Cards →</span>
           </a>
         </div>

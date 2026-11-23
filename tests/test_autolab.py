@@ -90,6 +90,7 @@ def test_site_files_present() -> None:
         "index.html",
         "styles.css",
         "shared.js",
+        "scheme_icons.js",
         "home.js",
         ".nojekyll",
         "studio/index.html",

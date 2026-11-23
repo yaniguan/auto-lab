@@ -935,3 +935,166 @@ details.deep-drawer summary:hover { color: var(--accent); }
 @media (max-width: 600px) {
   .chapter-strip { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Monoline Scientific Sketch & Scheme-Icon Relationship Figures
+ * Inspired by yaniguan.github.io: quiet neutral ink + lit active paths
+ */
+:root {
+  --sketch-ink: #334155;
+  --sketch-line: #94a3b8;
+  --sketch-faint: #cbd5e1;
+  --sketch-fill: #ffffff;
+  --sketch-soft: #f8fafc;
+}
+html[data-theme="dark"] {
+  --sketch-ink: #e2e8f0;
+  --sketch-line: #64748b;
+  --sketch-faint: #29384b;
+  --sketch-fill: #111b27;
+  --sketch-soft: #0d1520;
+}
+
+.sketch-frame {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.sketch-frame + .sketch-frame {
+  margin-top: 20px;
+}
+.sketch-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.sketch-head h3 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.sketch-hint {
+  font-size: 12.2px;
+  color: var(--muted);
+}
+.sketch-svg-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+.sketch-svg-wrap svg {
+  width: 100%;
+  min-width: 860px;
+  height: auto;
+  display: block;
+}
+
+/* SVG Sketch Primitives */
+.sk-box {
+  fill: var(--sketch-fill);
+  stroke: var(--sketch-line);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.16s, stroke-width 0.16s, fill 0.16s;
+}
+.sk-soft {
+  fill: var(--sketch-soft);
+  stroke: var(--sketch-faint);
+  stroke-width: 1.15;
+}
+.sk-line {
+  fill: none;
+  stroke: var(--sketch-line);
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.16s, opacity 0.16s;
+}
+.sk-leader {
+  fill: none;
+  stroke: var(--sketch-faint);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.16s, stroke-width 0.16s;
+}
+.sk-edge-quiet {
+  fill: none;
+  stroke: var(--sketch-faint);
+  stroke-width: 1.15;
+  opacity: 0.42;
+}
+.sk-edge-active {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-dasharray: 6 5;
+  animation: dash-flow 1s linear infinite;
+}
+.sk-edge-flywheel {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-dasharray: 6 5;
+  animation: dash-flow 1s linear infinite;
+}
+.sk-active-stroke {
+  stroke: var(--accent) !important;
+  stroke-width: 1.9 !important;
+}
+.sk-active-fill {
+  fill: var(--accent-soft) !important;
+  stroke: var(--accent) !important;
+  stroke-width: 1.9 !important;
+}
+.sk-neighbor-fill {
+  fill: var(--surface) !important;
+  stroke: var(--sketch-ink) !important;
+  stroke-width: 1.55 !important;
+}
+
+/* Connection Trace Bar */
+.conn-bar {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.conn-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface2);
+  font-size: 12px;
+  font-weight: 620;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.14s;
+}
+.conn-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.conn-chip.current {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 720;
+}
+.conn-chip small {
+  color: var(--muted);
+  font-weight: 520;
+}

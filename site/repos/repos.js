@@ -3,6 +3,7 @@
   'use strict';
 
   const { esc, fmtMd, initThemeToggle, loadData } = window.AutoLabShared;
+  const { iconMarkup, neighborsOf } = window.AutoLabIcons;
   const LAYER_ORDER = ['L6', 'L5', 'L4', 'L3', 'L2', 'L1', 'L0'];
 
   let DATA = null;
@@ -50,7 +51,8 @@
         <div class="sidebar-group">
           <div class="sidebar-group-label">${esc(code)} · ${esc(layer ? layer.name.split(',')[0] : '')}</div>
           ${items.map(r => `
-            <button type="button" class="sidebar-item ${activeRepo === r.repo ? 'active' : ''}" data-repo="${esc(r.repo)}">
+            <button type="button" class="sidebar-item ${activeRepo === r.repo ? 'active' : ''}" data-repo="${esc(r.repo)}" style="justify-content:flex-start;gap:8px;">
+              ${iconMarkup(r.repo, 16)}
               <span>${esc(r.repo)}</span>
             </button>`).join('')}
         </div>`;
@@ -89,12 +91,31 @@
         </div>`
       : '';
 
+    const { upstream, downstream } = neighborsOf(r.repo);
+    const coreSet = new Set((DATA.repos || []).map(x => x.repo));
+    const renderConnPill = item => coreSet.has(item.repo)
+      ? `<button type="button" class="conn-chip" data-nav-repo="${esc(item.repo)}">${iconMarkup(item.repo, 14)} <span>${esc(item.repo)}</span> <small>(${esc(item.label)})</small></button>`
+      : `<a class="conn-chip" href="https://github.com/yaniguan/${encodeURIComponent(item.repo)}" target="_blank" rel="noopener">${iconMarkup(item.repo, 14)} <span>${esc(item.repo)} ★</span> <small>(${esc(item.label)})</small></a>`;
+
+    const connHtml = `
+      <div class="conn-bar" style="margin:14px 0 18px;padding:12px 14px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;">
+        <strong style="font-size:10.5px;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);">Repo Links:</strong>
+        ${upstream.length ? upstream.map(renderConnPill).join('') : '<span style="color:var(--muted);">Raw input</span>'}
+        <span class="step-sep">→</span>
+        <span class="conn-chip current">${iconMarkup(r.repo, 14)} ${esc(r.repo)}</span>
+        <span class="step-sep">→</span>
+        ${downstream.length ? downstream.map(renderConnPill).join('') : '<span style="color:var(--muted);">Bench / output</span>'}
+      </div>`;
+
     host.innerHTML = `
       <div class="dossier-header" style="margin-bottom:16px;padding-bottom:16px;">
         <div>
           <span class="small-label ${colClass}">${esc(r.layer)} · ${esc(r.layer_name)} · <code>${esc(r.commit_head)}</code></span>
-          <h2>${esc(r.repo)}</h2>
-          <p style="color:var(--muted);font-size:15.5px;margin-top:4px;">${esc(c.hook || r.tagline)}</p>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+            <span style="color:var(--accent);display:inline-flex;">${iconMarkup(r.repo, 28)}</span>
+            <h2 style="margin:0;">${esc(r.repo)}</h2>
+          </div>
+          <p style="color:var(--muted);font-size:15.5px;margin-top:6px;">${esc(c.hook || r.tagline)}</p>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <a class="button primary" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub ↗</a>
@@ -109,6 +130,8 @@
         <span class="flow-arrow">→</span>
         <div class="flow-node"><small>Output</small>${esc(fl[2])}</div>
       </div>
+
+      ${connHtml}
 
       ${kpiHtml}
 
