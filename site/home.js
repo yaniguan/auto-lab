@@ -2,7 +2,7 @@
 (() => {
   'use strict';
 
-  const { esc, initThemeToggle, loadData, renderClosedLoopSVG } = window.AutoLabShared;
+  const { esc, fmtMd, initThemeToggle, loadData, renderClosedLoopSVG } = window.AutoLabShared;
 
   let DATA = null;
   let selectedOrgan = 'lab-decide';
@@ -106,13 +106,13 @@
     if (core) {
       badge.textContent = `LAYER ${core.layer} · ${core.layer_name.toUpperCase()}`;
       name.textContent = core.repo;
-      summary.textContent = core.tagline;
+      summary.innerHTML = fmtMd(core.tagline);
       const io = core.io_contract || {};
       contract.innerHTML = `
-        <div><strong>Inputs:</strong> <span>${esc(io.inputs || '-')}</span></div>
-        <div><strong>Outputs:</strong> <span>${esc(io.outputs || '-')}</span></div>
+        <div><strong>Inputs:</strong> <span>${fmtMd(io.inputs || '-')}</span></div>
+        <div><strong>Outputs:</strong> <span>${fmtMd(io.outputs || '-')}</span></div>
         <div><strong>Audit:</strong> <span>${esc(core.issue_count || 22)} tracked GitHub Issues (HEAD <code>${esc(core.commit_head)}</code>)</span></div>`;
-      props.innerHTML = (core.unique_properties || []).slice(0, 3).map(p => `<li>${esc(p)}</li>`).join('');
+      props.innerHTML = (core.unique_properties || []).slice(0, 3).map(p => `<li>${fmtMd(p)}</li>`).join('');
       dosLink.style.display = '';
       dosLink.href = `repos/#${encodeURIComponent(core.repo)}`;
       ghLink.href = core.url;

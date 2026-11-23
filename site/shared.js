@@ -19,6 +19,12 @@
       .replace(/"/g, '&quot;');
   }
 
+  function fmtMd(s) {
+    return esc(s)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  }
+
   function getPalette() {
     const dark = document.documentElement.dataset.theme === 'dark';
     return dark
@@ -274,6 +280,7 @@
 
   window.AutoLabShared = {
     esc,
+    fmtMd,
     getPalette,
     initThemeToggle,
     loadData,

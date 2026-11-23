@@ -2,7 +2,7 @@
 (() => {
   'use strict';
 
-  const { esc, initThemeToggle, loadData } = window.AutoLabShared;
+  const { esc, fmtMd, initThemeToggle, loadData } = window.AutoLabShared;
   const PAGE_SIZE = 20;
 
   let ALL_ISSUES = [];
@@ -48,7 +48,7 @@
           <td><code>${esc(it.category)}</code></td>
           <td>
             <div style="font-weight:620;margin-bottom:3px;">
-              <a href="${esc(url)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+              <a href="${esc(url)}" target="_blank" rel="noopener">${fmtMd(it.title)}</a>
             </div>
             <div style="font-size:11.8px;color:var(--muted);">${files}</div>
           </td>

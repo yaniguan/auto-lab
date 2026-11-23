@@ -290,9 +290,12 @@ html[data-theme="dark"] .button.primary { color: #05201c; }
 /* Clean 2-Column 7-Layer Brain Architecture Explorer (Overview Section 01) */
 .brain-explorer {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 24px;
   align-items: start;
+}
+.brain-explorer > *, .grid-2 > *, .catalog-layout > * {
+  min-width: 0;
 }
 .stack-panel {
   background: var(--surface);
@@ -351,14 +354,15 @@ html[data-theme="dark"] .button.primary { color: #05201c; }
   color: var(--text);
   transition: all 0.14s;
 }
+.repo-pill.companion { border-style: dashed; color: var(--muted); }
 .repo-pill:hover { border-color: var(--accent); color: var(--accent); }
 .repo-pill.selected {
   background: var(--accent);
   border-color: var(--accent);
+  border-style: solid;
   color: #ffffff;
 }
 html[data-theme="dark"] .repo-pill.selected { color: #05201c; }
-.repo-pill.companion { border-style: dashed; color: var(--muted); }
 
 /* Right-Side Sticky Inspector Card */
 .inspector-card {
@@ -516,7 +520,7 @@ html[data-theme="dark"] .tab-btn.active { color: #05201c; }
   background: var(--surface); color: var(--accent);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.10);
 }
-.grid-2 { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; align-items: start; }
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 22px; align-items: start; }
 .sub-panel {
   background: var(--surface2); border: 1px solid var(--line); border-radius: 11px; padding: 18px 20px;
 }

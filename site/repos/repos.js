@@ -2,7 +2,7 @@
 (() => {
   'use strict';
 
-  const { esc, initThemeToggle, loadData } = window.AutoLabShared;
+  const { esc, fmtMd, initThemeToggle, loadData } = window.AutoLabShared;
   const LAYER_ORDER = ['L6', 'L5', 'L4', 'L3', 'L2', 'L1', 'L0'];
 
   let DATA = null;
@@ -106,41 +106,41 @@
       <div class="dossier-sections">
         <section class="dossier-block">
           <h3>1. Object</h3>
-          <p>${esc(r.object)}</p>
+          <p>${fmtMd(r.object)}</p>
         </section>
 
         <section class="dossier-block">
           <h3>2. Data</h3>
-          <p>${esc(r.data)}</p>
+          <p>${fmtMd(r.data)}</p>
         </section>
 
         <section class="dossier-block">
           <h3>3. Model</h3>
-          <p>${esc(r.model)}</p>
+          <p>${fmtMd(r.model)}</p>
         </section>
 
         <section class="dossier-block">
           <h3>4. Training</h3>
-          <p>${esc(r.training)}</p>
+          <p>${fmtMd(r.training)}</p>
         </section>
 
         <section class="dossier-block">
           <h3>5. History</h3>
-          <p>${esc(r.history)}</p>
+          <p>${fmtMd(r.history)}</p>
         </section>
 
         <section class="dossier-block">
           <h3>6. Unique Properties</h3>
           <ul>
-            ${(r.unique_properties || []).map(p => `<li>${esc(p)}</li>`).join('')}
+            ${(r.unique_properties || []).map(p => `<li>${fmtMd(p)}</li>`).join('')}
           </ul>
         </section>
 
         <section class="dossier-block">
           <h3>Input &amp; Output Contract</h3>
           <div class="inspector-box">
-            <div><strong>Inputs:</strong> <span>${esc(io.inputs || '-')}</span></div>
-            <div><strong>Outputs:</strong> <span>${esc(io.outputs || '-')}</span></div>
+            <div><strong>Inputs:</strong> <span>${fmtMd(io.inputs || '-')}</span></div>
+            <div><strong>Outputs:</strong> <span>${fmtMd(io.outputs || '-')}</span></div>
           </div>
         </section>
       </div>
@@ -161,8 +161,8 @@
   function renderMatrix() {
     const tbody = document.getElementById('matrix-tbody');
     if (!tbody || !DATA) return;
-    const clip = (s, n = 130) => {
-      const str = String(s || '');
+    const clip = (s, n = 135) => {
+      const str = String(s || '').replace(/`/g, '');
       return str.length <= n ? str : str.slice(0, n - 1) + '…';
     };
     tbody.innerHTML = orderedRepos().map(r => `
