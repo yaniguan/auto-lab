@@ -6,4 +6,5 @@ import AutoLabLean.L3_PostTrain
 import AutoLabLean.L2_L1_L0_Embodied
 import AutoLabLean.TrustRegime
 import AutoLabLean.NovelDirections
+import AutoLabLean.AgentMemory
 import AutoLabLean.Examples

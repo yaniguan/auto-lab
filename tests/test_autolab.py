@@ -91,15 +91,21 @@ def test_cli_commands_smoke(capsys) -> None:
     assert cli_main(["trust", "--json"]) == 0
     trust_json = json.loads(capsys.readouterr().out)
     assert trust_json["lean_audit"]["zero_sorry_verified"] is True
-    assert trust_json["lean_audit"]["theorem_count"] >= 35
+    assert trust_json["lean_audit"]["theorem_count"] >= 50
+
+    assert cli_main(["memory", "--json"]) == 0
+    mem_json = json.loads(capsys.readouterr().out)
+    assert mem_json["dream_consolidation"]["quarantined_unverified_or_rote"] >= 1
+    assert mem_json["rusty_skill_recovery"]["lean_verdict"]["allowed"] is True
+    assert mem_json["novel_assay_onboarding"]["lean_verdict"]["allowed"] is True
 
 
 def test_lean_trust_regime_audit_and_parity() -> None:
     audit = audit_lean_sources()
     assert audit["zero_sorry_verified"] is True, f"Violations: {audit['violations']}"
-    assert audit["file_count"] == 11
-    assert audit["theorem_count"] >= 44
-    assert audit["guard_count"] >= 21
+    assert audit["file_count"] == 12
+    assert audit["theorem_count"] >= 50
+    assert audit["guard_count"] >= 27
 
     # Check empirical study results JSON
     study_path = REPO_ROOT / "benchmarks" / "results" / "trust_regime_results.json"
@@ -165,6 +171,19 @@ def test_lean_trust_regime_audit_and_parity() -> None:
         assert m_ok.allowed is True
         assert m_stale.allowed is False and m_stale.rule == "mcp_epoch_freshness"
 
+        ms_ok, ms_rusty_deny, mn_ok, mn_blind_deny = kernel.eval_lines(
+            [
+                "MEM_SKILL\t120\t30\t2\t2\t1\t1",
+                "MEM_SKILL\t120\t30\t2\t2\t0\t1",
+                "MEM_NOVEL\t0\t750\t600\t1\t1\t1",
+                "MEM_NOVEL\t0\t750\t600\t0\t1\t1",
+            ]
+        )
+        assert ms_ok.allowed is True
+        assert ms_rusty_deny.allowed is False and ms_rusty_deny.rule == "rusty_skill_requires_bottom_trace"
+        assert mn_ok.allowed is True
+        assert mn_blind_deny.allowed is False and mn_blind_deny.rule == "novel_requires_bottom_reasoning_trace"
+
 
 def test_site_files_present() -> None:
     import re
@@ -182,6 +201,8 @@ def test_site_files_present() -> None:
         "trust/trust.js",
         "assets/trust-regime-data.json",
         "assets/novel-directions-data.json",
+        "assets/agent-memory-data.json",
+        "assets/autolab_preprint.pdf",
         "studio/index.html",
         "studio/studio.js",
         "repos/index.html",
@@ -206,6 +227,9 @@ def test_site_files_present() -> None:
         *(REPO_ROOT / "autolab").rglob("*.py"),
         *(REPO_ROOT / "benchmarks").rglob("*.py"),
         *(REPO_ROOT / "docs").rglob("*.md"),
+        *(REPO_ROOT / "paper").rglob("*.tex"),
+        *(REPO_ROOT / "paper").rglob("*.sty"),
+        *(REPO_ROOT / "paper").rglob("*.py"),
         *[p for p in (REPO_ROOT / "lean").rglob("*") if ".lake" not in p.parts],
     ]
     for p in scan_paths:

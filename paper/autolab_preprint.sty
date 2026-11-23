@@ -1,0 +1,164 @@
+% autolab_preprint.sty — Modern Anthropic / OpenAI-inspired arXiv Technical Report Style
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{autolab_preprint}[2026/11/23 Auto-Lab Modern Preprint Style]
+
+\RequirePackage[margin=0.95in, top=0.92in, bottom=0.98in, headheight=15pt]{geometry}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{multirow}
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{caption}
+\RequirePackage{subcaption}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{listings}
+\RequirePackage{hyperref}
+
+% Typography: crisp Palatino-family body + Helvetica/sans headings
+\RequirePackage{mathpazo}
+\linespread{1.09}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.5pt}
+
+% Editorial Color Palette (Anthropic / OpenAI clean slate + scientific teal)
+\definecolor{ink}{HTML}{0F172A}
+\definecolor{slate}{HTML}{334155}
+\definecolor{muted}{HTML}{64748B}
+\definecolor{linegray}{HTML}{CBD5E1}
+\definecolor{softbg}{HTML}{F8FAFC}
+\definecolor{cardbg}{HTML}{F1F5F9}
+\definecolor{tealaccent}{HTML}{0D9488}
+\definecolor{tealdeep}{HTML}{115E59}
+\definecolor{indigoaccent}{HTML}{4F46E5}
+\definecolor{amberaccent}{HTML}{D97706}
+\definecolor{roseaccent}{HTML}{E11D48}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=tealdeep,
+  citecolor=indigoaccent,
+  urlcolor=tealaccent,
+  pdfauthor={Yani Guan},
+  pdftitle={Auto-Lab: A Formally Verified Trust Regime and Four-Layer Undergraduate Memory Architecture for Autonomous Wet Laboratories}
+}
+
+% Running headers (pages >= 2)
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{linegray}\leaders\hrule height \headrulewidth\hfill}}
+\fancyhead[L]{\footnotesize\sffamily\textcolor{muted}{\textbf{Auto-Lab} $\cdot$ Unified Lean 4 Trust Regime, Community Synthesis \& Undergraduate Agent Memory}}
+\fancyhead[R]{\footnotesize\sffamily\textcolor{muted}{\thepage}}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[C]{\footnotesize\sffamily\textcolor{muted}{\thepage}}%
+}
+
+% Clean sans-serif section headings with teal numbers
+\titleformat{\section}
+  {\large\sffamily\bfseries\color{ink}}
+  {\textcolor{tealaccent}{\thesection}}
+  {0.65em}
+  {}
+  [\vspace{-4pt}{\color{linegray}\titlerule[0.5pt]}]
+
+\titleformat{\subsection}
+  {\normalsize\sffamily\bfseries\color{ink}}
+  {\textcolor{tealaccent}{\thesubsection}}
+  {0.55em}
+  {}
+
+\titleformat{\subsubsection}
+  {\normalsize\sffamily\bfseries\color{slate}}
+  {\thesubsubsection}
+  {0.5em}
+  {}
+
+\titlespacing*{\section}{0pt}{13pt}{5pt}
+\titlespacing*{\subsection}{0pt}{9pt}{3pt}
+\titlespacing*{\subsubsection}{0pt}{6pt}{2pt}
+
+% Captions
+\captionsetup{
+  font={small},
+  labelfont={bf,sf,color=ink},
+  textfont={color=slate},
+  skip=6pt
+}
+
+% Theorem / Formal Guarantee Callout Box
+\newtcolorbox{leantheorem}[2]{
+  enhanced,
+  breakable,
+  colback=softbg,
+  colframe=linegray,
+  borderline west={2.6pt}{0pt}{indigoaccent},
+  arc=3pt,
+  boxrule=0.5pt,
+  left=9pt, right=9pt, top=6pt, bottom=6pt,
+  fonttitle=\small\sffamily\bfseries,
+  coltitle=ink,
+  colbacktitle=cardbg,
+  attach boxed title to top left={yshift=-1pt, xshift=0pt},
+  boxed title style={boxrule=0pt, colframe=cardbg, arc=2pt, left=6pt, right=6pt, top=2.5pt, bottom=2.5pt},
+  title={#1 \hfill \texttt{\footnotesize\textcolor{indigoaccent}{#2}}}
+}
+
+% Key Design Principle Callout
+\newtcolorbox{insightbox}[1]{
+  enhanced,
+  colback=softbg,
+  colframe=linegray,
+  borderline west={2.6pt}{0pt}{tealaccent},
+  arc=3pt,
+  boxrule=0.5pt,
+  left=9pt, right=9pt, top=6pt, bottom=6pt,
+  title={\small\sffamily\bfseries\textcolor{tealdeep}{#1}},
+  colbacktitle=softbg,
+  boxed title style={boxrule=0pt, colframe=softbg},
+  attach title to upper={\par\vspace{2pt}}
+}
+
+% Lean 4 Code Listing Style
+\lstdefinelanguage{Lean4}{
+  keywords={structure,inductive,def,theorem,by,where,match,with,if,then,else,let,in,return,import,namespace,end,cases,rcases,simp,omega,exact,unfold,have,intro,decide},
+  keywordstyle=\bfseries\color{indigoaccent},
+  sensitive=true,
+  comment=[l]{--},
+  morecomment=[s]{/-}{-/},
+  commentstyle=\itshape\color{muted},
+  stringstyle=\color{tealdeep},
+  morestring=[b]"
+}
+
+\lstset{
+  language=Lean4,
+  basicstyle=\footnotesize\ttfamily\color{ink},
+  backgroundcolor=\color{softbg},
+  frame=single,
+  rulecolor=\color{linegray},
+  framesep=5pt,
+  xleftmargin=4pt,
+  xrightmargin=4pt,
+  keepspaces=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  breaklines=true
+}
+
+% Page-1 Banner Command
+\newcommand{\makeautolabtitle}[5]{%
+  \thispagestyle{plain}%
+  \vspace*{-14pt}%
+  \noindent{\color{tealaccent}\rule{\textwidth}{2.2pt}}\par\vspace{3pt}%
+  \noindent{\scriptsize\sffamily\bfseries\textcolor{tealdeep}{TECHNICAL PREPRINT $\cdot$ AUTONOMOUS WET LABORATORIES \& FORMAL VERIFICATION}\hfill\textcolor{muted}{NOVEMBER 2026 $\cdot$ AUTOLABLEAN v4.36.0}}\par\vspace{6pt}%
+  {\LARGE\sffamily\bfseries\color{ink}\raggedright #1 \par}\vspace{4pt}%
+  {\small\sffamily\color{slate}\raggedright #2 \par}\vspace{6pt}%
+  \noindent{\small\sffamily\textbf{\textcolor{ink}{#3}} \;\;$\cdot$\;\; \textcolor{muted}{#4}}\par\vspace{2pt}%
+  \noindent{\footnotesize\sffamily #5}\par\vspace{5pt}%
+}

@@ -113,7 +113,9 @@ auto-lab/
 ├── autolab/                      # Zero-dependency hub package & `autolab` CLI
 │   ├── catalog.py                # Typed 7-layer registry & JSON catalog loaders
 │   ├── loop_demo.py              # Deterministic L2 -> L6 -> L5 -> L4 -> L1 -> L0 -> L3 trace simulator
-│   └── cli.py                    # `autolab layers | list | inspect | loop | status`
+│   ├── trust_regime.py           # Runtime bridge to compiled `autolab-lean --batch-tsv`
+│   ├── memory.py                 # 4-Layer 'Undergrad' Agent Memory + Bottom Reasoning Traces + Dreaming
+│   └── cli.py                    # `autolab layers | list | inspect | loop | status | trust | memory`
 ├── catalog/
 │   ├── repos.json                # Verified Object, Data, Model, Training, History, Properties for all 14 repos
 │   ├── issues_index.json         # Structured index of all 300+ deep audit issues & live URLs
@@ -124,15 +126,23 @@ auto-lab/
 │   ├── REPO_MATRIX.md            # Side-by-side 14-repository dossier matrix
 │   ├── TRUST_REGIME_STUDY.md     # Formal Lean 4 Trust Regime & 5-task empirical study
 │   ├── NOVEL_DIRECTIONS_FROM_COMMUNITY.md # 4 next-gen directions synthesized from 2025-2026 discourse
+│   ├── AGENT_MEMORY_ARCHITECTURE.md # 4-Layer Undergrad Memory, Bottom Reasoning Traces & Dreaming
 │   └── ISSUES_AUDIT_INDEX.md     # Master index of all filed GitHub Issues across the 14 repos
-├── lean/                         # AutoLabLean: Lean 4.36.0 Trust Regime (44 theorems, 0 sorry)
-│   ├── AutoLabLean/              # L6 -> L0 specs, bounded autonomy & novel frontier theorems
+├── lean/                         # AutoLabLean Hub Kernel: Lean 4.36.0 (50 theorems, 0 sorry; synced to 14 sub-repos)
+│   ├── AutoLabLean/              # L6 -> L0 specs, bounded autonomy, frontiers & agent memory theorems
 │   ├── Main.lean                 # Native `autolab-lean` showcase & `--batch-tsv` runtime verifier
 │   └── lakefile.toml             # Zero-dependency Lake build configuration
+├── paper/                        # Standalone arXiv Technical Preprint (LaTeX + Type-42 vector figures + compiled PDF)
+│   ├── main.tex                  # Manuscript source
+│   ├── autolab_preprint.sty      # Modern editorial preprint layout & Page-1 banner
+│   ├── generate_figures.py       # Reproducible matplotlib vector PDF generator
+│   └── main.pdf                  # Compiled 9-page preprint PDF
 ├── benchmarks/
 │   ├── trust_regime_study.py     # Reproducible 5-task empirical study via compiled `autolab-lean`
 │   ├── novel_directions_study.py # Empirical evaluation of the 4 next-gen frontier directions
-│   └── results/                  # Measured JSON metrics (`trust_regime_results.json`, `novel_directions_results.json`)
+│   ├── agent_memory_study.py     # Rusty-SOP, novel-assay transfer & 60-session Dreaming memory study
+│   ├── twenty_community_ideas_study.py # Unified harness running all 20 sub-repo `community_extensions/`
+│   └── results/                  # Measured JSON metrics
 ├── scripts/
 │   ├── sync_all.py               # Clone, fetch, or check git cleanliness across all 14 repos
 │   └── build_site_data.py        # Compiles catalog/ and audit data into docs/ and site/assets/
@@ -148,9 +158,9 @@ auto-lab/
     └── test_autolab.py           # Pytest suite verifying Lean proofs, parity, CLI, and site assets
 ```
 
-## Formal Trust Regime in Lean 4 (`AutoLabLean`)
+## Formal Trust Regime (`AutoLabLean`), Undergraduate Memory & Preprint
 
-Every hard physical, statistical, stoichiometric, temporal, security, privacy, and licensing guardrail across the 14 repositories—plus four next-generation frontier mechanisms—is formalized in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **44 machine-checked theorems**, **21 `#guard` witnesses**, **0 `sorry`**) and evaluated empirically in [`docs/TRUST_REGIME_STUDY.md`](docs/TRUST_REGIME_STUDY.md) and [`docs/NOVEL_DIRECTIONS_FROM_COMMUNITY.md`](docs/NOVEL_DIRECTIONS_FROM_COMMUNITY.md):
+Every hard physical, statistical, stoichiometric, temporal, security, privacy, licensing, and memory-hygiene guardrail across the 14 repositories is formalized centrally in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **50 machine-checked theorems**, **27 `#guard` witnesses**, **0 `sorry`**), mirrored as standalone Lake packages (`<repo>/lean/`) across all 14 sub-repositories (**140 sub-repo theorems**), and documented in our standalone LaTeX preprint ([`paper/main.pdf`](paper/main.pdf) · [`paper/main.tex`](paper/main.tex)):
 
 - **Bounded Molecular Discovery (`1,128` real Delaney ESOL compounds)**: Boundary violations drop from `72.0%` to **`0.0%`**, selected-run MAE drops **2.49x** (`0.978 -> 0.393` log mol/L), empirical 90% coverage reaches **`97.6%`**, and verified soluble hit yield climbs from `28.0%` to **`100.0%`**.
 - **Wet-Lab Protocol Synthesis & Counterexample Repair (`200 x 8` candidates @ `30,048` proto/s)**: Catastrophic hardware faults drop from `78.0%` to **`0.0%`**, while valid task completion rises from `22.0%` (ungated) / `23.5%` (coarse heuristic) to **`87.0%`** (Lean Best-of-8) and **`97.5%`** (with Lean counterexample-guided 1-step repair).

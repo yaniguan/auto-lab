@@ -1,0 +1,995 @@
+{
+  "generated_at_utc": "2026-11-23T20:08:09Z",
+  "count": 20,
+  "mean_baseline_pct": 18.6,
+  "mean_autolab_pct": 94.8,
+  "mean_lift_pp": 76.2,
+  "runtime_sec": 22.65,
+  "ideas": [
+    {
+      "id": 1,
+      "layer": "L6",
+      "repo": "lab-ask-why",
+      "module": "crux_tournament",
+      "short_name": "Elo+EVSI Crux Debate",
+      "community": "Google AI Co-Scientist & FutureHouse Robin",
+      "baseline_score_pct": 0.0,
+      "autolab_score_pct": 95.0,
+      "lift_pp": 95.0,
+      "metric_label": "deadlock resolution",
+      "raw_metrics": {
+        "idea_id": "idea_01_crux_tournament",
+        "n_scenarios": 40,
+        "naive_top_bm25": {
+          "deadlock_resolution_rate": 0.0,
+          "wasted_redundant_experiments": 40,
+          "mean_evsi_usd": 10.26
+        },
+        "elo_evsi_crux": {
+          "deadlock_resolution_rate": 0.95,
+          "wasted_redundant_experiments": 0,
+          "mean_evsi_usd": 386.92
+        }
+      }
+    },
+    {
+      "id": 2,
+      "layer": "L6",
+      "repo": "lab-ask-why",
+      "module": "precursor_ghost_guard",
+      "short_name": "XRD Precursor Ghost Guard",
+      "community": "A-Lab XRD Critique & alab_gpss_public",
+      "baseline_score_pct": 33.3,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 66.7,
+      "metric_label": "phase specificity (1-FDR)",
+      "raw_metrics": {
+        "idea_id": "idea_02_precursor_ghost_guard",
+        "n_spectra": 60,
+        "naive_peak_match": {
+          "true_positives": 15,
+          "false_positives": 30,
+          "false_discovery_rate": 0.6667,
+          "true_phase_recall": 1.0
+        },
+        "ghost_deconvolver_guard": {
+          "true_positives": 15,
+          "false_positives": 0,
+          "false_discovery_rate": 0.0,
+          "true_phase_recall": 1.0,
+          "ambiguous_quarantined": 30
+        }
+      }
+    },
+    {
+      "id": 3,
+      "layer": "L6",
+      "repo": "lab-decide",
+      "module": "mondrian_drift_conformal",
+      "short_name": "Mondrian Drift ACI",
+      "community": "Gibbs-Candes ACI & bo-mcp Drift",
+      "baseline_score_pct": 56.0,
+      "autolab_score_pct": 86.0,
+      "lift_pp": 30.0,
+      "metric_label": "worst-scaffold drift cov.",
+      "raw_metrics": {
+        "idea_id": "idea_03_mondrian_drift_conformal",
+        "n_steps": 300,
+        "target_coverage": 0.9,
+        "static_split_conformal": {
+          "empirical_coverage": 0.7467,
+          "abs_coverage_error": 0.1533,
+          "worst_scaffold_coverage": 0.56,
+          "mean_interval_width": 1.523,
+          "winkler_efficiency_score": 4.1081
+        },
+        "mondrian_aci": {
+          "empirical_coverage": 0.8667,
+          "abs_coverage_error": 0.0333,
+          "worst_scaffold_coverage": 0.86,
+          "mean_interval_width": 2.2786,
+          "winkler_efficiency_score": 2.9875
+        }
+      }
+    },
+    {
+      "id": 4,
+      "layer": "L6",
+      "repo": "lab-decide",
+      "module": "chem_rrt_frontier",
+      "short_name": "Stepped Chem-RRT Shell",
+      "community": "FutureHouse ether0 & OOD Guardrail Debate",
+      "baseline_score_pct": 0.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 100.0,
+      "metric_label": "safe scaffold unlock",
+      "raw_metrics": {
+        "idea_id": "idea_04_chem_rrt_frontier",
+        "n_novel_target_scaffolds": 12,
+        "static_wall": {
+          "novel_scaffolds_unlocked": 0,
+          "uncalibrated_ood_leaps": 0,
+          "calibration_probe_volume_ul": 0.0
+        },
+        "unbounded_leap": {
+          "novel_scaffolds_unlocked": 0,
+          "uncalibrated_ood_leaps": 12,
+          "reagent_wasted_on_ood_ul": 600.0
+        },
+        "chem_rrt_stepping": {
+          "novel_scaffolds_unlocked": 12,
+          "uncalibrated_ood_leaps": 0,
+          "stepping_stone_probes_used": 12,
+          "calibration_probe_volume_ul": 96.0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "layer": "L5",
+      "repo": "buy-or-make",
+      "module": "pareto_green_triage",
+      "short_name": "3D Cost-Lead-PMI Pareto",
+      "community": "AISLE & Green Pharma Retrosynthesis",
+      "baseline_score_pct": 0.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 100.0,
+      "metric_label": "green on-time route (-78% PMI)",
+      "raw_metrics": {
+        "idea_id": "idea_05_pareto_green_triage",
+        "n_candidates": 80,
+        "budget_usd_per_g": 60.0,
+        "max_lead_days": 10,
+        "scalar_cost_only": {
+          "mean_pmi_kg_per_kg": 88.5,
+          "on_time_delivery_rate": 0.0,
+          "within_budget_rate": 1.0
+        },
+        "pareto_green_router": {
+          "mean_pmi_kg_per_kg": 19.17,
+          "mean_pmi_waste_reduction_pct": 78.34,
+          "on_time_delivery_rate": 1.0,
+          "within_budget_rate": 1.0,
+          "null_price_leaks": 0,
+          "stoichiometry_leaks": 0
+        }
+      }
+    },
+    {
+      "id": 6,
+      "layer": "L5",
+      "repo": "buy-or-make",
+      "module": "plate_pack_procurement",
+      "short_name": "Shared-Synthon Cart Pack",
+      "community": "Enamine REAL & AutoDNA Library Synthesis",
+      "baseline_score_pct": 6.6,
+      "autolab_score_pct": 39.3,
+      "lift_pp": 32.7,
+      "metric_label": "6.0x analogues / $500 cart",
+      "raw_metrics": {
+        "idea_id": "idea_06_plate_pack_procurement",
+        "cart_budget_usd": 500.0,
+        "total_candidate_targets": 61,
+        "independent_per_target_buy": {
+          "target_analogues_unlocked": 4,
+          "target_analogues_per_100_usd": 0.8,
+          "total_spend_usd": 496.69,
+          "synthons_purchased": 7,
+          "synthon_reuse_factor": 1.1429
+        },
+        "shared_synthon_cart": {
+          "target_analogues_unlocked": 24,
+          "target_analogues_per_100_usd": 4.8,
+          "total_spend_usd": 480.82,
+          "synthons_purchased": 10,
+          "synthon_reuse_factor": 4.8,
+          "budget_respected": true
+        }
+      }
+    },
+    {
+      "id": 7,
+      "layer": "L5",
+      "repo": "labshift",
+      "module": "rolling_contingency_scheduler",
+      "short_name": "Mid-Run Fault Rescheduler",
+      "community": "La Agente Optima & Uni-Lab-OS",
+      "baseline_score_pct": 29.8,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 70.2,
+      "metric_label": "live plates saved (480/480)",
+      "raw_metrics": {
+        "benchmark": "idea_07_rolling_contingency_scheduler",
+        "num_scenarios": 40,
+        "total_plates": 480,
+        "naive_fifo_delay": {
+          "violated_plates": 337,
+          "saved_plates": 143,
+          "window_violation_rate": 0.7021,
+          "valid_schedule_rate": 0.0
+        },
+        "rolling_contingency_repair": {
+          "violated_plates": 0,
+          "saved_plates": 480,
+          "window_violation_rate": 0.0,
+          "valid_schedule_rate": 1.0,
+          "plates_saved_over_naive": 337,
+          "pre_incubation_holds_triggered": 249,
+          "rerouted_ops_total": 1101,
+          "mean_recovery_latency_ms": 3.898,
+          "p95_recovery_latency_ms": 9.166
+        }
+      }
+    },
+    {
+      "id": 8,
+      "layer": "L5",
+      "repo": "labshift",
+      "module": "night_shift_batcher",
+      "short_name": "24/7 Day-Night Queue Packer",
+      "community": "OpenLabAI & Osprey Overnight Autonomy",
+      "baseline_score_pct": 30.4,
+      "autolab_score_pct": 82.4,
+      "lift_pp": 52.0,
+      "metric_label": "72h fleet utilization (2.78x)",
+      "raw_metrics": {
+        "benchmark": "idea_08_night_shift_batcher",
+        "horizon_hours": 72,
+        "num_workcell_lanes": 3,
+        "total_submitted_protocols": 96,
+        "quarantined_unsafe_protocols": 6,
+        "fifo_human_gated": {
+          "completed_protocols_72h": 32,
+          "frontier_protocols_completed": 9,
+          "certified_protocols_completed": 23,
+          "daytime_machine_utilization_pct": 91.32,
+          "overnight_machine_utilization_pct": 0.0,
+          "overall_machine_utilization_pct": 30.44,
+          "schedule_valid": true
+        },
+        "dual_regime_night_packer": {
+          "completed_protocols_72h": 89,
+          "frontier_protocols_completed": 24,
+          "certified_protocols_completed": 65,
+          "daytime_machine_utilization_pct": 63.31,
+          "overnight_machine_utilization_pct": 91.9,
+          "overall_machine_utilization_pct": 82.37,
+          "schedule_valid": true,
+          "throughput_multiplier_vs_fifo": 2.781
+        }
+      }
+    },
+    {
+      "id": 9,
+      "layer": "L5",
+      "repo": "lab-automation-atlas",
+      "module": "mcp_capability_cards",
+      "short_name": "Typed Lean-MCP Schema Cards",
+      "community": "plr-mcp, LabMCP & Anthropic Hardware Std",
+      "baseline_score_pct": 5.9,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 94.1,
+      "metric_label": "unsafe MCP intercepted",
+      "raw_metrics": {
+        "benchmark": "idea_09_mcp_capability_cards",
+        "num_candidate_calls": 50,
+        "in_envelope_valid_calls": 16,
+        "out_of_envelope_unsafe_calls": 34,
+        "prompt_only_schema": {
+          "schema_completeness_score": 0.0,
+          "missing_safety_dimensions": 8,
+          "out_of_envelope_intercepted": 2,
+          "out_of_envelope_intercept_rate": 0.0588,
+          "unsafe_slips_to_hardware": 32,
+          "false_positive_blocks": 0
+        },
+        "typed_lean_mcp_card": {
+          "schema_completeness_score": 1.0,
+          "missing_safety_dimensions": 0,
+          "out_of_envelope_intercepted": 34,
+          "out_of_envelope_intercept_rate": 1.0,
+          "unsafe_slips_to_hardware": 0,
+          "false_positive_blocks": 0
+        }
+      }
+    },
+    {
+      "id": 10,
+      "layer": "L4",
+      "repo": "lab-rehearsal",
+      "module": "calm_twin_calibrator",
+      "short_name": "CALM-DT + Rusty-SOP Gate",
+      "community": "CALM-DT & Anthropic Agent Memory",
+      "baseline_score_pct": 0.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 100.0,
+      "metric_label": "rusty-SOP guard (-90% vol MAE)",
+      "raw_metrics": {
+        "benchmark": "idea_10_calm_twin_calibrator",
+        "num_runs": 50,
+        "rusty_sop_events": 29,
+        "static_nominal_twin": {
+          "volume_mae_ul": 20.493,
+          "volume_rmse_ul": 21.387,
+          "rusty_sop_faults_incurred": 29,
+          "rusty_sop_fault_prevention_rate": 0.0
+        },
+        "calm_adaptive_twin": {
+          "volume_mae_ul": 2.011,
+          "volume_rmse_ul": 4.724,
+          "mae_reduction_pct": 90.19,
+          "rusty_sop_interceptions": 29,
+          "rusty_sop_faults_incurred": 0,
+          "rusty_sop_fault_prevention_rate": 1.0
+        }
+      }
+    },
+    {
+      "id": 11,
+      "layer": "L4",
+      "repo": "lab-rehearsal",
+      "module": "certified_negative_ledger",
+      "short_name": "Proof-Carrying Negative Ledger",
+      "community": "Sakana AI Scientist-v2 Negative Results",
+      "baseline_score_pct": 58.3,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 41.7,
+      "metric_label": "ledger purity (0 poisoned)",
+      "raw_metrics": {
+        "benchmark": "idea_11_certified_negative_ledger",
+        "num_runs": 120,
+        "attribution_breakdown": {
+          "EXECUTION_ARTIFACT": 26,
+          "AMBIGUOUS_CHARACTERIZATION": 24,
+          "CERTIFIED_POSITIVE": 28,
+          "CERTIFIED_NEGATIVE": 42
+        },
+        "raw_append_ledger": {
+          "admitted_entries": 120,
+          "poisoned_entries": 50,
+          "memory_poisoning_rate": 0.4167,
+          "false_negative_entries": 33,
+          "false_negative_contamination_rate": 0.44
+        },
+        "certified_negative_ledger": {
+          "admitted_entries": 70,
+          "routed_to_execution_retry": 26,
+          "routed_to_orthogonal_assay": 24,
+          "poisoned_entries": 0,
+          "memory_poisoning_rate": 0.0,
+          "false_negative_entries": 0,
+          "false_negative_contamination_rate": 0.0,
+          "hash_chain_verified": true
+        }
+      }
+    },
+    {
+      "id": 12,
+      "layer": "L4",
+      "repo": "lab-verify",
+      "module": "lean_mcp_firewall",
+      "short_name": "Epoch-Bound Lean-MCP Firewall",
+      "community": "OpenLabAI & Lean4Agent",
+      "baseline_score_pct": 5.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 95.0,
+      "metric_label": "replay/tamper blocked (5.2 us)",
+      "raw_metrics": {
+        "benchmark": "idea_12_lean_mcp_firewall",
+        "num_requests": 200,
+        "valid_requests": 80,
+        "adversarial_requests": 120,
+        "stateless_bearer_gate": {
+          "adversarial_blocked": 6,
+          "replay_and_tamper_block_rate": 0.05
+        },
+        "lean_mcp_firewall": {
+          "adversarial_blocked": 120,
+          "replay_and_tamper_block_rate": 1.0,
+          "false_positive_blocks": 0,
+          "blocked_by_category": {
+            "stale_epoch_replay": 24,
+            "same_epoch_nonce_replay": 24,
+            "tampered_parameters": 24,
+            "unsigned_frontier_override": 24,
+            "forged_or_unverified_token": 24
+          },
+          "mean_verification_latency_us": 4.76,
+          "p95_verification_latency_us": 6.5
+        }
+      }
+    },
+    {
+      "id": 13,
+      "layer": "L4",
+      "repo": "lab-verify",
+      "module": "mutant_sql_synthesizer",
+      "short_name": "Counterexample DB Mutator",
+      "community": "BenchBench-Protocol (arXiv:2608.23898)",
+      "baseline_score_pct": 0.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 100.0,
+      "metric_label": "semantic SQL bugs caught",
+      "raw_metrics": {
+        "benchmark": "idea_13_mutant_sql_synthesizer",
+        "num_candidates": 24,
+        "gold_candidates": 6,
+        "buggy_candidates": 18,
+        "num_mutants_per_schema": 5,
+        "single_seed_db": {
+          "semantic_bugs_caught": 0,
+          "semantic_bug_catch_rate": 0.0,
+          "gold_accepted": 6,
+          "gold_acceptance_rate": 1.0
+        },
+        "mutant_db_gate": {
+          "semantic_bugs_caught": 18,
+          "semantic_bug_catch_rate": 1.0,
+          "gold_accepted": 6,
+          "gold_acceptance_rate": 1.0,
+          "catches_by_mutant": {
+            "mutant_1_duplicate_join_keys": 8,
+            "mutant_2_null_measurement_cells": 4,
+            "mutant_3_tie_breaking_rows": 3,
+            "mutant_4_empty_group_strata": 9,
+            "mutant_5_case_variants": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 14,
+      "layer": "L3",
+      "repo": "labbench-posttrain",
+      "module": "verifiable_trace_credit",
+      "short_name": "Twin-Delta Process Credit",
+      "community": "DeepSeek-R1 / DAPO Anti-<think>-Bloat",
+      "baseline_score_pct": 2.0,
+      "autolab_score_pct": 95.8,
+      "lift_pp": 93.8,
+      "metric_label": "verified RLVR repair (-67% tok)",
+      "raw_metrics": {
+        "idea": "Idea #14: Twin-Delta Step-Level Process Credit & Anti-<think>-Bloat Shaping",
+        "num_seeds": 5,
+        "num_steps": 120,
+        "max_think_tokens": 240,
+        "regimes": {
+          "additive_length_bonus": {
+            "verified_repair_accuracy_pct": 2.0,
+            "verified_repair_accuracy_std_pct": 0.32,
+            "mean_think_tokens": 391.48,
+            "std_think_tokens": 4.81,
+            "per_seed": [
+              {
+                "verified_repair_accuracy_pct": 2.5,
+                "ungated_solve_pct": 94.0,
+                "mean_think_tokens": 395.74
+              },
+              {
+                "verified_repair_accuracy_pct": 2.0,
+                "ungated_solve_pct": 94.5,
+                "mean_think_tokens": 386.34
+              },
+              {
+                "verified_repair_accuracy_pct": 1.5,
+                "ungated_solve_pct": 96.0,
+                "mean_think_tokens": 396.88
+              },
+              {
+                "verified_repair_accuracy_pct": 2.0,
+                "ungated_solve_pct": 96.5,
+                "mean_think_tokens": 393.2
+              },
+              {
+                "verified_repair_accuracy_pct": 2.0,
+                "ungated_solve_pct": 95.5,
+                "mean_think_tokens": 385.24
+              }
+            ]
+          },
+          "sparse_terminal_only": {
+            "verified_repair_accuracy_pct": 86.1,
+            "verified_repair_accuracy_std_pct": 2.62,
+            "mean_think_tokens": 163.34,
+            "std_think_tokens": 4.2,
+            "per_seed": [
+              {
+                "verified_repair_accuracy_pct": 89.0,
+                "ungated_solve_pct": 96.0,
+                "mean_think_tokens": 158.78
+              },
+              {
+                "verified_repair_accuracy_pct": 86.0,
+                "ungated_solve_pct": 93.0,
+                "mean_think_tokens": 164.98
+              },
+              {
+                "verified_repair_accuracy_pct": 82.5,
+                "ungated_solve_pct": 92.5,
+                "mean_think_tokens": 164.94
+              },
+              {
+                "verified_repair_accuracy_pct": 89.0,
+                "ungated_solve_pct": 97.5,
+                "mean_think_tokens": 158.46
+              },
+              {
+                "verified_repair_accuracy_pct": 84.0,
+                "ungated_solve_pct": 93.0,
+                "mean_think_tokens": 169.52
+              }
+            ]
+          },
+          "twin_delta_process_credit": {
+            "verified_repair_accuracy_pct": 95.8,
+            "verified_repair_accuracy_std_pct": 0.93,
+            "mean_think_tokens": 129.1,
+            "std_think_tokens": 3.49,
+            "per_seed": [
+              {
+                "verified_repair_accuracy_pct": 96.5,
+                "ungated_solve_pct": 98.5,
+                "mean_think_tokens": 126.74
+              },
+              {
+                "verified_repair_accuracy_pct": 97.0,
+                "ungated_solve_pct": 99.5,
+                "mean_think_tokens": 131.42
+              },
+              {
+                "verified_repair_accuracy_pct": 95.0,
+                "ungated_solve_pct": 97.5,
+                "mean_think_tokens": 126.96
+              },
+              {
+                "verified_repair_accuracy_pct": 96.0,
+                "ungated_solve_pct": 98.5,
+                "mean_think_tokens": 125.56
+              },
+              {
+                "verified_repair_accuracy_pct": 94.5,
+                "ungated_solve_pct": 99.5,
+                "mean_think_tokens": 134.84
+              }
+            ]
+          }
+        },
+        "accuracy_gain_vs_sparse_pct": 9.7,
+        "think_token_reduction_vs_additive_pct": 67.02
+      }
+    },
+    {
+      "id": 15,
+      "layer": "L3",
+      "repo": "twinstep",
+      "module": "saboteur_evolver",
+      "short_name": "LeanEvolve Protocol Saboteur",
+      "community": "Lean4Agent / LeanEvolve (arXiv:2606.06523)",
+      "baseline_score_pct": 4.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 96.0,
+      "metric_label": "saboteur mutations blocked",
+      "raw_metrics": {
+        "idea": "Idea #15: Evolutionary Protocol Saboteur (LeanEvolve Red-Teaming)",
+        "generations": 10,
+        "candidates_per_generation": 15,
+        "total_candidate_mutations": 150,
+        "evasion_rates_pct": {
+          "gen0_scalar_volume_gate": 96.0,
+          "gen1_bitmask_gate": 90.0,
+          "gen2_stateful_lean_gate": 0.0
+        },
+        "gen1_first_vs_last_evasion_pct": {
+          "gen_1": 53.33,
+          "gen_last": 100.0
+        },
+        "curated_hard_negative_count": 31,
+        "curated_hard_negatives": [
+          {
+            "protocol_name": "serial_dilution_thermocycle",
+            "generation": 1,
+            "mutation_ops": [
+              "swap_causal_barrier"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "causal_dag_satisfied",
+              "no_reverse_conc_tip_back_entry"
+            ]
+          },
+          {
+            "protocol_name": "mastermix_denature_read",
+            "generation": 1,
+            "mutation_ops": [
+              "reverse_conc_back_entry"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "bijective_step_permutation",
+              "pick_tip_requires_empty_mount"
+            ]
+          },
+          {
+            "protocol_name": "serial_dilution_thermocycle",
+            "generation": 1,
+            "mutation_ops": [
+              "swap_causal_barrier"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "causal_dag_satisfied"
+            ]
+          },
+          {
+            "protocol_name": "mastermix_denature_read",
+            "generation": 2,
+            "mutation_ops": [
+              "reverse_conc_back_entry",
+              "shave_dead_volume"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "bijective_step_permutation",
+              "pick_tip_requires_empty_mount",
+              "recoverable_dead_volume_reserve"
+            ]
+          },
+          {
+            "protocol_name": "serial_dilution_thermocycle",
+            "generation": 2,
+            "mutation_ops": [
+              "swap_causal_barrier",
+              "swap_causal_barrier"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "causal_dag_satisfied",
+              "no_reverse_conc_tip_back_entry"
+            ]
+          },
+          {
+            "protocol_name": "serial_dilution_thermocycle",
+            "generation": 2,
+            "mutation_ops": [
+              "swap_causal_barrier",
+              "drop_high_temp_seal"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "causal_dag_satisfied",
+              "no_reverse_conc_tip_back_entry",
+              "high_temp_seal_required"
+            ]
+          },
+          {
+            "protocol_name": "mastermix_denature_read",
+            "generation": 2,
+            "mutation_ops": [
+              "reverse_conc_back_entry",
+              "swap_causal_barrier"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "bijective_step_permutation",
+              "pick_tip_requires_empty_mount",
+              "mix_requires_mounted_tip_and_unsealed_plate"
+            ]
+          },
+          {
+            "protocol_name": "serial_dilution_thermocycle",
+            "generation": 2,
+            "mutation_ops": [
+              "swap_causal_barrier",
+              "shave_dead_volume"
+            ],
+            "evaded_gates": [
+              "gen0_scalar_volume_gate",
+              "gen1_bitmask_gate"
+            ],
+            "violated_lean_rules": [
+              "causal_dag_satisfied",
+              "recoverable_dead_volume_reserve",
+              "no_reverse_conc_tip_back_entry"
+            ]
+          }
+        ],
+        "generation_history": [
+          {
+            "generation": 1,
+            "candidates": 15,
+            "gen0_evasion_pct": 80.0,
+            "gen1_evasion_pct": 53.33,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 2,
+            "candidates": 15,
+            "gen0_evasion_pct": 86.67,
+            "gen1_evasion_pct": 86.67,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 3,
+            "candidates": 15,
+            "gen0_evasion_pct": 100.0,
+            "gen1_evasion_pct": 100.0,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 4,
+            "candidates": 15,
+            "gen0_evasion_pct": 100.0,
+            "gen1_evasion_pct": 93.33,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 5,
+            "candidates": 15,
+            "gen0_evasion_pct": 93.33,
+            "gen1_evasion_pct": 86.67,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 6,
+            "candidates": 15,
+            "gen0_evasion_pct": 100.0,
+            "gen1_evasion_pct": 100.0,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 7,
+            "candidates": 15,
+            "gen0_evasion_pct": 100.0,
+            "gen1_evasion_pct": 100.0,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 8,
+            "candidates": 15,
+            "gen0_evasion_pct": 100.0,
+            "gen1_evasion_pct": 86.67,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 9,
+            "candidates": 15,
+            "gen0_evasion_pct": 100.0,
+            "gen1_evasion_pct": 93.33,
+            "gen2_lean_evasion_pct": 0.0
+          },
+          {
+            "generation": 10,
+            "candidates": 15,
+            "gen0_evasion_pct": 100.0,
+            "gen1_evasion_pct": 100.0,
+            "gen2_lean_evasion_pct": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "layer": "L3",
+      "repo": "labfill",
+      "module": "curriculum_difficulty_packer",
+      "short_name": "DAPO Curriculum BF16 Packer",
+      "community": "DAPO Zero-Variance RLVR Filtering",
+      "baseline_score_pct": 7.7,
+      "autolab_score_pct": 99.1,
+      "lift_pp": 91.4,
+      "metric_label": "nonzero-grad bin fill (25.6x)",
+      "raw_metrics": {
+        "idea": "Idea #16: DAPO Zero-Variance Filtering & Curriculum bf16 Bin Packer",
+        "num_prompt_groups": 1000,
+        "rollouts_per_group": 8,
+        "bin_cap": 2048,
+        "zero_variance_groups_dropped": 634,
+        "informative_frontier_groups_kept": 366,
+        "naive_padded_unfiltered": {
+          "precision": "fp32",
+          "num_bins": 1000,
+          "allocated_token_slots": 2048000,
+          "total_unfiltered_real_tokens": 430295,
+          "nonzero_grad_tokens": 158304,
+          "effective_nonzero_grad_tokens_pct": 7.73
+        },
+        "dapo_curriculum_bf16_packed": {
+          "precision": "bf16",
+          "num_bins": 78,
+          "allocated_token_slots": 159744,
+          "nonzero_grad_tokens": 158304,
+          "effective_nonzero_grad_tokens_pct": 99.1,
+          "all_bins_lean_verified": true
+        },
+        "bin_slot_compression_x": 12.82,
+        "useful_gradient_throughput_speedup_x": 25.64
+      }
+    },
+    {
+      "id": 17,
+      "layer": "L2",
+      "repo": "lab-ears",
+      "module": "cross_modal_interlock",
+      "short_name": "Voice-Stripped Cavitation Gate",
+      "community": "LabVLA & Acoustic Dry-Draw Sensing",
+      "baseline_score_pct": 55.2,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 44.8,
+      "metric_label": "cavitation F1 under speech",
+      "raw_metrics": {
+        "idea_id": "idea_17_cross_modal_cavitation_interlock",
+        "n_clips": 120,
+        "sample_rate_hz": 16000,
+        "raw_audio_saved": false,
+        "speech_band_stripped_hz": [
+          300,
+          3400
+        ],
+        "retained_bands_hz": [
+          [
+            60.0,
+            260.0
+          ],
+          [
+            3600.0,
+            7800.0
+          ]
+        ],
+        "speech_unfiltered_rms": {
+          "dry_aspiration_f1": 0.5517,
+          "overall_fault_f1": 0.6486,
+          "precision": 0.48,
+          "recall": 1.0,
+          "false_alarm_rate_under_speech": 1.0,
+          "false_alarm_rate_overall": 0.7222
+        },
+        "cross_modal_voice_stripped_interlock": {
+          "dry_aspiration_f1": 1.0,
+          "overall_fault_f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_alarm_rate_under_speech": 0.0,
+          "false_alarm_rate_overall": 0.0,
+          "dry_aspiration_halt_recall": 1.0
+        }
+      }
+    },
+    {
+      "id": 18,
+      "layer": "L1",
+      "repo": "stepbot",
+      "module": "liquid_class_compiler",
+      "short_name": "Rheology Liquid-Class Pass",
+      "community": "PyLabRobot & Text2WetLab Rheology",
+      "baseline_score_pct": 78.0,
+      "autolab_score_pct": 98.2,
+      "lift_pp": 20.2,
+      "metric_label": "volume delivery accuracy",
+      "raw_metrics": {
+        "idea_id": "idea_18_rheology_liquid_class_compiler",
+        "api_level": "2.16",
+        "n_transfers": 80,
+        "liquid_classes": [
+          "aqueous",
+          "glycerol_80pct",
+          "dmso",
+          "ethanol_volatile",
+          "fragile_cells"
+        ],
+        "default_aqueous_codegen": {
+          "mean_volume_delivery_error_pct": 21.9528,
+          "max_volume_delivery_error_pct": 55.4147,
+          "volatile_drip_faults": 16,
+          "source_underflow_faults": 24,
+          "shear_lysis_faults": 16,
+          "per_class_error_pct": {
+            "aqueous": 1.4964,
+            "glycerol_80pct": 47.0626,
+            "dmso": 41.6353,
+            "ethanol_volatile": 16.8687,
+            "fragile_cells": 2.7011
+          }
+        },
+        "rheology_aware_compiler": {
+          "mean_volume_delivery_error_pct": 1.8271,
+          "max_volume_delivery_error_pct": 5.6605,
+          "volatile_drip_faults": 0,
+          "source_underflow_faults": 0,
+          "shear_lysis_faults": 0,
+          "compile_time_underflow_interceptions": 24,
+          "per_class_error_pct": {
+            "aqueous": 1.4964,
+            "glycerol_80pct": 5.6604,
+            "dmso": 0.143,
+            "ethanol_volatile": 1.2939,
+            "fragile_cells": 0.5415
+          }
+        }
+      }
+    },
+    {
+      "id": 19,
+      "layer": "L1",
+      "repo": "lab-hands",
+      "module": "slosh_minimum_jerk",
+      "short_name": "Meniscus-Slosh Min-Jerk",
+      "community": "DMDTE & Open-Well Cobot Transport",
+      "baseline_score_pct": 0.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 100.0,
+      "metric_label": "spill-free open-well transport",
+      "raw_metrics": {
+        "idea_id": "idea_19_open_meniscus_slosh_min_jerk",
+        "n_tasks": 60,
+        "min_obstacle_clearance_mm": 5.589,
+        "unscaled_trapezoidal": {
+          "well_spill_rate_pct": 100.0,
+          "spilled_tasks": 60,
+          "mean_transport_time_sec": 0.8277,
+          "max_meniscus_to_headspace_ratio": 6.9105
+        },
+        "slosh_bounded_min_jerk": {
+          "well_spill_rate_pct": 0.0,
+          "spilled_tasks": 0,
+          "mean_transport_time_sec": 1.6748,
+          "max_meniscus_to_headspace_ratio": 0.675,
+          "min_clearance_mm": 5.589
+        }
+      }
+    },
+    {
+      "id": 20,
+      "layer": "L0",
+      "repo": "lab-feet",
+      "module": "drift_abstaining_int4",
+      "short_name": "Int4 OOD Safe-Hold Monitor",
+      "community": "Quantized Edge OOD & Saturation Guards",
+      "baseline_score_pct": 0.0,
+      "autolab_score_pct": 100.0,
+      "lift_pp": 100.0,
+      "metric_label": "edge OOD safe-hold (+220 B)",
+      "raw_metrics": {
+        "idea_id": "idea_20_drift_abstaining_int4_edge_monitor",
+        "n_total_inputs": 400,
+        "n_in_domain_inputs": 240,
+        "n_ood_saturated_inputs": 160,
+        "packed_student_weight_bytes": 708,
+        "extra_sram_bytes": 220,
+        "naive_int4_argmax": {
+          "in_domain_accuracy_pct": 100.0,
+          "silent_ood_error_rate_pct": 100.0,
+          "ood_safe_hold_rate_pct": 0.0,
+          "extra_sram_bytes": 0
+        },
+        "drift_abstaining_int4": {
+          "in_domain_accuracy_pct": 99.5833,
+          "in_domain_abstain_rate_pct": 0.4167,
+          "silent_ood_error_rate_pct": 0.0,
+          "ood_safe_hold_rate_pct": 100.0,
+          "extra_sram_bytes": 220
+        }
+      }
+    }
+  ]
+}

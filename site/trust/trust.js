@@ -819,14 +819,88 @@ theorem unidentifiable_spectrum_never_certified (t : AssayTelemetry)
     renderTrustSketch();
     renderLeanExplorer();
 
-    const [respStudy, respNovel] = await Promise.all([
+    const [respStudy, respNovel, respMem] = await Promise.all([
       fetch('../assets/trust-regime-data.json'),
       fetch('../assets/novel-directions-data.json'),
+      fetch('../assets/agent-memory-data.json'),
     ]);
     STUDY = await respStudy.json();
     NOVEL = await respNovel.json();
+    const MEM = await respMem.json();
     renderExperiments();
     renderNovelDirections();
+    renderMemorySection(MEM);
+  }
+
+  function renderMemorySection(mem) {
+    const stage = document.getElementById('memory-stage');
+    if (!stage || !mem) return;
+    const r = mem.rusty_skill_reonboarding.safe_execution_pct;
+    const n = mem.novel_assay_transfer.first_try_certified_transfer_pct;
+    const l = mem.longitudinal_60_sessions;
+    const rows = [
+      {
+        name: 'Stateless Agent (No Long-Term Memory)',
+        tone: 'fail',
+        badge: `${l.stateless_acc_pct[l.stateless_acc_pct.length - 1]}% @ Session 60`,
+        metric: `${r.stateless_no_memory}% rusty · ${n.stateless_zero_memory}% novel`,
+        bar: 8,
+        note: 'Repeats nominal aqueous dead-volume and unsealed thermal mistakes every session.',
+      },
+      {
+        name: 'Rote Summary / Wiki Only (No Bottom Reasoning Trace)',
+        tone: 'hold',
+        badge: `${l.summary_no_trace_acc_pct[l.summary_no_trace_acc_pct.length - 1]}% @ Session 60`,
+        metric: `${r.rote_summary_without_bottom_trace}% rusty · ${n.wiki_analogy_without_bottom_trace}% novel`,
+        bar: 42,
+        note: 'Memorizes fixed scalar magic numbers that break whenever viscosity, vapor pressure, or deck epoch shifts.',
+      },
+      {
+        name: 'Append-Only Raw Session Logs (Context-Pollution Trap)',
+        tone: 'fail',
+        badge: `${l.append_only_context_tokens[l.append_only_context_tokens.length - 1]} tok bloat -> ${l.append_only_acc_pct[l.append_only_acc_pct.length - 1]}%`,
+        metric: `${r.append_only_unpruned_logs}% rusty recovery`,
+        bar: 57,
+        note: 'Peaks at Session 10 (78.0%), then degrades to 38.9% by Session 60 as noisy unattributed logs drown retrieval.',
+      },
+      {
+        name: 'Undergrad 4-Layer + Bottom Reasoning Trace + Dreaming (AutoLabLean)',
+        tone: 'pass',
+        badge: `${l.undergrad_dreaming_context_tokens[l.undergrad_dreaming_context_tokens.length - 1]} tok (180x leaner) · ${l.undergrad_dreaming_acc_pct[l.undergrad_dreaming_acc_pct.length - 1]}% @ S60`,
+        metric: `${r.undergrad_4layer_bottom_trace_dreaming}% rusty · ${n.undergrad_full_trace_plus_tools_lean}% novel`,
+        bar: 100,
+        note: 'Proved theorems: unverified_trace_never_consolidated · packIntoContext_respects_budget · stale_skill_requires_trace_and_rehearsal · novel_task_never_executes_blindly.',
+      },
+    ];
+
+    stage.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line);">
+        <div style="max-width:740px;">
+          <span class="small-label teal">AutoLabLean/AgentMemory.lean · 6 Proved Theorems</span>
+          <h3 style="font-size:19px;font-weight:740;margin-top:4px;">Bottom Reasoning Traces + Offline Dreaming vs. Rote &amp; Bloated Memory</h3>
+          <p style="font-size:13.5px;color:var(--muted);margin-top:4px;">120 rusty-SOP trials (&gt;120d gap + hardware epoch shift), 100 unseen reagent transfers, and 60 longitudinal sessions.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a class="button primary" href="https://github.com/yaniguan/auto-lab/blob/main/lean/AutoLabLean/AgentMemory.lean" target="_blank" rel="noopener">AgentMemory.lean ↗</a>
+          <a class="button secondary" href="https://github.com/yaniguan/auto-lab/blob/main/autolab/memory.py" target="_blank" rel="noopener">autolab/memory.py ↗</a>
+        </div>
+      </div>
+      <div style="display:grid;gap:12px;">
+        ${rows.map(item => `
+          <div style="background:var(--surface2);border:1px solid var(--line);border-radius:11px;padding:13px 16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+              <strong style="font-size:14.4px;">${esc(item.name)}</strong>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span class="pill ${esc(item.tone)}">${esc(item.badge)}</span>
+                <span style="font-size:13.5px;font-weight:740;color:var(--text);">${esc(item.metric)}</span>
+              </div>
+            </div>
+            <div style="height:9px;background:var(--surface);border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-bottom:6px;">
+              <div style="height:100%;width:${item.bar}%;background:${item.tone === 'pass' ? 'var(--accent)' : item.tone === 'hold' ? 'var(--amber)' : 'var(--rose)'};border-radius:999px;"></div>
+            </div>
+            <p style="font-size:12.5px;color:var(--muted);">${esc(item.note)}</p>
+          </div>`).join('')}
+      </div>`;
   }
 
   document.addEventListener('DOMContentLoaded', init);

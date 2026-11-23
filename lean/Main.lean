@@ -149,6 +149,22 @@ private def evalBatchLine (line : String) : String :=
     match checkMcpHardwareCall e with
     | none => "OK\tmcp\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
+  | ["MEM_SKILL", days, thresh, calEp, curEp, traceRev, microOK] =>
+    let s : SkillInvocationCheck :=
+      { daysSinceLastUse := parseNatD days, staleThresholdDays := parseNatD thresh,
+        calibratedDeckEpoch := parseNatD calEp, currentDeckEpoch := parseNatD curEp,
+        bottomTraceReviewed := parseBoolD traceRev, microRehearsalPass := parseBoolD microOK }
+    match checkSkillReadiness s with
+    | none => "OK\tmemory_skill\tvalid"
+    | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
+  | ["MEM_NOVEL", seen, simP, minSimP, traceOK, toolOK, twinOK] =>
+    let n : NovelOnboardingCheck :=
+      { seenBefore := parseBoolD seen, analogySimPermille := parseNatD simP,
+        minAnalogyPermille := parseNatD minSimP, analogBottomTraceLoaded := parseBoolD traceOK,
+        toolSpecsQueried := parseBoolD toolOK, twinDryRunCertified := parseBoolD twinOK }
+    match checkNovelOnboarding n with
+    | none => "OK\tmemory_novel\tvalid"
+    | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
   | _ => "ERR\tunknown\tmalformed_command\tunrecognized TSV batch command"
 
 private partial def runBatchLoop (stdin : IO.FS.Stream) (stdout : IO.FS.Stream) : IO Unit := do

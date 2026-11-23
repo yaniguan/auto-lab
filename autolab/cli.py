@@ -18,7 +18,8 @@ from autolab.catalog import (
     load_issues_index,
 )
 from autolab.loop_demo import SCENARIOS, run_closed_loop_scenario
-from autolab.trust_regime import audit_lean_sources, find_autolab_lean_binary
+from autolab.memory import build_seed_undergrad_memory
+from autolab.trust_regime import LeanBatchKernel, audit_lean_sources, find_autolab_lean_binary
 
 
 def _cmd_layers(_args: argparse.Namespace) -> int:
@@ -170,7 +171,64 @@ def build_parser() -> argparse.ArgumentParser:
     p_trust = sub.add_parser("trust", help="Inspect the Lean 4 AutoLabLean Trust Regime & empirical lift")
     p_trust.add_argument("--json", action="store_true", help="Emit JSON summary")
     p_trust.set_defaults(func=_cmd_trust)
+
+    p_mem = sub.add_parser("memory", help="Inspect & test the 4-layer Undergrad Agent Memory + Dreaming")
+    p_mem.add_argument("--json", action="store_true", help="Emit JSON summary")
+    p_mem.set_defaults(func=_cmd_memory)
     return parser
+
+
+def _cmd_memory(args: argparse.Namespace) -> int:
+    store = build_seed_undergrad_memory()
+    dream = store.dream_consolidate()
+    kernel = LeanBatchKernel()
+    rusty_demo = store.invoke_skill(
+        "viscous-liquid-handling",
+        current_day=145,
+        current_deck_epoch=2,
+        physical_params={
+            "viscosity_cp": 95.0,
+            "nominal_dead_vol_ul": 5.0,
+            "transfer_total_ul": 180.0,
+            "source_vol_ul": 186.0,
+        },
+        auto_refresh_if_rusty=True,
+        kernel=kernel,
+    )
+    novel_demo = store.onboard_novel_assay(
+        "peg400_crowding_buffer_dispense",
+        query_tags={"pipetting", "high-viscosity", "surfactant-or-polyol", "multi-dispense"},
+        raw_params={
+            "viscosity_cp": 115.0,
+            "nominal_dead_vol_ul": 5.0,
+            "transfer_total_ul": 150.0,
+            "source_vol_ul": 155.0,
+            "temp_c": 37.0,
+        },
+        use_bottom_trace=True,
+        query_lab_tools=True,
+        kernel=kernel,
+    )
+    payload = {
+        "dream_consolidation": dream.__dict__,
+        "injected_markdown": store.render_injected_markdown(),
+        "rusty_skill_recovery": rusty_demo,
+        "novel_assay_onboarding": novel_demo,
+    }
+    if args.json:
+        print(json.dumps(payload, indent=2))
+        return 0
+    print("=== Auto-Lab 4-Layer 'Undergrad' Agent Memory & Dreaming ===")
+    print(
+        f"Dreaming : {dream.raw_candidates} raw notes -> {dream.injected_notes_count} injected "
+        f"({dream.injected_tokens}/{dream.token_budget} tok, {dream.quarantined_unverified_or_rote} poisoned/rote quarantined)"
+    )
+    print(f"Rusty SOP: {rusty_demo['concept_id']} after {rusty_demo['days_since_last_use']}d -> {rusty_demo['lean_verdict']['rule']}")
+    print(
+        f"Novel SOP: {novel_demo['assay_name']} -> analogy={novel_demo['nearest_concept']} "
+        f"({novel_demo['analogy_sim_permille']} permille) -> {novel_demo['lean_verdict']['rule']}"
+    )
+    return 0
 
 
 def _cmd_trust(args: argparse.Namespace) -> int:

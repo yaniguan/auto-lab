@@ -1,0 +1,104 @@
+{
+  "generated_at_utc": "2026-11-23T19:30:19Z",
+  "lean_audit": {
+    "file_count": 12,
+    "theorem_count": 50,
+    "guard_count": 27,
+    "zero_sorry_verified": true
+  },
+  "runtime_sec": 11.23,
+  "rusty_skill_reonboarding": {
+    "trials": 120,
+    "lean_kernel_calls": 120,
+    "safe_execution_pct": {
+      "stateless_no_memory": 0.0,
+      "rote_summary_without_bottom_trace": 6.7,
+      "append_only_unpruned_logs": 57.5,
+      "undergrad_4layer_bottom_trace_dreaming": 100.0
+    }
+  },
+  "novel_assay_transfer": {
+    "novel_tasks": 100,
+    "lean_kernel_calls": 300,
+    "first_try_certified_transfer_pct": {
+      "stateless_zero_memory": 0.0,
+      "wiki_analogy_without_bottom_trace": 0.0,
+      "bottom_trace_physical_only_ungated": 90.0,
+      "undergrad_full_trace_plus_tools_lean": 100.0
+    }
+  },
+  "longitudinal_60_sessions": {
+    "sessions": [
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60
+    ],
+    "stateless_acc_pct": [
+      22.4,
+      24.2,
+      22.9,
+      23.7,
+      22.5,
+      22.6,
+      22.5
+    ],
+    "append_only_acc_pct": [
+      71.3,
+      78.0,
+      72.5,
+      64.6,
+      56.3,
+      47.4,
+      38.9
+    ],
+    "summary_no_trace_acc_pct": [
+      60.6,
+      67.5,
+      67.5,
+      67.5,
+      67.5,
+      67.5,
+      67.5
+    ],
+    "undergrad_dreaming_acc_pct": [
+      84.9,
+      95.4,
+      95.6,
+      95.7,
+      95.7,
+      95.8,
+      95.8
+    ],
+    "append_only_context_tokens": [
+      1511,
+      2844,
+      6169,
+      9280,
+      12569,
+      16106,
+      19473
+    ],
+    "undergrad_dreaming_context_tokens": [
+      90,
+      108,
+      108,
+      108,
+      108,
+      108,
+      108
+    ],
+    "poisoned_rules_in_dream_memory": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

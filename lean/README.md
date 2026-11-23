@@ -3,7 +3,8 @@
 `AutoLabLean` (`leanprover/lean4:v4.36.0`, zero external dependencies) formalizes the hard physical, statistical, stoichiometric, temporal, security, privacy, and licensing guardrails of all **14 Auto-Lab repositories** (`L6` down to `L0`) into a single machine-checked **Trust Regime** (`verifyCycle` / `InTrustRegime`).
 
 - **Toolchain**: `leanprover/lean4:v4.36.0` (matches `yaniguan/YLM/lean` `LabLean`)
-- **Proof Hygiene**: **44 machine-checked theorems**, **21 compile-time `#guard` witnesses**, **`0` `sorry`**, **`0` `admit`**, **`0` `axiom`**, **`0` `native_decide`**
+- **Proof Hygiene**: **50 machine-checked theorems**, **27 compile-time `#guard` witnesses**, **`0` `sorry`**, **`0` `admit`**, **`0` `axiom`**, **`0` `native_decide`**
+- **Hub + Spoke Synchronization**: Maintained centrally here in `auto-lab/lean/` as the unified cross-layer kernel AND mirrored as standalone `lean/` packages (`LabAskWhyLean` .. `LabFeetLean`) inside each of the 14 sub-repositories
 - **Runtime Executable**: `lake exe autolab-lean` (showcase mode + `--batch-tsv` high-throughput stdin RPC called directly from Python at ~15,000–30,000 checks/sec)
 
 ## Module Map (`L6 -> L0`)
@@ -18,6 +19,7 @@
 | `AutoLabLean/L2_L1_L0_Embodied.lean` | `lab-ears`, `stepbot`, `lab-hands`, `lab-feet` | Full-skirt `[300, 3400] Hz` speech-band drop & zero raw audio persistence (`checkLabEars_strips_speech`), Opentrons `1..11` slots + tip cap + `distribute` disposal conservation (`stepbot_never_underflows_distribute_source`), `>= 5 mm` continuous arm clearance & slosh limit (`checkLabHands_guarantees_5mm_clearance`), positive quant scale & edge SRAM budget (`checkLabFeet_safe_for_edge`) |
 | `AutoLabLean/TrustRegime.lean` | All 14 Repositories | `verifyCycle_ok_iff` (Soundness & Completeness), **`shieldedTrajectory_never_crosses_boundary`** (Multi-step inductive safety under arbitrary untrusted policies), **`selectBestCertified_always_valid`** & **`selectBestCertified_dominates_all_valid`** (Certified Best-of-`N` optimality) |
 | `AutoLabLean/NovelDirections.lean` | Cross-Stack Frontier Extensions | **Diagnostic Epistemic Attribution** (`corrupted_run_never_poisons_memory`, `unidentifiable_spectrum_never_certified`, `certified_negative_sound`), **Stepped Frontier Calibration** (`deep_ood_always_blocked`, `accepted_outside_tau_is_bounded_probe`), and **Proof-Carrying `Lean-MCP` Envelopes** (`autonomous_mcp_requires_fresh_lean_proof`) |
+| `AutoLabLean/AgentMemory.lean` | 4-Layer "Undergrad" Memory | **Offline Dreaming Hygiene & Budget Cap** (`unverified_trace_never_consolidated`, `packIntoContext_respects_budget`, `packIntoContext_all_certified`), **Rusty-Skill Calibration** (`stale_skill_requires_trace_and_rehearsal`, `epoch_shifted_skill_requires_rehearsal`), and **Zero-Shot Novel Onboarding** (`novel_task_never_executes_blindly`) |
 | `AutoLabLean/Examples.lean` | All 14 Repositories | Compile-time `#guard` verification of a full 14-repo `ResearchCycle` plus per-repo boundary-crossing counterexamples |
 
 ## Quickstart

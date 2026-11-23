@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f8fafc">
-  <title>Lean 4 Trust Regime — Auto-Lab</title>
-  <meta name="description" content="Machine-checked Lean 4 Trust Regime (AutoLabLean: 44 theorems, 0 sorry) across all 14 Auto-Lab repositories, with empirical performance lift and 4 next-generation frontier directions.">
+  <title>Lean 4 Trust Regime &amp; Agent Memory — Auto-Lab</title>
+  <meta name="description" content="Machine-checked Lean 4 Trust Regime (AutoLabLean: 50 theorems, 0 sorry), 4-Layer Undergraduate Agent Memory with Bottom Reasoning Traces & Dreaming, and 20 community-synthesized sub-repo extensions.">
   <link rel="canonical" href="https://yaniguan.github.io/auto-lab/trust/">
   <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css?v=9">
-  <script defer src="../shared.js?v=9"></script>
-  <script defer src="../scheme_icons.js?v=9"></script>
-  <script defer src="trust.js?v=9"></script>
+  <link rel="stylesheet" href="../styles.css?v=10">
+  <script defer src="../shared.js?v=10"></script>
+  <script defer src="../scheme_icons.js?v=10"></script>
+  <script defer src="trust.js?v=10"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -37,8 +37,13 @@
         <p class="eyebrow"><span class="status-dot"></span> Formal Verification · Lean 4.36.0 · Zero <code>sorry</code></p>
         <h1>The Auto-Lab Trust Regime</h1>
         <p style="max-width:820px;">
-          Hard boundaries proved in Lean 4 across all 14 repositories—so an autonomous lab agent can <strong>never cross physical, chemical, or epistemic guardrails</strong>, while exploring, repairing, and improving freely inside the certified manifold.
+          Hard boundaries proved in Lean 4 across all 14 repositories—paired with a 4-layer <strong>Undergraduate Agent Memory</strong> (Bottom Reasoning Traces + sleep-time Dreaming) and an arXiv technical preprint.
         </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+          <a class="button primary" href="../assets/autolab_preprint.pdf" target="_blank" rel="noopener">Read Preprint PDF ↗</a>
+          <a class="button secondary" href="#undergrad-memory">4-Layer Agent Memory ↓</a>
+          <a class="button secondary" href="https://github.com/yaniguan/auto-lab/tree/main/paper" target="_blank" rel="noopener">LaTeX Source ↗</a>
+        </div>
       </div>
     </section>
 
@@ -47,8 +52,8 @@
       <div class="metric-strip">
         <a class="metric-card" href="#lean-explorer">
           <span class="small-label purple">Lean 4.36.0 Kernel</span>
-          <div class="metric-big"><strong>44</strong> <span>theorems · 0 sorry</span></div>
-          <p>14 repos + 4 frontiers · 21 <code>#guard</code>s.</p>
+          <div class="metric-big"><strong>50</strong> <span>theorems · 0 sorry</span></div>
+          <p>Hub + 14 repo <code>lean/</code> · 27 <code>#guard</code>s.</p>
         </a>
         <a class="metric-card" href="#performance-lift">
           <span class="small-label teal">Molecular Campaign</span>
@@ -136,6 +141,20 @@
         </div>
       </div>
     </section>
+
+    <!-- 05 / 4-Layer "Undergrad" Agent Memory & Bottom Reasoning Traces -->
+    <section class="section wrap" id="undergrad-memory" style="padding-block:56px;">
+      <div class="section-heading" style="margin-bottom:20px;">
+        <p class="eyebrow">05 / 4-Layer "Undergraduate" Agent Memory &amp; Dreaming</p>
+        <h2>Rapid re-onboarding on rusty SOPs and zero-shot mastery of novel assays.</h2>
+        <p class="section-intro">
+          Modeled on Anthropic’s <em>Components of Agent Memory</em> and a well-trained senior undergraduate: Layer-0 causal <strong>Bottom Reasoning Traces</strong> restore first-principles equations rather than brittle magic numbers, while sleep-time <strong>Dreaming</strong> enforces a <code>180x</code> leaner prompt footprint (<code>AutoLabLean/AgentMemory.lean</code>).
+        </p>
+      </div>
+      <div class="sandbox-card" id="memory-stage">
+        <p style="color:var(--muted);">Loading undergraduate memory benchmarks…</p>
+      </div>
+    </section>
   </main>
 
   <footer class="wrap site-footer">
@@ -143,7 +162,7 @@
       <img src="../assets/autolab-static.svg" width="44" height="22" alt="">
       <span>Auto-Lab</span>
     </a>
-    <p>AutoLabLean · Lean 4.36.0 · 44 Theorems · 0 <code>sorry</code></p>
+    <p>AutoLabLean · Lean 4.36.0 · 50 Theorems · 0 <code>sorry</code></p>
     <div style="display:flex;gap:16px;">
       <a href="../">Overview</a>
       <a href="../studio/">Interactive Lab</a>
