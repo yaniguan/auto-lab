@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f8fafc">
-  <title>14 Repo Cards — Auto-Lab</title>
-  <meta name="description" content="Concise 6-tile visual cards (Object, Data, Model, Training, History, Unique Property) for all 14 Auto-Lab repositories.">
+  <title>14 Repository Stories — Auto-Lab</title>
+  <meta name="description" content="Interactive, plain-English stories, real-world scenario switchers, and under-the-hood engineering tabs for all 14 Auto-Lab repositories.">
   <link rel="canonical" href="https://yaniguan.github.io/auto-lab/repos/">
   <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css?v=6">
-  <script defer src="../shared.js?v=6"></script>
-  <script defer src="../scheme_icons.js?v=6"></script>
-  <script defer src="repos.js?v=6"></script>
+  <link rel="stylesheet" href="../styles.css?v=7">
+  <script defer src="../shared.js?v=7"></script>
+  <script defer src="../scheme_icons.js?v=7"></script>
+  <script defer src="../repo_stories.js?v=7"></script>
+  <script defer src="repos.js?v=7"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -34,46 +35,44 @@
     <section class="subpage-hero">
       <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;">
         <div>
-          <p class="eyebrow"><span class="status-dot"></span> 5-Second Visual Cards · 14 Core Repositories</p>
-          <h1>Repository Cards</h1>
+          <p class="eyebrow"><span class="status-dot"></span> Interactive Repository Guide · 14 Core Modules</p>
+          <h1>How Each Part Works</h1>
           <p>
-            One-line summary, I/O pipeline, measured numbers, and six short tiles per repo.
+            Each repository tackles one concrete failure mode of an autonomous wet lab. Pick a module on the left to switch real examples, inspect verdicts, and explore how it connects.
           </p>
         </div>
         <div class="seg-pills" id="view-mode-pills">
-          <button type="button" data-view="detail" class="active">Visual Card</button>
-          <button type="button" data-view="matrix">14-Row Table</button>
+          <button type="button" data-view="detail" class="active">Interactive Card</button>
+          <button type="button" data-view="matrix">Comparison Table</button>
         </div>
       </div>
     </section>
 
     <section class="section wrap" style="padding-top:36px;">
-      <!-- Visual Card Reader View -->
+      <!-- Interactive Story Card Reader View -->
       <div class="catalog-layout" id="reader-view">
         <aside class="catalog-sidebar" aria-label="Repository navigation">
           <input type="search" id="sidebar-search" class="input-ctrl" style="width:100%;margin-bottom:12px;"
-                 placeholder="Filter repos…" aria-label="Filter repositories">
+                 placeholder="Search by topic or repo…" aria-label="Filter repositories">
           <div id="sidebar-groups"></div>
         </aside>
 
         <article class="dossier-sheet" id="dossier-host">
-          <p style="color:var(--muted);">Loading card…</p>
+          <p style="color:var(--muted);">Loading interactive story…</p>
         </article>
       </div>
 
-      <!-- Compact 14-Row Table View -->
+      <!-- Clean 14-Row Comparison Table View -->
       <div id="matrix-view" style="display:none;">
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>Layer</th>
-                <th>Repo</th>
-                <th>Object</th>
-                <th>Data</th>
-                <th>Model</th>
-                <th>Training</th>
-                <th>Unique Property</th>
+                <th>Repository</th>
+                <th>Problem It Solves</th>
+                <th>Pipeline</th>
+                <th>Headline Result</th>
               </tr>
             </thead>
             <tbody id="matrix-tbody"></tbody>
@@ -88,7 +87,7 @@
       <img src="../assets/autolab-static.svg" width="44" height="22" alt="">
       <span>Auto-Lab</span>
     </a>
-    <p>14 Core Repositories · Concise Visual Cards</p>
+    <p>14 Core Repositories · Interactive Guides</p>
     <div style="display:flex;gap:16px;">
       <a href="../">Overview</a>
       <a href="../studio/">Interactive Lab</a>

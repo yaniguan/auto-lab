@@ -14,10 +14,11 @@
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=6">
-  <script defer src="shared.js?v=6"></script>
-  <script defer src="scheme_icons.js?v=6"></script>
-  <script defer src="home.js?v=6"></script>
+  <link rel="stylesheet" href="styles.css?v=7">
+  <script defer src="shared.js?v=7"></script>
+  <script defer src="scheme_icons.js?v=7"></script>
+  <script defer src="repo_stories.js?v=7"></script>
+  <script defer src="home.js?v=7"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -115,20 +116,21 @@
         <div class="conn-bar" id="conn-trace-bar"></div>
       </figure>
 
-      <!-- Compact Selected-Module Bar -->
+      <!-- Compact Selected-Module Story Bar -->
       <div class="organ-bar" id="organ-inspector">
-        <div>
-          <span class="small-label" id="insp-badge">L6 · BRAIN</span>
+        <div style="min-width:0;">
+          <span class="small-label" id="insp-badge">L4 · TWIN &amp; GATE</span>
           <div style="display:flex;align-items:center;gap:9px;margin:4px 0 6px;">
             <span id="insp-icon" style="color:var(--accent);display:inline-flex;"></span>
-            <h3 id="insp-name" style="font-size:21px;font-weight:760;margin:0;">lab-decide</h3>
+            <h3 id="insp-name" style="font-size:21px;font-weight:760;margin:0;">lab-rehearsal</h3>
           </div>
-          <p id="insp-hook" style="font-size:13.6px;color:var(--muted);line-height:1.5;">Loading…</p>
+          <p id="insp-hook" style="font-size:14px;color:var(--text);font-weight:560;line-height:1.48;">Loading…</p>
+          <p id="insp-why" style="font-size:12.8px;color:var(--muted);line-height:1.5;margin-top:6px;"></p>
         </div>
-        <div class="mini-spec-grid" id="insp-mini-specs"></div>
-        <div style="display:flex;flex-direction:column;gap:8px;min-width:148px;">
-          <a class="button primary" id="insp-dossier-link" href="repos/#lab-decide">Open Card →</a>
-          <a class="button secondary" id="insp-github-link" href="https://github.com/yaniguan/lab-decide" target="_blank" rel="noopener">GitHub ↗</a>
+        <div id="insp-story-preview" style="min-width:0;"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:154px;">
+          <a class="button primary" id="insp-dossier-link" href="repos/#lab-rehearsal">Interactive Card →</a>
+          <a class="button secondary" id="insp-github-link" href="https://github.com/yaniguan/lab-rehearsal" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
       </div>
     </section>
@@ -182,9 +184,9 @@
           </a>
           <a class="portal-card" href="repos/">
             <span class="small-label purple">Subpage 02</span>
-            <h3>14 Repo Cards</h3>
-            <p>Scannable 6-tile visual specs and upstream/downstream links for every repository.</p>
-            <span class="portal-cta">Browse Cards →</span>
+            <h3>14 Interactive Repo Guides</h3>
+            <p>Plain-English problem stories, clickable real-world examples, and under-the-hood tabs for every repository.</p>
+            <span class="portal-cta">Browse Repo Stories →</span>
           </a>
         </div>
       </div>

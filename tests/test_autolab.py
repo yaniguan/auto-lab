@@ -91,6 +91,7 @@ def test_site_files_present() -> None:
         "styles.css",
         "shared.js",
         "scheme_icons.js",
+        "repo_stories.js",
         "home.js",
         ".nojekyll",
         "studio/index.html",
@@ -102,6 +103,13 @@ def test_site_files_present() -> None:
     )
     for rel in required:
         assert (site / rel).exists(), f"Missing site/{rel}"
+
+    stories_text = (site / "repo_stories.js").read_text(encoding="utf-8")
+    for repo_name in CORE_REPO_NAMES:
+        assert f"'{repo_name}':" in stories_text, f"Missing story entry for {repo_name}"
+
+    repos_js = (site / "repos" / "repos.js").read_text(encoding="utf-8")
+    assert "1 · Object" not in repos_js and "bento-6" not in repos_js
 
     cjk_re = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
     for p in [*site.rglob("*"), REPO_ROOT / "README.md", *(REPO_ROOT / "autolab").rglob("*.py")]:

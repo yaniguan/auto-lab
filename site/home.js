@@ -8,46 +8,92 @@
   const NS = 'http://www.w3.org/2000/svg';
   const { esc, initThemeToggle, loadData } = window.AutoLabShared;
   const { ICONS, REPO_EDGES, ORGAN_GROUP, iconMarkup, neighborsOf } = window.AutoLabIcons;
+  const { STORIES } = window.AutoLabStories;
 
   let DATA = null;
   let selectedOrgan = 'lab-rehearsal';
+  let inspDemoIdx = 0;
 
-  const COMPANION_CARDS = {
+  const COMPANION_STORIES = {
     YLM: {
-      hook: 'Reads English questions and 3D atoms together—outputs vectors that rotate with the molecule.',
-      short: {
-        object: 'Answer 3D force & dipole queries with exact rotation equivariance.',
-        data: 'TensorQA-v0 (84,757 questions on 20k QM9 molecules).',
-        model: 'Frozen MiniLM / MatSciBERT + e3nn (l <= 2) cross-attention.',
-        property: '0.960 force cosine across 32 rotations (~2e-6 equivariance error).',
-      },
+      headline: 'Read English questions and 3D atomic coordinates together—and return vectors that rotate cleanly with the molecule.',
+      why: 'Text-only LLMs lose 3D geometry when molecules rotate; YLM fuses frozen language embeddings with SE(3)-equivariant e3nn layers and Lean 4 protocol verification (`LabLean`).',
+      metrics: [
+        ['0.960', 'force cosine (32 rotations)'],
+        ['~2e-6', 'equivariance error'],
+        ['84,757', 'TensorQA-v0 3D queries'],
+      ],
+      demos: [
+        {
+          tab: 'Rotated Force Query',
+          verdict: 'EQUIVARIANT · ~2e-6 err',
+          verdictTone: 'pass',
+          output: 'Rotate molecule by R in SO(3) -> predicted dipole & force vectors rotate by exact R (vs -0.011 collapsed non-equivariant baseline).',
+        },
+        {
+          tab: 'LabLean Protocol Gate',
+          verdict: 'FORMAL LEAN 4 CHECK',
+          verdictTone: 'pass',
+          output: 'Verifies wet-lab protocol invariants formally in Lean 4 downstream of fast batched pre-filters.',
+        },
+      ],
     },
     WignerFlow: {
-      hook: 'Jumps molecular dynamics 50 fs per step without a numerical integrator.',
-      short: {
-        object: 'Replace stiff 2 fs MD steps and gate untrained molecules for YLM.',
-        data: '256-atom liquid argon NVE trajectories + CALiSol-23 alignment.',
-        model: 'EquiTraj residual conditional flow matching + FrameSplit CPU API.',
-        property: '4/5 seeds stable for 10,000 steps; strict refusal outside registry.',
-      },
+      headline: 'Jump molecular dynamics forward 50 fs per step without a numerical step-by-step integrator.',
+      why: 'Classical 2 fs MD steps bottleneck electrolyte screening; EquiTraj flow matching leaps 25x further while refusing out-of-registry chemistry.',
+      metrics: [
+        ['50 fs', 'single-jump MD horizon'],
+        ['4 / 5', 'seeds stable to 10k steps'],
+        ['Strict', 'out-of-registry refusal'],
+      ],
+      demos: [
+        {
+          tab: '256-Atom Argon Jump',
+          verdict: 'STABLE · 10,000 Steps',
+          verdictTone: 'pass',
+          output: 'EquiTraj residual conditional flow matching advances 50 fs per call while conserving NVE structure across 4/5 seeds.',
+        },
+        {
+          tab: 'Untrained Molecule Check',
+          verdict: 'REFUSED · Out of Registry',
+          verdictTone: 'hold',
+          output: 'FrameSplit `[physics]` API refuses untrained chemical compositions instead of hallucinating trajectories.',
+        },
+      ],
     },
     'ouroboros-ocsr': {
-      hook: 'Reads molecule drawings from papers at any angle and checks stereochemistry in 3D.',
-      short: {
-        object: 'Turn 2D chemical figures into confidence-gated SMILES and 3D conformers.',
-        data: 'Synthetic 24-angle drawings + untouched 300-image frozen-test-v2.',
-        model: 'C8 steerable encoder + plain CNN ensemble + 229 ms int8 CPU API.',
-        property: '65.8% across 24 angles with zero rotated training images.',
-      },
+      headline: 'Read 2D chemical structure drawings from papers at any angle—and verify stereochemistry in 3D.',
+      why: 'Standard optical chemical structure recognizers break when figures are rotated or skewed on journal pages.',
+      metrics: [
+        ['65.8%', 'accuracy across 24 angles'],
+        ['0', 'rotated training images'],
+        ['229 ms', 'int8 CPU inference'],
+      ],
+      demos: [
+        {
+          tab: 'Rotated Journal Figure',
+          verdict: '65.8% · 24-Angle Mean',
+          verdictTone: 'pass',
+          output: 'C8 steerable encoder + CNN ensemble recovers canonical SMILES and 3D conformers on untouched frozen-test-v2.',
+        },
+      ],
     },
     assayfold: {
-      hook: 'Collects scattered open lab datasets into one SHA-256-sealed, license-gated schema.',
-      short: {
-        object: 'Unify protocols, reactions, QM9, and LabPics under one strict record format.',
-        data: 'AqSolDB, FreeSolv, ORD, QM9, RGD1, Transition1x, WLP, LabPics.',
-        model: 'Pydantic extra=forbid schema + UCUM normalizer + license gate.',
-        property: 'Blocks non-commercial & eval_only items from commercial exports.',
-      },
+      headline: 'Unify scattered open chemistry, reaction, and wet-lab datasets under one SHA-256-sealed, license-gated schema.',
+      why: 'Mixing incompatible units (`uM` vs `mol/L`) or non-commercial benchmarks into training pipelines causes silent errors and license breaches.',
+      metrics: [
+        ['8', 'open lab corpora unified'],
+        ['UCUM', 'strict unit normalizer'],
+        ['SHA-256', 'license & split seal'],
+      ],
+      demos: [
+        {
+          tab: 'Commercial Export Gate',
+          verdict: 'BLOCKED · Non-Commercial',
+          verdictTone: 'fail',
+          output: 'Pydantic extra=forbid schema blocks eval_only and non-commercial records before export to downstream post-training.',
+        },
+      ],
     },
   };
 
@@ -168,7 +214,10 @@
   }
 
   function selectRepo(repo) {
-    selectedOrgan = repo;
+    if (selectedOrgan !== repo) {
+      selectedOrgan = repo;
+      inspDemoIdx = 0;
+    }
     renderRobotSketch();
     renderRepoNetwork();
     renderInspector();
@@ -373,7 +422,7 @@
       let rxCursor = cx + 14;
       let ryCursor = c.y + 54;
       c.repos.forEach(rName => {
-        const shortName = rName === 'lab-automation-atlas' ? 'atlas' : rName === 'ouroboros-ocsr' ? 'ouroboros ★' : (COMPANION_CARDS[rName] ? `${rName} ★` : rName);
+        const shortName = rName === 'lab-automation-atlas' ? 'atlas' : rName === 'ouroboros-ocsr' ? 'ouroboros ★' : (COMPANION_STORIES[rName] ? `${rName} ★` : rName);
         const pillW = Math.max(58, shortName.length * 6.7 + 16);
         if (rxCursor + pillW > cx + cw - 10) {
           rxCursor = cx + 14;
@@ -613,6 +662,36 @@
     }
   }
 
+  function fmtInline(text) {
+    return esc(text || '').replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+
+  function renderStoryMid(story) {
+    const demos = story.demos || [];
+    const safeIdx = Math.min(inspDemoIdx, Math.max(0, demos.length - 1));
+    const d = demos[safeIdx];
+    const firstTwoLines = d ? d.output.split('\n').filter(Boolean).slice(0, 2).join('\n') : '';
+
+    return `
+      <div class="insp-story-mid">
+        ${d ? `
+          <div class="insp-demo-row">
+            <div class="insp-demo-pills">
+              ${demos.map((item, i) => `
+                <button type="button" class="insp-demo-btn ${i === safeIdx ? 'active' : ''}" data-insp-demo="${i}">
+                  ${esc(item.tab.replace(/^\d+\s*·\s*/, ''))}
+                </button>`).join('')}
+            </div>
+            <span class="pill ${esc(d.verdictTone || 'pass')}">${esc(d.verdict)}</span>
+          </div>
+          <pre class="insp-snippet">${esc(firstTwoLines)}</pre>
+        ` : ''}
+        <div class="insp-kpi-row">
+          ${(story.metrics || []).map(([v, l]) => `<span class="insp-kpi-chip"><strong>${esc(v)}</strong>${esc(l)}</span>`).join('')}
+        </div>
+      </div>`;
+  }
+
   function renderInspector() {
     if (!DATA) return;
     const core = (DATA.repos || []).find(r => r.repo === selectedOrgan);
@@ -622,40 +701,40 @@
     const iconEl = document.getElementById('insp-icon');
     const name = document.getElementById('insp-name');
     const hook = document.getElementById('insp-hook');
-    const specs = document.getElementById('insp-mini-specs');
+    const whyEl = document.getElementById('insp-why');
+    const previewHost = document.getElementById('insp-story-preview');
     const dosLink = document.getElementById('insp-dossier-link');
     const ghLink = document.getElementById('insp-github-link');
 
     if (iconEl) iconEl.innerHTML = iconMarkup(selectedOrgan, 24);
 
     if (core) {
-      const c = core.concise || {};
-      const sh = c.short || {};
+      const story = STORIES[core.repo] || { headline: core.tagline, why: core.object, metrics: [], demos: [] };
       badge.textContent = `${core.layer} · ${core.layer_name.toUpperCase()}`;
       name.textContent = core.repo;
-      hook.textContent = c.hook || core.tagline;
-      specs.innerHTML = `
-        <div class="mini-spec"><strong>Object</strong><span>${esc(sh.object || '')}</span></div>
-        <div class="mini-spec"><strong>Data</strong><span>${esc(sh.data || '')}</span></div>
-        <div class="mini-spec"><strong>Model</strong><span>${esc(sh.model || '')}</span></div>
-        <div class="mini-spec"><strong>Unique Property</strong><span>${esc(sh.property || '')}</span></div>`;
+      hook.innerHTML = fmtInline(story.headline);
+      if (whyEl) whyEl.innerHTML = `<strong style="color:var(--accent);">Why:</strong> ${fmtInline(story.why)}`;
+      if (previewHost) previewHost.innerHTML = renderStoryMid(story);
       dosLink.style.display = '';
       dosLink.href = `repos/#${encodeURIComponent(core.repo)}`;
       ghLink.href = core.url;
     } else if (comp) {
-      const cc = COMPANION_CARDS[comp.repo] || {};
-      const sh = cc.short || {};
+      const story = COMPANION_STORIES[comp.repo] || { headline: comp.summary, why: '', metrics: [], demos: [] };
       badge.textContent = `COMPANION · ${comp.layer}`;
       name.textContent = `${comp.repo} ★`;
-      hook.textContent = cc.hook || comp.summary;
-      specs.innerHTML = `
-        <div class="mini-spec"><strong>Object</strong><span>${esc(sh.object || '')}</span></div>
-        <div class="mini-spec"><strong>Data</strong><span>${esc(sh.data || '')}</span></div>
-        <div class="mini-spec"><strong>Model</strong><span>${esc(sh.model || '')}</span></div>
-        <div class="mini-spec"><strong>Key Result</strong><span>${esc(sh.property || '')}</span></div>`;
+      hook.innerHTML = fmtInline(story.headline);
+      if (whyEl) whyEl.innerHTML = story.why ? `<strong style="color:var(--accent);">Why:</strong> ${fmtInline(story.why)}` : '';
+      if (previewHost) previewHost.innerHTML = renderStoryMid(story);
       dosLink.style.display = 'none';
       ghLink.href = comp.page || comp.url;
     }
+
+    previewHost?.querySelectorAll('[data-insp-demo]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        inspDemoIdx = Number(btn.dataset.inspDemo) || 0;
+        renderInspector();
+      });
+    });
   }
 
   function renderDirectoryTable() {
@@ -668,8 +747,8 @@
 
     tbody.innerHTML = ordered.map(r => {
       const colClass = r.layer === 'L6' || r.layer === 'L0' ? 'purple' : r.layer === 'L5' || r.layer === 'L2' ? 'blue' : r.layer === 'L3' ? 'amber' : 'teal';
-      const c = r.concise || {};
-      const kpi0 = (c.kpis && c.kpis[0]) ? `${c.kpis[0][0]} ${c.kpis[0][1]}` : '-';
+      const story = STORIES[r.repo] || {};
+      const m0 = (story.metrics && story.metrics[0]) ? `${story.metrics[0][0]} ${story.metrics[0][1]}` : '-';
       return `
         <tr>
           <td><span class="layer-code-pill ${colClass}">${esc(r.layer)}</span></td>
@@ -678,10 +757,10 @@
               ${iconMarkup(r.repo, 17)} <strong>${esc(r.repo)}</strong>
             </a>
           </td>
-          <td style="color:var(--muted);">${esc(c.hook || r.tagline)}</td>
-          <td style="white-space:nowrap;"><code>${esc(kpi0)}</code></td>
+          <td style="color:var(--muted);">${fmtInline(story.headline || r.tagline)}</td>
+          <td style="white-space:nowrap;"><code>${esc(m0)}</code></td>
           <td style="white-space:nowrap;">
-            <a class="table-link" href="repos/#${encodeURIComponent(r.repo)}">Card</a>
+            <a class="table-link" href="repos/#${encodeURIComponent(r.repo)}">Story</a>
             <span style="color:var(--subtle);margin:0 6px;">·</span>
             <a class="table-link" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub ↗</a>
           </td>
