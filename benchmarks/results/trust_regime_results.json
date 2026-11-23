@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-23T08:02:47Z",
+  "generated_at_utc": "2026-11-23T08:44:37Z",
   "lean_toolchain": "leanprover/lean4:v4.36.0",
   "lean_audit": {
     "lean_files": [
@@ -10,12 +10,13 @@
       "AutoLabLean/L4_TwinAndGate.lean",
       "AutoLabLean/L5_Executive.lean",
       "AutoLabLean/L6_Epistemic.lean",
+      "AutoLabLean/NovelDirections.lean",
       "AutoLabLean/TrustRegime.lean",
       "AutoLabLean.lean",
       "Main.lean"
     ],
-    "file_count": 10,
-    "theorem_count": 38,
+    "file_count": 11,
+    "theorem_count": 44,
     "theorems": [
       "firstViolation_none_iff",
       "checkLabEars_strips_speech",
@@ -50,17 +51,23 @@
       "out_of_domain_always_abstains",
       "undersized_calib_always_abstains",
       "conformalRank_pos",
+      "corrupted_run_never_poisons_memory",
+      "unidentifiable_spectrum_never_certified",
+      "certified_negative_sound",
+      "deep_ood_always_blocked",
+      "accepted_outside_tau_is_bounded_probe",
+      "autonomous_mcp_requires_fresh_lean_proof",
       "verifyCycle_ok_iff",
       "shieldedStep_preserves_worldSafe",
       "shieldedTrajectory_never_crosses_boundary",
       "selectBestCertified_always_valid",
       "selectBestCertified_dominates_all_valid"
     ],
-    "guard_count": 16,
+    "guard_count": 21,
     "zero_sorry_verified": true,
     "violations": []
   },
-  "total_runtime_sec": 36.55,
+  "total_runtime_sec": 35.8,
   "experiments": {
     "exp1_molecular_discovery": {
       "task": "L6 + L5 Autonomous Molecular Discovery Campaign (ESOL + Retrosynthesis)",
@@ -103,7 +110,7 @@
         "labfill"
       ],
       "candidates_verified_in_lean": 1626,
-      "lean_throughput_protocols_per_sec": 30047.7,
+      "lean_throughput_protocols_per_sec": 29952.1,
       "regimes": {
         "ungated_top1": {
           "valid_completion_pct": 22.0,
@@ -146,7 +153,7 @@
           "feasible_instances": "30/30",
           "feasible_pct": 100.0,
           "window_violations": 0,
-          "mean_makespan_min": 116.5
+          "mean_makespan_min": 116.9
         }
       }
     },

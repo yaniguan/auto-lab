@@ -116,6 +116,39 @@ private def evalBatchLine (line : String) : String :=
     match checkRolloutGate rw with
     | none => s!"OK\tlabbench-posttrain\t{val}"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{val}"
+  | ["ATTRIB", preOK, acOK, winOK, tacOK, posOK, negOK, resP, maxRes, ovlP, maxOvl, sigHi] =>
+    let t : AssayTelemetry :=
+      { preGateCertified := parseBoolD preOK, acousticNormal := parseBoolD acOK,
+        scheduleWindowsRespected := parseBoolD winOK, tactileSeatedCleanly := parseBoolD tacOK,
+        posControlPassed := parseBoolD posOK, negControlBlankClean := parseBoolD negOK,
+        spectralResidualPermille := parseNatD resP, maxResidualPermille := parseNatD maxRes,
+        precursorOverlapPermille := parseNatD ovlP, maxOverlapPermille := parseNatD maxOvl,
+        signalAboveActivityThresh := parseBoolD sigHi }
+    let out := attributeAssayOutcome t
+    let tag := match out with
+      | .executionArtifact         => "EXECUTION_ARTIFACT"
+      | .ambiguousCharacterization => "AMBIGUOUS_CHARACTERIZATION"
+      | .certifiedPositive         => "CERTIFIED_POSITIVE"
+      | .certifiedNegative         => "CERTIFIED_NEGATIVE"
+    s!"OK\tattribution\t{tag}\t{if admitToScientificMemory out then 1 else 0}"
+  | ["FRONTIER", isProbe, dist, tau, eta, maxEta, vol, microCap, isBuy, usedPred] =>
+    let p : FrontierProbeSpec :=
+      { mode := if parseBoolD isProbe then .frontierCalibration else .exploitation,
+        knnDistPermille := parseNatD dist, tauPermille := parseNatD tau,
+        etaStepPermille := parseNatD eta, maxEtaPermille := parseNatD maxEta,
+        assayVolTenthUL := parseNatD vol, microVolCapTenthUL := parseNatD microCap,
+        isDirectBuy := parseBoolD isBuy, usedAsPointPrediction := parseBoolD usedPred }
+    match checkFrontierAction p with
+    | none => "OK\tfrontier\tvalid"
+    | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
+  | ["MCP", tokEp, curEp, leanOK, isExc, humSign] =>
+    let e : McpHardwareEnvelope :=
+      { tokenEpoch := parseNatD tokEp, currentDeckEpoch := parseNatD curEp,
+        leanProofValid := parseBoolD leanOK, isFrontierException := parseBoolD isExc,
+        humanSupervisorSign := parseBoolD humSign }
+    match checkMcpHardwareCall e with
+    | none => "OK\tmcp\tvalid"
+    | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
   | _ => "ERR\tunknown\tmalformed_command\tunrecognized TSV batch command"
 
 private partial def runBatchLoop (stdin : IO.FS.Stream) (stdout : IO.FS.Stream) : IO Unit := do

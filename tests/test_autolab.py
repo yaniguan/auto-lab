@@ -97,9 +97,9 @@ def test_cli_commands_smoke(capsys) -> None:
 def test_lean_trust_regime_audit_and_parity() -> None:
     audit = audit_lean_sources()
     assert audit["zero_sorry_verified"] is True, f"Violations: {audit['violations']}"
-    assert audit["file_count"] == 10
-    assert audit["theorem_count"] >= 38
-    assert audit["guard_count"] >= 16
+    assert audit["file_count"] == 11
+    assert audit["theorem_count"] >= 44
+    assert audit["guard_count"] >= 21
 
     # Check empirical study results JSON
     study_path = REPO_ROOT / "benchmarks" / "results" / "trust_regime_results.json"
@@ -107,6 +107,14 @@ def test_lean_trust_regime_audit_and_parity() -> None:
     study = json.loads(study_path.read_text(encoding="utf-8"))
     assert study["experiments"]["exp1_molecular_discovery"]["regimes"]["lean_trust"]["boundary_violation_pct"] == 0.0
     assert study["experiments"]["exp2_protocol_synthesis"]["regimes"]["lean_best_of_8_plus_guided_repair"]["hardware_fault_pct"] == 0.0
+
+    novel_path = REPO_ROOT / "benchmarks" / "results" / "novel_directions_results.json"
+    assert novel_path.exists()
+    novel = json.loads(novel_path.read_text(encoding="utf-8"))
+    assert novel["directions"]["d1_epistemic_attribution"]["comparison"]["lean_attribution_sdl"]["false_discovery_rate_pct"] == 0.0
+    assert novel["directions"]["d2_stepped_frontier"]["comparison"]["undirected_shell_probes"]["uncalibrated_production_runs"] == 0.0
+    assert novel["directions"]["d3_lean_mcp"]["comparison"]["proof_carrying_lean_mcp"]["unsafe_or_replay_executions"] == 0
+    assert novel["directions"]["d4_adversarial_coevolution"]["generations"]["gen2_autolablean_formal"]["saboteur_evasion_pct"] == 0.0
 
     # When `autolab-lean` is compiled locally or in CI, verify exact kernel parity!
     kernel = LeanBatchKernel()
@@ -139,6 +147,24 @@ def test_lean_trust_regime_audit_and_parity() -> None:
         assert r_bad.allowed is py_check_rehearsal(200, 3000, 102, [], wells, bad_steps).allowed is False
         assert r_bad.rule == "no_tip_cross_contamination"
 
+        # Verify NovelDirections.lean batch commands (ATTRIB, FRONTIER, MCP)
+        a_neg, a_xrd, f_ok, f_deep, m_ok, m_stale = kernel.eval_lines(
+            [
+                "ATTRIB\t1\t1\t1\t1\t1\t1\t80\t150\t40\t120\t0",
+                "ATTRIB\t1\t1\t1\t1\t1\t1\t80\t150\t310\t120\t1",
+                "FRONTIER\t1\t890\t750\t250\t350\t80\t100\t1\t0",
+                "FRONTIER\t1\t1200\t750\t250\t350\t80\t100\t1\t0",
+                "MCP\t42\t42\t1\t0\t0",
+                "MCP\t41\t42\t1\t0\t0",
+            ]
+        )
+        assert a_neg.rule == "CERTIFIED_NEGATIVE" and a_neg.extra == "1"
+        assert a_xrd.rule == "AMBIGUOUS_CHARACTERIZATION" and a_xrd.extra == "0"
+        assert f_ok.allowed is True
+        assert f_deep.allowed is False and f_deep.rule == "within_stepping_stone_shell"
+        assert m_ok.allowed is True
+        assert m_stale.allowed is False and m_stale.rule == "mcp_epoch_freshness"
+
 
 def test_site_files_present() -> None:
     import re
@@ -155,6 +181,7 @@ def test_site_files_present() -> None:
         "trust/index.html",
         "trust/trust.js",
         "assets/trust-regime-data.json",
+        "assets/novel-directions-data.json",
         "studio/index.html",
         "studio/studio.js",
         "repos/index.html",

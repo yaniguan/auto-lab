@@ -123,14 +123,16 @@ auto-lab/
 │   ├── POSTTRAIN_FLYWHEEL.md     # Execution-to-RLVR data & post-training flywheel
 │   ├── REPO_MATRIX.md            # Side-by-side 14-repository dossier matrix
 │   ├── TRUST_REGIME_STUDY.md     # Formal Lean 4 Trust Regime & 5-task empirical study
+│   ├── NOVEL_DIRECTIONS_FROM_COMMUNITY.md # 4 next-gen directions synthesized from 2025-2026 discourse
 │   └── ISSUES_AUDIT_INDEX.md     # Master index of all filed GitHub Issues across the 14 repos
-├── lean/                         # AutoLabLean: Lean 4.36.0 Trust Regime (38 theorems, 0 sorry)
-│   ├── AutoLabLean/              # L6 -> L0 specifications, checkers & bounded autonomy theorems
+├── lean/                         # AutoLabLean: Lean 4.36.0 Trust Regime (44 theorems, 0 sorry)
+│   ├── AutoLabLean/              # L6 -> L0 specs, bounded autonomy & novel frontier theorems
 │   ├── Main.lean                 # Native `autolab-lean` showcase & `--batch-tsv` runtime verifier
 │   └── lakefile.toml             # Zero-dependency Lake build configuration
 ├── benchmarks/
 │   ├── trust_regime_study.py     # Reproducible 5-task empirical study via compiled `autolab-lean`
-│   └── results/                  # Measured JSON metrics (`trust_regime_results.json`)
+│   ├── novel_directions_study.py # Empirical evaluation of the 4 next-gen frontier directions
+│   └── results/                  # Measured JSON metrics (`trust_regime_results.json`, `novel_directions_results.json`)
 ├── scripts/
 │   ├── sync_all.py               # Clone, fetch, or check git cleanliness across all 14 repos
 │   └── build_site_data.py        # Compiles catalog/ and audit data into docs/ and site/assets/
@@ -148,12 +150,13 @@ auto-lab/
 
 ## Formal Trust Regime in Lean 4 (`AutoLabLean`)
 
-Every hard physical, statistical, stoichiometric, temporal, security, privacy, and licensing guardrail across the 14 repositories is formalized in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **38 machine-checked theorems**, **16 `#guard` witnesses**, **0 `sorry`**) and evaluated across five empirical tasks in [`docs/TRUST_REGIME_STUDY.md`](docs/TRUST_REGIME_STUDY.md):
+Every hard physical, statistical, stoichiometric, temporal, security, privacy, and licensing guardrail across the 14 repositories—plus four next-generation frontier mechanisms—is formalized in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **44 machine-checked theorems**, **21 `#guard` witnesses**, **0 `sorry`**) and evaluated empirically in [`docs/TRUST_REGIME_STUDY.md`](docs/TRUST_REGIME_STUDY.md) and [`docs/NOVEL_DIRECTIONS_FROM_COMMUNITY.md`](docs/NOVEL_DIRECTIONS_FROM_COMMUNITY.md):
 
 - **Bounded Molecular Discovery (`1,128` real Delaney ESOL compounds)**: Boundary violations drop from `72.0%` to **`0.0%`**, selected-run MAE drops **2.49x** (`0.978 -> 0.393` log mol/L), empirical 90% coverage reaches **`97.6%`**, and verified soluble hit yield climbs from `28.0%` to **`100.0%`**.
 - **Wet-Lab Protocol Synthesis & Counterexample Repair (`200 x 8` candidates @ `30,048` proto/s)**: Catastrophic hardware faults drop from `78.0%` to **`0.0%`**, while valid task completion rises from `22.0%` (ungated) / `23.5%` (coarse heuristic) to **`87.0%`** (Lean Best-of-8) and **`97.5%`** (with Lean counterexample-guided 1-step repair).
 - **Contended Fleet Scheduling (`30` `labshift` suites)**: Suite feasibility improves from `24/30` (`13` incubation window violations) to **`30/30` (`0` violations)** with **`10.2%` shorter mean makespan** (`129.8 -> 116.5 min`).
 - **Lab SQL Verification (`lab-verify`) & Anti-Hack RLVR (`labbench-posttrain`)**: Wrong-SQL false accepts drop from `55.6%` (`L1–L3` syntax/schema only) to **`0.0%`**, and 5-seed `GRPO` true verified accuracy climbs from `0.4%` (`99.6%` exploit collapse under soft rewards) to **`98.4%`** under multiplicative Lean reward gating.
+- **Next-Gen Frontier Directions (`NovelDirections.lean`)**: (1) *Diagnostic Epistemic Attribution* cuts post-execution false discoveries **`8.3% -> 0.0%`** and lifts verified hits **`+29.5%`** (`52.2 -> 67.6`); (2) *Stepped Frontier Calibration (`Chem-RRT`)* unlocks **`30.8–54.4`** novel multi-ring scaffolds (vs `1.2` static) with **`0.0`** uncalibrated leaps; (3) *Proof-Carrying `Lean-MCP` Envelopes* deliver **`5.36x`** higher 72h protocol throughput than per-run human approval (`472` vs `88`) with **`0`** unsafe/replay runs; and (4) *Adversarial Saboteur-Verifier Co-Evolution* drives protocol evasion from **`85.7% -> 0.0%`**.
 
 ## Scientific Honesty & Status
 

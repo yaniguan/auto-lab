@@ -1,0 +1,102 @@
+{
+  "generated_at_utc": "2026-11-23T08:43:22Z",
+  "lean_audit": {
+    "file_count": 11,
+    "theorem_count": 44,
+    "guard_count": 21,
+    "zero_sorry_verified": true
+  },
+  "runtime_sec": 10.37,
+  "directions": {
+    "d1_epistemic_attribution": {
+      "direction": "Direction 1 \u00b7 Diagnostic Epistemic Attribution & Certified Negative Results",
+      "inspired_by": "A-Lab XRD characterization debate, Sakana AI Scientist-v2 negative results, La Agente Optima sensor faults",
+      "data_source": "real_esol (1128 compounds)",
+      "lean_kernel_calls": 960,
+      "comparison": {
+        "naive_sdl": {
+          "false_discovery_rate_pct": 8.3,
+          "poisoned_records_admitted": 18.0,
+          "post_campaign_surrogate_mae": 1.0,
+          "verified_true_hits_discovered": 52.2
+        },
+        "lean_attribution_sdl": {
+          "false_discovery_rate_pct": 0.0,
+          "poisoned_records_admitted": 0.0,
+          "post_campaign_surrogate_mae": 0.78,
+          "verified_true_hits_discovered": 67.6
+        }
+      }
+    },
+    "d2_stepped_frontier": {
+      "direction": "Direction 2 \u00b7 Stepped Frontier Calibration (Active Trust-Boundary Expansion)",
+      "inspired_by": "Resolving the static guardrail vs novel-scaffold discovery paradox in self-driving labs",
+      "data_source": "real_esol (1128 compounds)",
+      "lean_kernel_calls": 54239,
+      "comparison": {
+        "static_trust_wall_v1": {
+          "trusted_chemical_space_pct": 49.8,
+          "certified_multiring_scaffolds_unlocked": 1.2,
+          "uncalibrated_production_runs": 0.0,
+          "empirical_90_coverage_pct": 93.7
+        },
+        "undirected_shell_probes": {
+          "trusted_chemical_space_pct": 88.5,
+          "certified_multiring_scaffolds_unlocked": 54.4,
+          "uncalibrated_production_runs": 0.0,
+          "empirical_90_coverage_pct": 89.7
+        },
+        "goal_directed_chem_rrt_shell": {
+          "trusted_chemical_space_pct": 61.2,
+          "certified_multiring_scaffolds_unlocked": 30.8,
+          "uncalibrated_production_runs": 0.0,
+          "empirical_90_coverage_pct": 90.1
+        },
+        "unbounded_greedy_leap": {
+          "trusted_chemical_space_pct": 66.1,
+          "certified_multiring_scaffolds_unlocked": 48.4,
+          "uncalibrated_production_runs": 102.4,
+          "empirical_90_coverage_pct": 86.6
+        }
+      }
+    },
+    "d3_lean_mcp": {
+      "direction": "Direction 3 \u00b7 Proof-Carrying `Lean-MCP` Hardware Envelopes (72-Hour Continuous Lab Simulation)",
+      "inspired_by": "2026 MCP lab harnesses (plr-mcp, LabMCP, OpenLabAI, Osprey, Anthropic Model Hardware Standard)",
+      "lean_kernel_calls": 500,
+      "comparison": {
+        "advisory_prompt_mcp": {
+          "protocols_completed_in_72h": 472,
+          "human_approval_interruptions": 0,
+          "unsafe_or_replay_executions": 28
+        },
+        "per_run_human_approval_mcp": {
+          "protocols_completed_in_72h": 88,
+          "human_approval_interruptions": 95,
+          "unsafe_or_replay_executions": 0
+        },
+        "proof_carrying_lean_mcp": {
+          "protocols_completed_in_72h": 472,
+          "human_approval_interruptions": 32,
+          "unsafe_or_replay_executions": 0
+        }
+      }
+    },
+    "d4_adversarial_coevolution": {
+      "direction": "Direction 4 \u00b7 Adversarial Saboteur-Verifier Co-Evolution (`twinstep` x `LeanEvolve`)",
+      "inspired_by": "Lean4Agent / LeanEvolve (arXiv:2606.06523), BenchBench-Protocol, and RLVR verifier-gaming debates",
+      "adversarial_mutations_tested": 140,
+      "generations": {
+        "gen0_volume_bounds_only": {
+          "saboteur_evasion_pct": 85.7
+        },
+        "gen1_presence_bitmask": {
+          "saboteur_evasion_pct": 71.4
+        },
+        "gen2_autolablean_formal": {
+          "saboteur_evasion_pct": 0.0
+        }
+      }
+    }
+  }
+}

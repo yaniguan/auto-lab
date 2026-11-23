@@ -196,7 +196,9 @@ theorem unverified_rollout_gets_zero_reward (r : RolloutRewardSpec)
   ];
 
   let STUDY = null;
+  let NOVEL = null;
   let activeExpKey = 'exp1_molecular_discovery';
+  let activeNovelKey = 'd1_epistemic_attribution';
   let activeRepo = 'lab-rehearsal';
   let activeWitness = 'deny';
 
@@ -603,14 +605,228 @@ theorem unverified_rollout_gets_zero_reward (r : RolloutRewardSpec)
     });
   }
 
+  /* ---- Section 04: Next-Gen Frontier Directions Explorer ---- */
+  const NOVEL_META = [
+    {
+      key: 'd1_epistemic_attribution',
+      tab: 'D1 · Diagnostic Attribution & Negative Results',
+      theorems: 'corrupted_run_never_poisons_memory · unidentifiable_spectrum_never_certified · certified_negative_sound',
+      problem: 'Self-driving labs conflate robotic/timing glitches with biochemical negative results (Sakana v2 debate) and conflate unreacted precursor peaks with novel discoveries (A-Lab XRD critique).',
+      code: `theorem corrupted_run_never_poisons_memory (t : AssayTelemetry) (hfault : ...) :
+    attributeAssayOutcome t = .executionArtifact ∧
+    admitToScientificMemory (attributeAssayOutcome t) = false
+
+theorem unidentifiable_spectrum_never_certified (t : AssayTelemetry)
+    (ham : t.maxResidualPermille < t.spectralResidualPermille ∨
+           t.maxOverlapPermille < t.precursorOverlapPermille) :
+    attributeAssayOutcome t ≠ .certifiedPositive ∧
+    attributeAssayOutcome t ≠ .certifiedNegative`,
+      extract: d => [
+        {
+          name: 'Naive Self-Driving Lab (Raw Readout Write-Back)',
+          tone: 'fail',
+          badge: `${d.comparison.naive_sdl.false_discovery_rate_pct}% FDR · ${d.comparison.naive_sdl.poisoned_records_admitted} poisoned runs`,
+          metric: `${d.comparison.naive_sdl.verified_true_hits_discovered} true hits`,
+          barPct: Math.round((d.comparison.naive_sdl.verified_true_hits_discovered / 75) * 100),
+          note: `Post-campaign surrogate test MAE = ${d.comparison.naive_sdl.post_campaign_surrogate_mae} log(mol/L)`,
+        },
+        {
+          name: 'AutoLabLean 4-Way Causal Attribution (ATTRIB)',
+          tone: 'pass',
+          badge: `${d.comparison.lean_attribution_sdl.false_discovery_rate_pct}% FDR · ${d.comparison.lean_attribution_sdl.poisoned_records_admitted} poisoned runs`,
+          metric: `${d.comparison.lean_attribution_sdl.verified_true_hits_discovered} true hits (+29.5%)`,
+          barPct: Math.round((d.comparison.lean_attribution_sdl.verified_true_hits_discovered / 75) * 100),
+          note: `Post-campaign surrogate test MAE = ${d.comparison.lean_attribution_sdl.post_campaign_surrogate_mae} log(mol/L) (-22.0% error)`,
+        },
+      ],
+    },
+    {
+      key: 'd2_stepped_frontier',
+      tab: 'D2 · Stepped Frontier Calibration (Chem-RRT)',
+      theorems: 'deep_ood_always_blocked · accepted_outside_tau_is_bounded_probe',
+      problem: 'A static kNN conformal wall prevents OOD hallucinations but traps the lab in starting acyclic chemotypes (49.8% space). Annular stepping-stones tau < d(x) <= (1+eta)*tau unlock multi-ring scaffolds via <=10 uL stock-only probes.',
+      code: `theorem accepted_outside_tau_is_bounded_probe (p : FrontierProbeSpec)
+    (hout : p.tauPermille < p.knnDistPermille) (hok : checkFrontierAction p = none) :
+    p.mode = .frontierCalibration ∧
+    p.knnDistPermille ≤ frontierOuterRadius p.tauPermille p.etaStepPermille ∧
+    p.assayVolTenthUL ≤ p.microVolCapTenthUL ∧
+    p.isDirectBuy = true ∧ p.usedAsPointPrediction = false`,
+      extract: d => [
+        {
+          name: 'Static Trust Wall (v1 Exploitation Only)',
+          tone: 'hold',
+          badge: '0.0 uncalibrated leaps · trapped',
+          metric: `${d.comparison.static_trust_wall_v1.certified_multiring_scaffolds_unlocked} multi-ring scaffolds`,
+          barPct: d.comparison.static_trust_wall_v1.trusted_chemical_space_pct,
+          note: `${d.comparison.static_trust_wall_v1.trusted_chemical_space_pct}% trusted space · ${d.comparison.static_trust_wall_v1.empirical_90_coverage_pct}% empirical coverage`,
+        },
+        {
+          name: 'Unbounded Greedy OOD Leap',
+          tone: 'fail',
+          badge: `${d.comparison.unbounded_greedy_leap.uncalibrated_production_runs} uncalibrated OOD runs`,
+          metric: `${d.comparison.unbounded_greedy_leap.certified_multiring_scaffolds_unlocked} multi-ring scaffolds`,
+          barPct: d.comparison.unbounded_greedy_leap.trusted_chemical_space_pct,
+          note: `Empirical coverage drops to ${d.comparison.unbounded_greedy_leap.empirical_90_coverage_pct}% (< 90% nominal target)`,
+        },
+        {
+          name: 'Lean Stepped Annular Probes (Undirected Shell)',
+          tone: 'pass',
+          badge: '0.0 uncalibrated production runs',
+          metric: `${d.comparison.undirected_shell_probes.certified_multiring_scaffolds_unlocked} multi-ring scaffolds (45x)`,
+          barPct: d.comparison.undirected_shell_probes.trusted_chemical_space_pct,
+          note: `${d.comparison.undirected_shell_probes.trusted_chemical_space_pct}% trusted space · ${d.comparison.undirected_shell_probes.empirical_90_coverage_pct}% empirical coverage`,
+        },
+        {
+          name: 'Lean Goal-Directed Chem-RRT Stepping-Stones',
+          tone: 'pass',
+          badge: '0.0 uncalibrated production runs',
+          metric: `${d.comparison.goal_directed_chem_rrt_shell.certified_multiring_scaffolds_unlocked} multi-ring scaffolds (26x)`,
+          barPct: d.comparison.goal_directed_chem_rrt_shell.trusted_chemical_space_pct,
+          note: `Targeted scaffold bridge · ${d.comparison.goal_directed_chem_rrt_shell.empirical_90_coverage_pct}% empirical coverage`,
+        },
+      ],
+    },
+    {
+      key: 'd3_lean_mcp',
+      tab: 'D3 · Proof-Carrying Lean-MCP Envelopes',
+      theorems: 'autonomous_mcp_requires_fresh_lean_proof',
+      problem: '2026 Hardware-MCP stacks either trust natural-language device prompts (vulnerable to stale-epoch replays) or pause every run for human click approval (stalling overnight 24/7 throughput).',
+      code: `theorem autonomous_mcp_requires_fresh_lean_proof (e : McpHardwareEnvelope)
+    (hnoHuman : e.humanSupervisorSign = false) :
+    checkMcpHardwareCall e = none ↔
+      (e.tokenEpoch = e.currentDeckEpoch ∧
+       e.leanProofValid = true ∧
+       e.isFrontierException = false)`,
+      extract: d => [
+        {
+          name: 'Advisory Prompt-Only Hardware MCP',
+          tone: 'fail',
+          badge: `${d.comparison.advisory_prompt_mcp.unsafe_or_replay_executions} unsafe stale-epoch replays`,
+          metric: `${d.comparison.advisory_prompt_mcp.protocols_completed_in_72h} runs / 72h`,
+          barPct: Math.round((d.comparison.advisory_prompt_mcp.protocols_completed_in_72h / 500) * 100),
+          note: '0 human clicks, but executes replayed tokens against mutated deck states',
+        },
+        {
+          name: 'Per-Run Human Approval MCP (OpenLabAI / Osprey Style)',
+          tone: 'hold',
+          badge: `${d.comparison.per_run_human_approval_mcp.human_approval_interruptions} human interruptions`,
+          metric: `${d.comparison.per_run_human_approval_mcp.protocols_completed_in_72h} runs / 72h`,
+          barPct: Math.round((d.comparison.per_run_human_approval_mcp.protocols_completed_in_72h / 500) * 100),
+          note: '0 unsafe runs, but stalls every night waiting for 9 AM human approval',
+        },
+        {
+          name: 'Proof-Carrying Lean-MCP + Daytime Exception Deferral',
+          tone: 'pass',
+          badge: `0 unsafe runs · ${d.comparison.proof_carrying_lean_mcp.human_approval_interruptions} exception-only clicks`,
+          metric: `${d.comparison.proof_carrying_lean_mcp.protocols_completed_in_72h} runs / 72h (5.36x)`,
+          barPct: Math.round((d.comparison.proof_carrying_lean_mcp.protocols_completed_in_72h / 500) * 100),
+          note: '24/7 zero-click autonomy inside certified regime; co-signs frontier exceptions during daytime',
+        },
+      ],
+    },
+    {
+      key: 'd4_adversarial_coevolution',
+      tab: 'D4 · Saboteur–Verifier Co-Evolution',
+      theorems: 'checkRehearsal_preserves_capacity · runRehearsalSteps_conserves',
+      problem: 'Inspired by Lean4Agent / LeanEvolve (arXiv:2606.06523): adversarial protocol saboteurs rapidly evade scalar volume or bitmask gates via B1->A1 concentration back-entry and unsealed 95 C evaporation.',
+      code: `-- Gen-0 (volume bounds): 85.7% saboteur evasion
+-- Gen-1 (2-bit presence mask): 71.4% saboteur evasion
+-- Gen-2 (AutoLabLean stateful conservation + conc. monotonicity + >=80 C seal): 0.0% evasion`,
+      extract: d => [
+        {
+          name: 'Gen-0 Verifier (Scalar Volume Bounds Only)',
+          tone: 'fail',
+          badge: `${d.generations.gen0_volume_bounds_only.saboteur_evasion_pct}% saboteur evasion`,
+          metric: `${(100 - d.generations.gen0_volume_bounds_only.saboteur_evasion_pct).toFixed(1)}% blocked`,
+          barPct: Math.round(100 - d.generations.gen0_volume_bounds_only.saboteur_evasion_pct),
+          note: 'Misses tip reuse, thermal evaporation, dead-volume underflow, and frozen wells',
+        },
+        {
+          name: 'Gen-1 Verifier (Coarse 2-Bit Reagent Presence Mask)',
+          tone: 'hold',
+          badge: `${d.generations.gen1_presence_bitmask.saboteur_evasion_pct}% saboteur evasion`,
+          metric: `${(100 - d.generations.gen1_presence_bitmask.saboteur_evasion_pct).toFixed(1)}% blocked`,
+          barPct: Math.round(100 - d.generations.gen1_presence_bitmask.saboteur_evasion_pct),
+          note: 'Evaded by B1->A1 concentration back-entry, >=80 C evaporation, and forgotten drop_tip',
+        },
+        {
+          name: 'Gen-2 Verifier (AutoLabLean Formal Invariant Suite)',
+          tone: 'pass',
+          badge: `${d.generations.gen2_autolablean_formal.saboteur_evasion_pct}% saboteur evasion`,
+          metric: '100.0% blocked (140 / 140)',
+          barPct: 100,
+          note: 'Zero successful evasions across all 7 wet-lab fault families',
+        },
+      ],
+    },
+  ];
+
+  function renderNovelDirections() {
+    const tabsHost = document.getElementById('novel-tabs');
+    const stage = document.getElementById('novel-stage');
+    if (!tabsHost || !stage || !NOVEL) return;
+
+    tabsHost.innerHTML = NOVEL_META.map(m => `
+      <button type="button" class="tab-btn ${m.key === activeNovelKey ? 'active' : ''}" data-novel="${esc(m.key)}">
+        ${esc(m.tab)}
+      </button>`).join('');
+
+    tabsHost.querySelectorAll('[data-novel]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeNovelKey = btn.dataset.novel;
+        renderNovelDirections();
+      });
+    });
+
+    const meta = NOVEL_META.find(m => m.key === activeNovelKey) || NOVEL_META[0];
+    const dData = NOVEL.directions[meta.key];
+    const rows = meta.extract(dData);
+
+    stage.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line);">
+        <div style="max-width:760px;">
+          <span class="small-label purple">Inspired by: ${esc(dData.inspired_by)}</span>
+          <h3 style="font-size:19px;font-weight:740;margin-top:5px;">${esc(dData.direction)}</h3>
+          <p style="font-size:13.6px;color:var(--muted);margin-top:5px;">${esc(meta.problem)}</p>
+          <p style="font-size:12.4px;color:var(--muted);margin-top:6px;">Proved in <code>AutoLabLean/NovelDirections.lean</code>: <code>${esc(meta.theorems)}</code></p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a class="button primary" href="https://github.com/yaniguan/auto-lab/blob/main/lean/AutoLabLean/NovelDirections.lean" target="_blank" rel="noopener">NovelDirections.lean ↗</a>
+          <a class="button secondary" href="https://github.com/yaniguan/auto-lab/blob/main/docs/NOVEL_DIRECTIONS_FROM_COMMUNITY.md" target="_blank" rel="noopener">Full Study ↗</a>
+        </div>
+      </div>
+      <div style="display:grid;gap:12px;margin-bottom:16px;">
+        ${rows.map(r => `
+          <div style="background:var(--surface2);border:1px solid var(--line);border-radius:11px;padding:13px 16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+              <strong style="font-size:14.4px;">${esc(r.name)}</strong>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span class="pill ${esc(r.tone)}">${esc(r.badge)}</span>
+                <span style="font-size:13.5px;font-weight:740;color:var(--text);">${esc(r.metric)}</span>
+              </div>
+            </div>
+            <div style="height:9px;background:var(--surface);border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-bottom:6px;">
+              <div style="height:100%;width:${Math.max(3, Math.min(100, Number(r.barPct)))}%;background:${r.tone === 'pass' ? 'var(--accent)' : r.tone === 'hold' ? 'var(--amber)' : 'var(--rose)'};border-radius:999px;"></div>
+            </div>
+            <p style="font-size:12.5px;color:var(--muted);">${esc(r.note)}</p>
+          </div>`).join('')}
+      </div>
+      <pre class="code-block" style="margin:0;">${esc(meta.code)}</pre>`;
+  }
+
   async function init() {
     initThemeToggle(() => renderTrustSketch());
     renderTrustSketch();
     renderLeanExplorer();
 
-    const resp = await fetch('../assets/trust-regime-data.json');
-    STUDY = await resp.json();
+    const [respStudy, respNovel] = await Promise.all([
+      fetch('../assets/trust-regime-data.json'),
+      fetch('../assets/novel-directions-data.json'),
+    ]);
+    STUDY = await respStudy.json();
+    NOVEL = await respNovel.json();
     renderExperiments();
+    renderNovelDirections();
   }
 
   document.addEventListener('DOMContentLoaded', init);
