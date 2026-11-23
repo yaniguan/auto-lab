@@ -16,6 +16,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from autolab.catalog import COMPANION_REPOS, CORE_REPO_NAMES, LAYERS  # noqa: E402
 from autolab.loop_demo import SCENARIOS, run_closed_loop_scenario  # noqa: E402
+from scripts.concise_specs import CONCISE_SPECS  # noqa: E402
 
 
 def git_head_info(repo_dir: Path) -> tuple[str, str]:
@@ -66,6 +67,8 @@ def build_all(scratch_json_dir: Path, workspace_root: Path) -> None:
         prof["layer_name"] = layer_lookup[layer_code].name
         prof["commit_head"] = head_sha
         prof["issue_count"] = len(issues_raw)
+        if name in CONCISE_SPECS:
+            prof["concise"] = CONCISE_SPECS[name]
         repos_out.append(prof)
 
         compact_items = []

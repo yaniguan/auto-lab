@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f8fafc">
-  <title>14-Repository Technical Dossiers — Auto-Lab</title>
-  <meta name="description" content="Complete technical specifications (Object, Data, Model, Training, History, and Unique Properties) for all 14 repositories in the Auto-Lab 7-layer architecture.">
+  <title>14 Repo Cards — Auto-Lab</title>
+  <meta name="description" content="Concise 6-tile visual cards (Object, Data, Model, Training, History, Unique Property) for all 14 Auto-Lab repositories.">
   <link rel="canonical" href="https://yaniguan.github.io/auto-lab/repos/">
   <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css">
-  <script defer src="../shared.js"></script>
-  <script defer src="repos.js"></script>
+  <link rel="stylesheet" href="../styles.css?v=3">
+  <script defer src="../shared.js?v=3"></script>
+  <script defer src="repos.js?v=3"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -18,13 +18,13 @@
   <header class="site-header">
     <a class="brand" href="../" aria-label="Auto-Lab home">
       <img src="../assets/autolab-animated.svg" width="52" height="26" alt="">
-      <span>Auto-Lab <small>Repositories</small></span>
+      <span>Auto-Lab <small>14 Repos</small></span>
     </a>
     <nav aria-label="Main navigation">
       <a class="nav-link" href="../">Overview</a>
       <a class="nav-link" href="../studio/">Interactive Lab</a>
-      <a class="nav-link active" href="./">14 Repositories</a>
-      <a class="nav-link" href="../audit/">Issue Audit</a>
+      <a class="nav-link active" href="./">14 Repos</a>
+      <a class="nav-link" href="../audit/">322 Issues</a>
       <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
       <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
@@ -34,46 +34,46 @@
     <section class="subpage-hero">
       <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;">
         <div>
-          <p class="eyebrow"><span class="status-dot"></span> Complete Specifications · 14 Core Repositories</p>
-          <h1>Repository Technical Dossiers</h1>
+          <p class="eyebrow"><span class="status-dot"></span> 5-Second Visual Cards · 14 Core Repositories</p>
+          <h1>Repository Cards</h1>
           <p>
-            Select any repository in the sidebar to inspect its <strong>Object</strong>, <strong>Data</strong>, <strong>Model</strong>, <strong>Training</strong>, <strong>History</strong>, and <strong>Unique Properties</strong>, or switch to the side-by-side matrix.
+            One-line summary, I/O pipeline, measured numbers, and six short tiles per repo.
           </p>
         </div>
         <div class="seg-pills" id="view-mode-pills">
-          <button type="button" data-view="detail" class="active">Dossier Reader</button>
-          <button type="button" data-view="matrix">Comparison Matrix (All 14)</button>
+          <button type="button" data-view="detail" class="active">Visual Card</button>
+          <button type="button" data-view="matrix">14-Row Table</button>
         </div>
       </div>
     </section>
 
     <section class="section wrap" style="padding-top:36px;">
-      <!-- Reader View -->
+      <!-- Visual Card Reader View -->
       <div class="catalog-layout" id="reader-view">
         <aside class="catalog-sidebar" aria-label="Repository navigation">
           <input type="search" id="sidebar-search" class="input-ctrl" style="width:100%;margin-bottom:12px;"
-                 placeholder="Filter repositories…" aria-label="Filter repositories">
+                 placeholder="Filter repos…" aria-label="Filter repositories">
           <div id="sidebar-groups"></div>
         </aside>
 
         <article class="dossier-sheet" id="dossier-host">
-          <p style="color:var(--muted);">Loading repository dossier…</p>
+          <p style="color:var(--muted);">Loading card…</p>
         </article>
       </div>
 
-      <!-- Matrix View -->
+      <!-- Compact 14-Row Table View -->
       <div id="matrix-view" style="display:none;">
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>Layer</th>
-                <th>Repository</th>
+                <th>Repo</th>
                 <th>Object</th>
                 <th>Data</th>
                 <th>Model</th>
                 <th>Training</th>
-                <th>Primary Unique Property</th>
+                <th>Unique Property</th>
               </tr>
             </thead>
             <tbody id="matrix-tbody"></tbody>
@@ -88,11 +88,11 @@
       <img src="../assets/autolab-static.svg" width="44" height="22" alt="">
       <span>Auto-Lab</span>
     </a>
-    <p>14 Core Repositories · Documented with README.md &amp; ARCHITECTURE_AND_HISTORY.md</p>
+    <p>14 Core Repositories · Concise Visual Cards</p>
     <div style="display:flex;gap:16px;">
       <a href="../">Overview</a>
       <a href="../studio/">Interactive Lab</a>
-      <a href="../audit/">Issue Audit</a>
+      <a href="../audit/">322 Issues</a>
     </div>
   </footer>
 </body>

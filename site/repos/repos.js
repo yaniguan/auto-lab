@@ -1,4 +1,4 @@
-/* 14-Repository Technical Dossiers Controller (/repos/) */
+/* 14-Repository Concise Visual Cards Controller (/repos/) */
 (() => {
   'use strict';
 
@@ -23,7 +23,7 @@
     if (updateHash) history.replaceState(null, '', `#${encodeURIComponent(repoName)}`);
     if (viewMode !== 'detail') setViewMode('detail');
     renderSidebar();
-    renderDossier();
+    renderCard();
   }
 
   function setViewMode(mode) {
@@ -43,7 +43,7 @@
       const items = (DATA.repos || []).filter(r => {
         if (r.layer !== code) return false;
         if (!q) return true;
-        return JSON.stringify(r).toLowerCase().includes(q);
+        return JSON.stringify(r.concise || r).toLowerCase().includes(q) || r.repo.toLowerCase().includes(q);
       });
       if (!items.length) return '';
       return `
@@ -57,13 +57,13 @@
         </div>`;
     }).join('');
 
-    host.innerHTML = groupsHtml || '<p style="padding:8px;font-size:12.5px;color:var(--muted);">No matching repositories.</p>';
+    host.innerHTML = groupsHtml || '<p style="padding:8px;font-size:12.5px;color:var(--muted);">No match.</p>';
     host.querySelectorAll('[data-repo]').forEach(btn => {
       btn.addEventListener('click', () => selectRepo(btn.dataset.repo));
     });
   }
 
-  function renderDossier() {
+  function renderCard() {
     const host = document.getElementById('dossier-host');
     if (!host || !DATA) return;
     const list = orderedRepos();
@@ -75,77 +75,88 @@
     const next = idx < list.length - 1 ? list[idx + 1] : null;
     const colClass = r.layer === 'L6' || r.layer === 'L0' ? 'purple' : r.layer === 'L5' || r.layer === 'L2' ? 'blue' : r.layer === 'L3' ? 'amber' : 'teal';
 
-    const metrics = (r.key_metrics || []).slice(0, 4);
-    const kpiHtml = metrics.length
-      ? `<div class="kpi-strip" style="margin-bottom:24px;grid-template-columns:repeat(${metrics.length}, 1fr);">
-          ${metrics.map(m => `
+    const c = r.concise || {};
+    const sh = c.short || {};
+    const fl = c.flow || ['Inputs', r.repo, 'Outputs'];
+    const kpis = c.kpis || [];
+
+    const kpiHtml = kpis.length
+      ? `<div class="kpi-strip" style="margin:16px 0;grid-template-columns:repeat(${kpis.length}, 1fr);">
+          ${kpis.map(([val, lbl]) => `
             <div class="kpi-cell">
-              <small>${esc(m.label)}</small>
-              <strong>${esc(m.value)}</strong>
+              <small>${esc(lbl)}</small>
+              <strong>${esc(val)}</strong>
             </div>`).join('')}
         </div>`
       : '';
 
-    const io = r.io_contract || {};
     host.innerHTML = `
-      <div class="dossier-header">
+      <div class="dossier-header" style="margin-bottom:16px;padding-bottom:16px;">
         <div>
-          <span class="small-label ${colClass}">${esc(r.layer)} · ${esc(r.layer_name)} · HEAD ${esc(r.commit_head)}</span>
+          <span class="small-label ${colClass}">${esc(r.layer)} · ${esc(r.layer_name)} · <code>${esc(r.commit_head)}</code></span>
           <h2>${esc(r.repo)}</h2>
-          <p style="color:var(--muted);font-size:15px;max-width:640px;">${esc(r.tagline)}</p>
+          <p style="color:var(--muted);font-size:15.5px;margin-top:4px;">${esc(c.hook || r.tagline)}</p>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <a class="button primary" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub Repo ↗</a>
-          <a class="button secondary" href="${esc(r.url)}/blob/main/docs/ARCHITECTURE_AND_HISTORY.md" target="_blank" rel="noopener">ARCHITECTURE_AND_HISTORY.md ↗</a>
-          <a class="button secondary" href="../audit/?repo=${encodeURIComponent(r.repo)}">${esc(r.issue_count)} Audit Issues →</a>
+          <a class="button primary" href="${esc(r.url)}" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="button secondary" href="../audit/?repo=${encodeURIComponent(r.repo)}">${esc(r.issue_count)} Issues →</a>
         </div>
+      </div>
+
+      <div class="flow-strip">
+        <div class="flow-node"><small>Input</small>${esc(fl[0])}</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node"><small>Method</small>${esc(fl[1])}</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node"><small>Output</small>${esc(fl[2])}</div>
       </div>
 
       ${kpiHtml}
 
-      <div class="dossier-sections">
-        <section class="dossier-block">
-          <h3>1. Object</h3>
-          <p>${fmtMd(r.object)}</p>
-        </section>
-
-        <section class="dossier-block">
-          <h3>2. Data</h3>
-          <p>${fmtMd(r.data)}</p>
-        </section>
-
-        <section class="dossier-block">
-          <h3>3. Model</h3>
-          <p>${fmtMd(r.model)}</p>
-        </section>
-
-        <section class="dossier-block">
-          <h3>4. Training</h3>
-          <p>${fmtMd(r.training)}</p>
-        </section>
-
-        <section class="dossier-block">
-          <h3>5. History</h3>
-          <p>${fmtMd(r.history)}</p>
-        </section>
-
-        <section class="dossier-block">
-          <h3>6. Unique Properties</h3>
-          <ul>
-            ${(r.unique_properties || []).map(p => `<li>${fmtMd(p)}</li>`).join('')}
-          </ul>
-        </section>
-
-        <section class="dossier-block">
-          <h3>Input &amp; Output Contract</h3>
-          <div class="inspector-box">
-            <div><strong>Inputs:</strong> <span>${fmtMd(io.inputs || '-')}</span></div>
-            <div><strong>Outputs:</strong> <span>${fmtMd(io.outputs || '-')}</span></div>
-          </div>
-        </section>
+      <div class="bento-6">
+        <div class="bento-tile">
+          <span class="bento-label">1 · Object</span>
+          <p>${esc(sh.object || r.object)}</p>
+        </div>
+        <div class="bento-tile">
+          <span class="bento-label">2 · Data</span>
+          <p>${esc(sh.data || r.data)}</p>
+        </div>
+        <div class="bento-tile">
+          <span class="bento-label">3 · Model</span>
+          <p>${esc(sh.model || r.model)}</p>
+        </div>
+        <div class="bento-tile">
+          <span class="bento-label">4 · Training</span>
+          <p>${esc(sh.training || r.training)}</p>
+        </div>
+        <div class="bento-tile">
+          <span class="bento-label">5 · History</span>
+          <p>${esc(sh.history || r.history)}</p>
+        </div>
+        <div class="bento-tile highlight">
+          <span class="bento-label">6 · Unique Property</span>
+          <p>${esc(sh.property || (r.unique_properties || [])[0] || '')}</p>
+        </div>
       </div>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:18px;border-top:1px solid var(--line);gap:12px;flex-wrap:wrap;">
+      <details class="deep-drawer">
+        <summary>Expand detailed technical notes &amp; ARCHITECTURE_AND_HISTORY.md</summary>
+        <div class="deep-drawer-body">
+          <div><strong>Object</strong>${fmtMd(r.object)}</div>
+          <div><strong>Data</strong>${fmtMd(r.data)}</div>
+          <div><strong>Model</strong>${fmtMd(r.model)}</div>
+          <div><strong>Training</strong>${fmtMd(r.training)}</div>
+          <div><strong>History</strong>${fmtMd(r.history)}</div>
+          <div>
+            <a class="table-link" href="${esc(r.url)}/blob/main/docs/ARCHITECTURE_AND_HISTORY.md" target="_blank" rel="noopener">
+              Read full ARCHITECTURE_AND_HISTORY.md on GitHub ↗
+            </a>
+          </div>
+        </div>
+      </details>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px;padding-top:16px;border-top:1px solid var(--line);gap:12px;flex-wrap:wrap;">
         ${prev ? `<button type="button" class="button secondary" data-nav-repo="${esc(prev.repo)}">← ${esc(prev.repo)}</button>` : '<span></span>'}
         ${next ? `<button type="button" class="button secondary" data-nav-repo="${esc(next.repo)}">${esc(next.repo)} →</button>` : '<span></span>'}
       </div>`;
@@ -161,20 +172,19 @@
   function renderMatrix() {
     const tbody = document.getElementById('matrix-tbody');
     if (!tbody || !DATA) return;
-    const clip = (s, n = 135) => {
-      const str = String(s || '').replace(/`/g, '');
-      return str.length <= n ? str : str.slice(0, n - 1) + '…';
-    };
-    tbody.innerHTML = orderedRepos().map(r => `
-      <tr>
-        <td><span class="layer-code-pill">${esc(r.layer)}</span></td>
-        <td><button type="button" class="table-link" style="background:none;border:0;padding:0;" data-jump-detail="${esc(r.repo)}">${esc(r.repo)}</button></td>
-        <td>${esc(clip(r.object))}</td>
-        <td>${esc(clip(r.data))}</td>
-        <td>${esc(clip(r.model))}</td>
-        <td>${esc(clip(r.training))}</td>
-        <td>${esc(clip((r.unique_properties || [])[0] || ''))}</td>
-      </tr>`).join('');
+    tbody.innerHTML = orderedRepos().map(r => {
+      const sh = (r.concise && r.concise.short) || {};
+      return `
+        <tr>
+          <td><span class="layer-code-pill">${esc(r.layer)}</span></td>
+          <td><button type="button" class="table-link" style="background:none;border:0;padding:0;" data-jump-detail="${esc(r.repo)}">${esc(r.repo)}</button></td>
+          <td>${esc(sh.object || '')}</td>
+          <td>${esc(sh.data || '')}</td>
+          <td>${esc(sh.model || '')}</td>
+          <td>${esc(sh.training || '')}</td>
+          <td>${esc(sh.property || '')}</td>
+        </tr>`;
+    }).join('');
 
     tbody.querySelectorAll('[data-jump-detail]').forEach(btn => {
       btn.addEventListener('click', () => selectRepo(btn.dataset.jumpDetail));
@@ -201,7 +211,7 @@
     });
 
     renderSidebar();
-    renderDossier();
+    renderCard();
     renderMatrix();
   }
 

@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f8fafc">
-  <title>Auto-Lab — 7-Layer Embodied Brain, Safety Harness &amp; Post-Training Stack</title>
-  <meta name="description" content="Auto-Lab organizes 14 wet-lab AI and robotics repositories across a 7-layer cognitive and embodied hierarchy: metacognitive & conformal brain (L6), procurement & CP-SAT scheduling (L5), digital-twin rehearsal & default-deny verification (L4), RLVR post-training (L3), sensory ears (L2), protocol compiler & tactile hands (L1), and quantized edge runtime (L0).">
+  <title>Auto-Lab — 7-Layer Embodied Brain, Safety Gate &amp; Post-Training</title>
+  <meta name="description" content="Fourteen modular repositories giving a wet-lab robot a calibrated brain, a default-deny safety gate, ears, hands, edge feet, and verifiable RL post-training.">
   <link rel="canonical" href="https://yaniguan.github.io/auto-lab/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Auto-Lab — 7-Layer Embodied Co-Scientist Infrastructure &amp; Post-Training">
-  <meta property="og:description" content="14 modular repositories spanning L6 Metacognitive Brain to L0 Quantized Edge Runtime, default-deny safety gates, and verifiable RL post-training.">
+  <meta property="og:title" content="Auto-Lab — Embodied Lab Brain &amp; Post-Training">
+  <meta property="og:description" content="7 layers, 14 repositories, default-deny gates, and RLVR post-training.">
   <meta property="og:url" content="https://yaniguan.github.io/auto-lab/">
   <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="shared.js"></script>
-  <script defer src="home.js"></script>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <script defer src="shared.js?v=3"></script>
+  <script defer src="home.js?v=3"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -29,8 +29,8 @@
     <nav aria-label="Main navigation">
       <a class="nav-link active" href="./">Overview</a>
       <a class="nav-link" href="studio/">Interactive Lab</a>
-      <a class="nav-link" href="repos/">14 Repositories</a>
-      <a class="nav-link" href="audit/">Issue Audit</a>
+      <a class="nav-link" href="repos/">14 Repos</a>
+      <a class="nav-link" href="audit/">322 Issues</a>
       <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
       <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
@@ -39,27 +39,28 @@
   <main id="main">
     <!-- Hero -->
     <section class="hero wrap">
-      <p class="eyebrow"><span class="status-dot"></span> Embodied Co-Scientist · Default-Deny Safety · RLVR Post-Training</p>
+      <p class="eyebrow"><span class="status-dot"></span> Embodied Brain · Default-Deny Safety · Post-Training</p>
       <h1>
         <span class="hero-name"><span class="hero-accent">Auto</span>-Lab</span>
-        <span class="hero-title">A Multi-Layer Brain, Safety Nervous System, and Post-Training Stack for Autonomous Wet Laboratories</span>
+        <span class="hero-title">Give a Lab Robot a Calibrated Brain, a Safety Gate, Hands, Ears, and Feet</span>
       </h1>
       <p class="hero-deck">
-        Wiring an unconstrained language model directly to a pipette fails on the bench. Auto-Lab structures <strong>14 modular repositories</strong> into seven cognitive, executive, inhibitory, sensory, motor, edge, and post-training layers (<code>L6 → L0</code>).
+        Fourteen small, checkable repositories organized from high-level scientific reasoning (<code>L6</code>) down to edge quantized boards (<code>L0</code>) and verifiable RL post-training (<code>L3</code>).
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="studio/">Open Interactive Lab →</a>
-        <a class="button secondary" href="repos/">Explore 14 Repositories →</a>
-        <a class="button secondary" href="audit/">Browse 322-Issue Audit →</a>
+        <a class="button primary" href="#brain-stack">Inspect 7-Layer Brain ↓</a>
+        <a class="button secondary" href="studio/">Interactive Lab →</a>
+        <a class="button secondary" href="repos/">14 Repo Cards →</a>
+        <a class="button secondary" href="audit/">322 Issues →</a>
       </div>
       <div class="meta-strip">
         <span><strong>Yani Guan</strong></span>
         <span>·</span>
-        <span>MIT Open Source</span>
+        <span>MIT</span>
         <span>·</span>
-        <span>Supported by Google Antigravity for Science</span>
+        <span>Google Antigravity for Science</span>
         <span>·</span>
-        <span>Companion organs: <a href="https://yaniguan.github.io/YLM/" target="_blank" rel="noopener">YLM</a>, <a href="https://yaniguan.github.io/WignerFlow/" target="_blank" rel="noopener">WignerFlow</a>, <a href="https://yaniguan.github.io/ouroboros-ocsr/" target="_blank" rel="noopener">Ouroboros</a>, <a href="https://github.com/yaniguan/assayfold" target="_blank" rel="noopener">assayfold</a></span>
+        <span>Companions: <a href="https://yaniguan.github.io/YLM/" target="_blank" rel="noopener">YLM</a>, <a href="https://yaniguan.github.io/WignerFlow/" target="_blank" rel="noopener">WignerFlow</a>, <a href="https://yaniguan.github.io/ouroboros-ocsr/" target="_blank" rel="noopener">Ouroboros</a>, <a href="https://github.com/yaniguan/assayfold" target="_blank" rel="noopener">assayfold</a></span>
       </div>
     </section>
 
@@ -67,36 +68,33 @@
     <section class="wrap" aria-label="Measured highlights">
       <div class="metric-strip">
         <a class="metric-card" href="#brain-stack">
-          <span class="small-label purple">Brain &amp; Body Hierarchy</span>
+          <span class="small-label purple">Architecture</span>
           <div class="metric-big"><strong>7</strong> <span>layers · 14 repos</span></div>
-          <p>Top-down division from Socratic &amp; conformal brain (L6) to quantized edge boards (L0).</p>
+          <p>Brain (L6) to edge boards (L0).</p>
         </a>
         <a class="metric-card" href="studio/#posttrain">
-          <span class="small-label amber">Post-Training Ledger</span>
+          <span class="small-label amber">Post-Training</span>
           <div class="metric-big"><strong>49,139</strong> <span>records · 0 leak</span></div>
-          <p>20 open sources unified under cryptographic <code>SplitGuard</code> and 8 verified reward templates.</p>
+          <p>20 sources under <code>SplitGuard</code>.</p>
         </a>
         <a class="metric-card" href="studio/">
-          <span class="small-label teal">Default-Deny Gates</span>
+          <span class="small-label teal">Safety Gates</span>
           <div class="metric-big"><strong>22 / 22</strong> <span>&amp; 30 / 30</span></div>
-          <p>Zero false passes on 4-layer SQL verification and 100% window-feasible CP-SAT schedules.</p>
+          <p>SQL gate &amp; CP-SAT schedules.</p>
         </a>
         <a class="metric-card" href="audit/">
-          <span class="small-label blue">Engineering Maintenance</span>
+          <span class="small-label blue">Code Audit</span>
           <div class="metric-big"><strong id="home-issue-total">322</strong> <span>live issues</span></div>
-          <p>22–24 code-grounded GitHub Issues filed per repository across bugs, safety, and numerics.</p>
+          <p>22–24 issues filed per repo.</p>
         </a>
       </div>
     </section>
 
-    <!-- 01 / Interactive 7-Layer Brain & Nervous System -->
+    <!-- 01 / Interactive 7-Layer Brain & Organ Cards -->
     <section class="section wrap" id="brain-stack">
       <div class="section-heading">
-        <p class="eyebrow">01 / Seven-Layer Cognitive &amp; Embodied Architecture</p>
-        <h2>A brain that asks why and knows when to abstain.<br><span class="muted-heading">A body that rehearses before touching a plate.</span></h2>
-        <p class="section-intro">
-          Select any layer or repository pill on the left to inspect its anatomical role, input/output contract, and key invariants.
-        </p>
+        <p class="eyebrow">01 / Anatomy of the Agent</p>
+        <h2>Click any part of the brain or body.</h2>
       </div>
 
       <div class="brain-explorer">
@@ -104,75 +102,83 @@
 
         <aside class="inspector-card" id="organ-inspector">
           <div>
-            <span class="small-label" id="insp-badge">LAYER L6 · METACOGNITIVE &amp; EPISTEMIC BRAIN</span>
+            <span class="small-label" id="insp-badge">LAYER L6 · BRAIN</span>
             <h3 id="insp-name">lab-decide</h3>
-            <p class="inspector-tagline" id="insp-summary">Loading repository specification…</p>
+            <p class="inspector-tagline" id="insp-hook">Loading…</p>
           </div>
-          <div class="inspector-box" id="insp-contract"></div>
-          <div>
-            <span class="small-label" style="display:block;margin-bottom:6px;">Key Invariants &amp; Properties</span>
-            <ul class="inspector-props" id="insp-props"></ul>
-          </div>
+          <div class="flow-strip" id="insp-flow"></div>
+          <div class="mini-spec-grid" id="insp-mini-specs"></div>
           <div class="inspector-actions">
-            <a class="button primary" id="insp-dossier-link" href="repos/#lab-decide">Full Technical Dossier →</a>
-            <a class="button secondary" id="insp-github-link" href="https://github.com/yaniguan/lab-decide" target="_blank" rel="noopener">GitHub Repo ↗</a>
+            <a class="button primary" id="insp-dossier-link" href="repos/#lab-decide">Open Repo Card →</a>
+            <a class="button secondary" id="insp-github-link" href="https://github.com/yaniguan/lab-decide" target="_blank" rel="noopener">GitHub ↗</a>
           </div>
         </aside>
       </div>
     </section>
 
-    <!-- 02 / Closed-Loop Signal Flow -->
+    <!-- 02 / Two Loops -->
     <section class="section alt-section" id="loop">
       <div class="wrap">
         <div class="section-heading">
-          <p class="eyebrow">02 / Closed-Loop Execution &amp; Plasticity</p>
-          <h2>How one experimental goal traverses the organism.</h2>
-          <p class="section-intro">
-            Click any stage in the pipeline below to inspect how upward sensory evidence, downward default-deny gates, and post-training write-back connect.
-          </p>
+          <p class="eyebrow">02 / Closed Loops</p>
+          <h2>Rehearse before running. Verify before training.</h2>
         </div>
 
-        <div class="flow-shell">
+        <div class="flow-shell" style="margin-bottom:22px;">
           <div id="closed-loop-svg-host"></div>
-          <p id="closed-loop-stage-note" style="font-size:13.8px;color:var(--muted);margin-top:14px;padding-top:14px;border-top:1px solid var(--line);"></p>
+          <p id="closed-loop-stage-note" style="font-size:13.5px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--line);"></p>
         </div>
 
-        <div class="flow-steps-grid">
-          <article class="flow-step-card">
-            <span class="small-label purple">Cortex · L6 &amp; L5</span>
-            <h3>Deliberate, Calibrate &amp; Schedule</h3>
-            <p><code>lab-ask-why</code> surfaces opposing evidence and discriminating controls; <code>lab-decide</code> abstains outside its conformal trust region; <code>buy-or-make</code> and <code>labshift</code> bound reagent cost and instrument windows.</p>
+        <div class="dual-loops">
+          <article class="loop-box">
+            <span class="small-label teal">Before Every Bench Run · L4</span>
+            <h3>Pre-Experiment Safety Loop</h3>
+            <div class="step-chain">
+              <span class="step-chip">Recall memory</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Rehearse in twin</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Default-deny verify</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Run</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Write back</span>
+            </div>
           </article>
-          <article class="flow-step-card">
-            <span class="small-label teal">Inhibitory Gate · L4</span>
-            <h3>Recall, Rehearse &amp; Default-Deny</h3>
-            <p><code>lab-rehearsal</code> checks episodic memory (<code>runs.jsonl</code>) and dry-runs deck volumes and tips in a digital twin, while <code>lab-verify</code> blocks unverified SQL, Lean, and protocol actions.</p>
-          </article>
-          <article class="flow-step-card">
-            <span class="small-label amber">Motor &amp; Flywheel · L2–L0 &amp; L3</span>
-            <h3>Compile, Act &amp; Post-Train</h3>
-            <p><code>stepbot</code>, <code>lab-hands</code>, and <code>lab-feet</code> compile deterministic commands and collision-free paths on quantized edge models, feeding outcomes into <code>twinstep</code>, <code>labfill</code>, and <code>labbench-posttrain</code>.</p>
+
+          <article class="loop-box">
+            <span class="small-label amber">After Every Run · L3</span>
+            <h3>Post-Training Flywheel</h3>
+            <div class="step-chain">
+              <span class="step-chip">Seed error twins</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Pack BF16 (5.42x)</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">SFT · MPO · GDPO</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Distill to edge</span>
+            </div>
           </article>
         </div>
 
         <div class="portal-grid">
           <a class="portal-card" href="studio/">
             <span class="small-label teal">Subpage 01</span>
-            <h3>Interactive Lab Workbench</h3>
-            <p>Run live closed-loop gate simulations, inspect 5.42x sequence-packed BF16 throughput, and explore conformal coverage &amp; CP-SAT Gantt charts.</p>
-            <span class="portal-cta">Launch Interactive Lab →</span>
+            <h3>Interactive Lab</h3>
+            <p>Test default-deny blocks, BF16 packing, and CP-SAT Gantt schedules live.</p>
+            <span class="portal-cta">Open Workbench →</span>
           </a>
           <a class="portal-card" href="repos/">
             <span class="small-label purple">Subpage 02</span>
-            <h3>14-Repository Dossiers</h3>
-            <p>Clean master-detail technical profiles covering Object, Data, Model, Training, History, and Unique Properties for every repository.</p>
-            <span class="portal-cta">Open Repository Catalog →</span>
+            <h3>14 Repo Cards</h3>
+            <p>Scannable 6-tile visual specs (Object, Data, Model, Training, History, Property).</p>
+            <span class="portal-cta">Browse Cards →</span>
           </a>
           <a class="portal-card" href="audit/">
             <span class="small-label blue">Subpage 03</span>
-            <h3>322-Issue Codebase Audit</h3>
-            <p>Searchable, paginated engineering audit indexing all 322 live GitHub Issues across severity levels, categories, and exact source lines.</p>
-            <span class="portal-cta">Explore Issue Tracker →</span>
+            <h3>322-Issue Audit</h3>
+            <p>Filterable engineering issues across all 14 repositories.</p>
+            <span class="portal-cta">Explore Issues →</span>
           </a>
         </div>
       </div>
@@ -181,11 +187,8 @@
     <!-- 03 / Clean 14-Repository Directory Table -->
     <section class="section wrap" id="directory">
       <div class="section-heading">
-        <p class="eyebrow">03 / Repository Directory</p>
-        <h2>All 14 core repositories at a glance.</h2>
-        <p class="section-intro">
-          Select any repository to read its complete technical dossier or inspect its live GitHub Issue tracker.
-        </p>
+        <p class="eyebrow">03 / All 14 Repositories</p>
+        <h2>One line per repo.</h2>
       </div>
 
       <div class="table-wrap">
@@ -193,9 +196,9 @@
           <thead>
             <tr>
               <th>Layer</th>
-              <th>Repository</th>
-              <th>Role in the Organism</th>
-              <th>Audit</th>
+              <th>Repo</th>
+              <th>What it does</th>
+              <th>Key result</th>
               <th>Links</th>
             </tr>
           </thead>
@@ -208,19 +211,14 @@
     <section class="section alt-section" id="quickstart">
       <div class="wrap">
         <div class="section-heading">
-          <p class="eyebrow">04 / Workspace CLI &amp; Citation</p>
-          <h2>Clone, inspect, and verify the stack locally.</h2>
-          <p class="section-intro">
-            The <code>autolab-hub</code> package uses the Python standard library only and manages all 14 sibling checkouts.
-          </p>
+          <p class="eyebrow">04 / Quickstart</p>
+          <h2>Pull and inspect all 14 repos.</h2>
         </div>
 
         <pre class="code-block">git clone https://github.com/yaniguan/auto-lab.git &amp;&amp; cd auto-lab
 pip install -e ".[dev]"
-python scripts/sync_all.py --action clone-or-fetch   # clone or update all 14 sibling repositories
-autolab layers                                       # print L6 -> L0 hierarchy
-autolab inspect labbench-posttrain                   # print Object, Data, Model, Training, History, Properties
-autolab loop --scenario broken_tip_reuse             # trace L4 default-deny block &amp; L3 write-back</pre>
+python scripts/sync_all.py --action clone-or-fetch
+autolab loop --scenario broken_tip_reuse</pre>
 
         <div class="citation-box">
           <div class="citation-top">
@@ -233,7 +231,7 @@ autolab loop --scenario broken_tip_reuse             # trace L4 default-deny blo
   author = {Guan, Yani},
   year   = {2026},
   url    = {https://github.com/yaniguan/auto-lab},
-  note   = {Project Website: https://yaniguan.github.io/auto-lab/}
+  note   = {https://yaniguan.github.io/auto-lab/}
 }</pre>
         </div>
       </div>
@@ -245,11 +243,11 @@ autolab loop --scenario broken_tip_reuse             # trace L4 default-deny blo
       <img src="assets/autolab-static.svg" width="44" height="22" alt="">
       <span>Auto-Lab</span>
     </a>
-    <p>7-Layer Embodied Co-Scientist Infrastructure &amp; Post-Training · 14 Core Repositories</p>
+    <p>7 Layers · 14 Core Repositories · MIT</p>
     <div style="display:flex;gap:16px;">
       <a href="studio/">Interactive Lab</a>
-      <a href="repos/">Repositories</a>
-      <a href="audit/">Issue Audit</a>
+      <a href="repos/">14 Repos</a>
+      <a href="audit/">322 Issues</a>
       <a href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </footer>
