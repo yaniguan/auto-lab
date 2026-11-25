@@ -1,4 +1,4 @@
-/* Layered, Human-Readable Stories & Interactive Micro-Playgrounds for All 14 Auto-Lab Repos
+/* Layered, Human-Readable Stories & Interactive Micro-Playgrounds for All 15 Auto-Lab Repos
  * Replaces rigid "1. Object / 2. Data..." form lists with:
  *   Layer 1: Plain-English "What & Why" + 3 clean metrics
  *   Layer 2: Interactive "Try an Example" scenario switcher (real inputs -> real outputs)
@@ -48,7 +48,7 @@ Ask-Why Experiment Prompt:
       tabs: {
         how: 'Ranks every sentence in candidate abstracts against the claim using a zero-dependency NumPy BM25 scorer on the SciFact corpus (188 claims, 209 claim-abstract pairs), then pairs the top evidence spans with structured questions probing evidence, hidden assumptions, and mind-changing results.',
         guarantee: 'Treats supporting claims (79.7% top-3 recall) and contradicting claims (77.5% top-3 recall) equally instead of confirming the user’s phrasing. Current baseline retrieves inside gold abstracts; multi-paper open retrieval is the next step.',
-        status: 'Working CPU baseline on public SciFact dev (CC BY-NC 2.0 research data). Planned next: cross-corpus retrieval and automatic translation of discriminating questions into runnable protocol checks.',
+        status: 'Merged on `main` (`b8a9d51`, 70 passing tests): SciFact dev baseline plus 14-dataset 2019-2026 claim/conflict registry (`LABBench2`, `PeerQA-XT`, `SciVer`, `ConflictBank`, `ChemBench`) with `eval_only` canary guards.',
       },
     },
 
@@ -99,7 +99,7 @@ Round 3 : Calibration holds near ≥90% target while in-region MAE stays ~0.64.`
       tabs: {
         how: 'Trains a gradient-boosted regressor on six molecular descriptors from Delaney’s 1,128-compound ESOL dataset (ignoring the file’s own linear ESOL column), calibrates ±q intervals on a held-out split at 90% nominal coverage, and gates answers by 5-nearest-neighbor distance.',
         guarantee: 'Never silently extrapolates outside its distance threshold, and reports inside vs outside accuracy separately so coverage gains from shrinking the test pool are never misread as generalization.',
-        status: 'CPU workflow verified on ESOL. Next milestones: locally adaptive interval widths (Mondrian / heteroscedastic conformal) and a constrained BoTorch acquisition loop.',
+        status: 'Merged on `main` (`e37de97`, 68 passing tests): Delaney ESOL plus 10 open calibration datasets (`BigSolDB v2.2`, `AqSolDB`, `CALiSol-23`, `FreeSolv`, `Biogen ADME`, `BH-HTE-OOD 2026`) with strict leakage-column exclusion.',
       },
     },
 
@@ -150,7 +150,7 @@ Guarantee   : Unverified molecules stay "unknown" or "invalid"—never guessed a
       tabs: {
         how: 'Queries live PubChem Chemical Vendors (rate-limited with SQLite caching) and local stock files (ZINC, eMolecules, Mcule, Enamine), scores synthetic complexity with RDKit SA_Score and MIT SCScore, and searches 2-step RDKit SMARTS disconnections (or optional AiZynthFinder MCTS).',
         guarantee: 'Strictly separates vendor existence from price: missing catalog prices stay null, mixed currencies or incompatible pack units are never compared, and every external data source carries an explicit commercial/redistribution license record aligned with assayfold.',
-        status: '38-file Python package with CLI (`buy-or-make rank`), JSON Schemas, and 20-molecule measured CPU benchmark. Active review branch refines mixed-currency and partial-leaf cost reporting.',
+        status: 'Merged on `main` (`3be1f4a`, 65 passing tests): 19 SPDX-audited sources (`PaRoutes 2.0`, `ChEMBL 37`, `SureChEMBL`, `COCONUT 2.0`, `ORDerly`, `Syntheseus USPTO-50K`, `SynPlanner`), 5 JSON Schemas, and 20-molecule CPU benchmark.',
       },
     },
 
@@ -238,7 +238,7 @@ Benchmarks : LAB-Bench (CC-BY-SA-4.0, eval-only) · BioProBench (non-commercial)
       tabs: {
         how: 'Curates four concise Markdown tables linking hardware vendors, remote cloud labs, open-source software stacks, and protocol datasets, backed by a scheduled link-checking script in `.github/workflows/`.',
         guarantee: 'Strictly pointer-only: copies zero external data, claims no vendor partnerships or rankings, and reminds callers to verify per-dataset licenses before training.',
-        status: 'Live reference map checked in November 2026; serves as the human-readable entry map for `stepbot`, `twinstep`, and `labshift`.',
+        status: 'Merged on `main` (`3b7d259`, 123 passing tests): 70-entry `atlas.json` (17 open datasets including `FineBio`, `ChemBench`, `BixBench`, `MassSpecGym`, `COD/ROD`, `OMAT24`, `DROID`) across 160 live-checked HTTPS links.',
       },
     },
 
@@ -292,7 +292,7 @@ RUN      : BLOCKED by verify gate — 0 commands sent · logged to runs.jsonl`,
       tabs: {
         how: 'Simulates a virtual deck (96-well plate, 12-column reservoir, 96-tip rack, 20–300 uL pipette), hashes each incoming JSON protocol to recall prior outcomes from `runs.jsonl`, checks physical bookkeeping invariants, and writes every pass or failure back to memory.',
         guarantee: 'Enforces a hard pre-execution barrier: broken runs (empty aspiration, out-of-range pipette volume, well overflow, tip cross-contamination) never emit hardware commands, and repeat submissions trigger immediate recall warnings.',
-        status: 'Working CPU bookkeeping twin + curated directory of 3D lab simulators (LabUtopia, AutoBio, Labimus, Genesis, IsaacLab). Next step: physics-level MuJoCo/Isaac replay with stochastic pipetting CV.',
+        status: 'Merged on `main` (`4013323`, 64 passing tests): CPU 96-well bookkeeping twin plus 14-dataset 2024-2026 protocol catalog & converters (`Opentrons v6-v8`, `FineBio`, `BioPlanner`, `BioProBench`, `Matterix`, `WETOP-Bench`).',
       },
     },
 
@@ -343,7 +343,7 @@ Key lesson: Syntax + schema gates alone let 7/14 wrong queries through; executio
       tabs: {
         how: 'Runs candidate SQL queries against a synthetic lab SQLite database (experiments, samples, instruments) through four sequential gates—`sqlglot` syntax parsing, AST read-only enforcement, table/column schema validation, and execution result verification—and links to the Lean 4 `LabLean` protocol checker in `YLM`.',
         guarantee: 'Default-deny posture: anything unparsed, mutating (`DELETE`/`UPDATE`/`DROP`), schema-invalid, or failing behavioral checks is rejected with the exact first failing layer.',
-        status: '22-candidate SQL gate benchmark complete on CPU (22/22 agreement) alongside text-to-SQL and Lean 4 autoformalization references. Next: property-based invariants when no single gold query exists.',
+        status: 'Merged on `main` (`0c29ffc`, 106 passing tests): 22-candidate SQL gate + `lean-mcp/v1` runtime verifier + 16-benchmark 2024-2026 SQL & Lean 4 adapters (`Spider 2.0-Lite`, `BIRD`, `EHRSQL-2024`, `PutnamBench`, `ProofNet-Lean4`).',
       },
     },
 
@@ -393,7 +393,7 @@ Operator constraints     : Scores workspace AABB, joint limits & swept-point obs
       tabs: {
         how: 'Combines two tracks—Scientist (multimodal evidence QA, CALiSol-23 conductivity, BioProBench PQA/ORD/ERR/GEN) and Operator (JSON-Schema instrument calls, behavioral cloning, world model, spatial constraint checking)—packaged into the installable `labrl` library with `TorchLocalEngine` (CPU/1xGPU) and `NeMoRLEngine` (8xA100 recipes).',
         guarantee: 'Strict scientific honesty: CPU smoke runs verify end-to-end training loops and reward audits today, while full A100/H100 training metrics remain explicitly marked `PENDING` until executed; `LAB-Bench` is strictly evaluation-only.',
-        status: '421-file flagship post-training repository on `main`, integrating Scientist & Operator benchmarks, the CALiSol-23 RLVR suite, the `labrl` CLI, and 8 verified reward composers.',
+        status: 'Merged on `main` (`fbdd731`, 177 passing tests): Scientist & Operator benchmarks, CALiSol-23 RLVR suite, `labrl` CLI, 8 anti-hack templates, and 9-corpus 2024-2026 Open Science registry (`MassSpecGym`, `SMolInstruct`, `ORD`, `BixBench`).',
       },
     },
 
@@ -531,7 +531,7 @@ Speed       : "12,000 x g"    (test F1 = 0.748 across 155 gold spans)`,
       tabs: {
         how: 'Provides a zero-learning regex span baseline evaluated on 125 BRAT-annotated test protocols from the MIT Wet Lab Protocols corpus (`main`), plus an unsupervised machine condition monitor (`Gaussian`, `kNN`, and dense `Autoencoder` over 64-bin log-mel spectrograms on DCASE 2023 fan/valve/bearing clips in PR #2).',
         guarantee: 'Privacy by default in lab rooms: raw audio is never saved to disk, and `drop_speech_band=True` strips the 300–3400 Hz voice band while emitting step-linked JSONL alerts that can pause a run.',
-        status: 'WLP protocol parser on `main` and full DCASE 2023 acoustic evaluation + unit tests in open review branch `acoustic-anomaly`. Next: learned action-reagent link parsing and contact-mic recordings on real lab hardware.',
+        status: 'Merged on `main` (`079b9bb`, 65 passing tests): WLP protocol parser, DCASE 2023 acoustic detectors, and 12-dataset 2024-2026 sensory & protocol registry (`DCASE 2024-2026`, `IMAD-DS 2024`, `MIMII`, `ChemBench`, `BioProBench`, `ProtoAct`).',
       },
     },
 
@@ -617,7 +617,7 @@ Learned policies  : ACT · Diffusion Policy · OpenVLA · pi0 · cuRobo · AutoB
       tabs: {
         how: 'Implements SBS 96-well coordinate mapping, analytic 2-link inverse kinematics, link-vs-AABB obstacle checking, joint-space RRT exploration, and randomized path shortcutting in pure NumPy, paired with a license-checked catalog of manipulation & tactile datasets.',
         guarantee: 'Verifies continuous link segments along every shortcut edge before accepting it, and flags non-commercial datasets (`TransCG`, `Touch-Slide`, `Sparsh`) explicitly.',
-        status: 'Working 2D geometric CPU planner (`demo/plan_to_well.py`) + literature/dataset tracker through November 2026. Next: 3D MuJoCo pipetting scene and imitation-learned visuomotor/tactile policies.',
+        status: 'Merged on `main` (`53d7ac4`, 44 passing tests): 2D & 6-DoF `ArmSE3` RRT planners, 96-well clearance/slosh auditors, and 12-dataset 2024-2026 registry (`FineBio`, `DROID`, `AutoBio`, `LayeredDepth`, `ClearPose`, `TactX`, `FeelSight`).',
       },
     },
 
@@ -657,7 +657,7 @@ Honest caveat   : NumPy dequantizes before matmul—storage drops 250x; real run
       tabs: {
         how: 'Trains a two-hidden-layer teacher and compact student via both hard labels and temperature-scaled (`T=4`) logit regression, packs weights into `int8` and `4-bit` representations, benchmarks single-sample latency, and indexes edge runtimes (`llama.cpp`, `ExecuTorch`, `MLC-LLM`, `AWQ`, `GPTQ`, `Embodied.cpp`).',
         guarantee: 'Reports negative and nuanced findings plainly—showing both where simple hard-label training edges out soft distillation on an easy task and why true integer kernels are required for wall-clock gains.',
-        status: 'Runnable CPU compression probe + curated edge-AI reference hub. Next: true `int8`/`int4` C++ runtime execution on a Raspberry Pi 5 / Jetson bench board.',
+        status: 'Merged on `main` (`98a995b`, 40 passing tests): `int8`/`4-bit` distillation + `SAFE_HOLD` drift abstention across 7 open edge sensor corpora (`UCI 36-mo Gas Drift`, `CWRU` & `Hydraulic` vibration, `SERS Raman 2026`, `Ethanol NIR`).',
       },
     },
 
@@ -697,7 +697,7 @@ Ledger   : Appended with SHA-256 chain receipt -> safe constraint for BO & RLVR.
       tabs: {
         how: 'Combines a 25-theorem Lean 4.36.0 blame calculus (`LabAttribLean`) with dual-backend projected-coordinate-descent NNLS spectral deconvolution, Expected Value of Information (`EVOI`) orthogonal assay routing, and SHA-256 hash-chained ledgers.',
         guarantee: 'Proves `corrupted_run_never_poisons_memory`, `unidentifiable_spectrum_never_certified`, and `valid_tau_expansion_requires_certified_micro_probe`—preserving 96.4% conformal coverage across 9-round ESOL stepping-stone campaigns.',
-        status: 'Standalone 15th Core Repository (`yaniguan/lab-attrib`) with 42 passing tests, Ubuntu Python + Lean 4 CI, and a 5-page LaTeX monograph (`paper/main.pdf`).',
+        status: 'Merged on `main` (`b8df8ef`, 75 unit tests): 15th Core Repository with 25 Lean 4 theorems, 5-page LaTeX monograph (`paper/main.pdf`), 11-phase XRD/Raman panel, and 9 open characterization datasets (`RRUFF`, `COD`, `MP-20`, `A-Lab GPSS`, `MassSpecGym`).',
       },
     },
   };

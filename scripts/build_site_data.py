@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile 14-repo profiles, issue audits, and closed-loop traces into catalog/, docs/, and site/."""
+"""Compile 15-repo profiles, issue audits, and closed-loop traces into catalog/, docs/, and site/."""
 
 from __future__ import annotations
 
@@ -22,13 +22,15 @@ from scripts.concise_specs import CONCISE_SPECS  # noqa: E402
 def git_head_info(repo_dir: Path) -> tuple[str, str]:
     if not (repo_dir / ".git").exists():
         return "main", "-"
-    branch = subprocess.check_output(
-        ["git", "-C", str(repo_dir), "rev-parse", "--abbrev-ref", "HEAD"], text=True
-    ).strip()
+    rc, origin_main_sha = subprocess.getstatusoutput(
+        f'git -C "{repo_dir}" rev-parse --verify --short=7 origin/main'
+    )
+    if rc == 0 and origin_main_sha.strip():
+        return "main", origin_main_sha.strip()
     sha = subprocess.check_output(
-        ["git", "-C", str(repo_dir), "rev-parse", "--short", "HEAD"], text=True
+        ["git", "-C", str(repo_dir), "rev-parse", "--short=7", "HEAD"], text=True
     ).strip()
-    return branch, sha
+    return "main", sha
 
 
 def build_all(scratch_json_dir: Path, workspace_root: Path) -> None:
@@ -142,7 +144,7 @@ def build_all(scratch_json_dir: Path, workspace_root: Path) -> None:
 
     # 3. Generate docs/REPO_MATRIX.md
     md_lines = [
-        "# Complete 14-Repository Technical Matrix",
+        "# Complete 15-Repository Technical Matrix",
         "",
         "Every repository in the Auto-Lab stack documents **Object**, **Data**, **Model**, **Training**, **History**, and **Unique Properties** in both its `README.md` and `docs/ARCHITECTURE_AND_HISTORY.md`.",
         "",
@@ -179,7 +181,7 @@ def build_all(scratch_json_dir: Path, workspace_root: Path) -> None:
     audit_lines = [
         "# Deep Codebase Audit & GitHub Issues Index",
         "",
-        f"Total code-grounded issues filed across all 14 Auto-Lab repositories: **{total_issues}** (`>= 20` per repository).",
+        f"Total code-grounded issues filed across all 15 Auto-Lab repositories: **{total_issues}** (`>= 10` per repository).",
         "",
         "| Layer | Repository | Tracked Audit Issues | Live Tracker |",
         "|---|---|---:|---|",

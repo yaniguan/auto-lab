@@ -130,7 +130,7 @@ COMPANION_REPOS: tuple[dict[str, str], ...] = (
         "page": "",
         "layer": "L2",
         "organ": "License-Gated Open Science Data Schema & Ingestion",
-        "summary": "Normalizes open protocols, reactions, QM9/DFT, LabPics images, and benchmarks into one SHA-256-sealed, UCUM-unit, SPDX-gated schema.",
+        "summary": "Normalizes 21 open lab datasets (protocols, reactions, QM9/DFT, LabPics, CALiSol-23, BigSolDB 2.0, MassSpecGym, opXRD, ROD, Raman, ChemBench, DCASE 2025, FineBio) into one SHA-256-sealed, UCUM-unit, SPDX-gated schema.",
     },
 )
 

@@ -73,10 +73,12 @@ def main() -> int:
                 continue
 
         _, branch = run_git(["rev-parse", "--abbrev-ref", "HEAD"], cwd=dest)
-        _, sha = run_git(["rev-parse", "--short", "HEAD"], cwd=dest)
+        _, sha = run_git(["rev-parse", "--short=7", "HEAD"], cwd=dest)
+        rc_om, om_sha = run_git(["rev-parse", "--short=7", "origin/main"], cwd=dest)
         _, dirty = run_git(["status", "--porcelain"], cwd=dest)
         state = "clean" if not dirty else f"dirty ({len(dirty.splitlines())} files)"
-        print(f"[ok] {name:22s} | branch={branch:14s} | head={sha:8s} | {state}")
+        om_note = f" | origin/main={om_sha}" if rc_om == 0 and om_sha != sha else ""
+        print(f"[ok] {name:22s} | branch={branch:14s} | head={sha:8s}{om_note} | {state}")
 
     return 1 if failures else 0
 

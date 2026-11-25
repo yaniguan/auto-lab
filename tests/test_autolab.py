@@ -59,8 +59,10 @@ def test_closed_loop_scenarios_behave_honestly() -> None:
 
 
 def test_catalog_and_issues_integrity_when_built() -> None:
+    import re
+
     catalog_file = REPO_ROOT / "catalog" / "repos.json"
-    issues_file = REPO_ROOT / "catalog" / "issues_index.json"
+    manifest_file = REPO_ROOT / "catalog" / "workspace.manifest.json"
     site_data = REPO_ROOT / "site" / "assets" / "autolab-data.json"
     if not catalog_file.exists():
         return
@@ -70,10 +72,21 @@ def test_catalog_and_issues_integrity_when_built() -> None:
     seen = {r["repo"] for r in repos}
     assert seen == set(CORE_REPO_NAMES)
 
+    assert manifest_file.exists()
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert manifest.get("hub") == "auto-lab"
+    manifest_repos = manifest.get("repositories", [])
+    assert [m["repo"] for m in manifest_repos] == list(CORE_REPO_NAMES)
+    manifest_by_repo = {m["repo"]: m for m in manifest_repos}
+
     for r in repos:
         for required_field in ("object", "data", "model", "training", "history", "unique_properties"):
             assert r.get(required_field), f"{r['repo']} missing {required_field}"
         assert get_repo(r["repo"])["url"].startswith("https://github.com/yaniguan/")
+        m_entry = manifest_by_repo[r["repo"]]
+        assert m_entry["default_branch"] == "main"
+        assert re.fullmatch(r"[0-9a-f]{7}", m_entry["head_sha"]), f"Invalid head_sha for {r['repo']}: {m_entry['head_sha']}"
+        assert r["commit_head"] == m_entry["head_sha"], f"SHA drift for {r['repo']}: {r['commit_head']} vs {m_entry['head_sha']}"
 
     issues = load_issues_index()
     assert issues["total_issues"] >= 416
@@ -88,6 +101,8 @@ def test_catalog_and_issues_integrity_when_built() -> None:
     assert site_data.exists()
     payload = json.loads(site_data.read_text(encoding="utf-8"))
     assert len(payload["repos"]) == 15
+    assert payload["repos"] == repos
+    assert payload["companions"] == list(COMPANION_REPOS)
     assert len(payload["layers"]) == 7
     assert payload["issues"]["total_issues"] == issues["total_issues"]
     assert payload["issues"]["repos"]["lab-attrib"]["count"] >= 10

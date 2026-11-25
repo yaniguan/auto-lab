@@ -8,10 +8,10 @@
       "layer_name": "Metacognitive & Epistemic Brain",
       "tagline": "Socratic co-scientist that surfaces supporting and contradicting rationale sentences, hidden assumptions, and mind-changing experiments instead of picking a winner",
       "object": "Epistemic disagreement and rationale-probing module (`L6`) for the Auto-Lab brain: rather than collapsing scientific uncertainty into a binary verdict, it retrieves verbatim evidence sentences on each side of a claim, surfaces necessary assumptions, and frames the discriminating experimental result that would resolve the disagreement.",
-      "data": "Evaluates on the SciFact dev split (Wadden et al., EMNLP 2020; CC BY-NC 2.0, fetched on demand to gitignored `data/` with zero redistribution): 5,183 corpus abstracts (mean 9.7, median 8 sentences) and 300 dev claims, where 188 evidence-bearing claims yield 209 `(claim, doc_id)` pairs (138 `SUPPORT`, 71 `CONTRADICT`; 112 `NOINFO` claims excluded). Also curates SciRIFF, LAB-Bench, 9 co-scientist/debate repositories, and 13 papers (2018-2026).",
+      "data": "Evaluates on the SciFact dev split (Wadden et al., EMNLP 2020; CC BY-NC 2.0, fetched on demand to gitignored `data/` with zero redistribution: 5,183 corpus abstracts, 300 dev claims, and 209 evidence-bearing `(claim, doc_id)` pairs across 138 `SUPPORT` and 71 `CONTRADICT`) and integrates a 14-dataset `OpenDatasetSpec` registry (`src/lab_ask_why/datasets.py`, 11 from 2024-2026: `LABBench2` 2026, `PeerQA-XT` 2026, `SciVer` 2025, `CLAIMCHECK` 2025, `ChemBench` 2025, `LitQA2` 2024, `LAB-Bench ProtocolQA` 2024, `ConflictBank` 2024, `FaithEval-inconsistent` 2024, `SciRIFF` 2024, `BioASQ` 2024, plus `SciFact-Open`, `SciFact`, and `PubMedQA`) with `eval_only` canary/training blocks and `NormalizedClaimRecord` adapters.",
       "model": "Zero-parameter Okapi BM25 lexical sentence ranker (`k1 = 1.2`, `b = 0.75`) over lowercased `[a-z0-9]+` tokens (29 stopwords removed) using corpus-wide sentence IDF and average sentence length (`avgdl`), benchmarked against a 20-seed uniform random permutation baseline and paired with a deterministic 3-question epistemic probe generator (`why_questions`).",
       "training": "Zero parametric training or LLM API calls (`numpy` + Python standard library on CPU in < 1s). Achieves 0.493 Hit@1 (`recall@1`) and 0.789 Hit@3 (`recall@3`) on 209 SciFact dev claim-abstract pairs vs. 0.197 +- 0.024 and 0.528 +- 0.029 for 20-seed random ranking, with near-symmetric performance on `SUPPORT` (0.507 / 0.797) and `CONTRADICT` (0.465 / 0.775).",
-      "history": "Initialized in `6236123` (2026-11-18) with `demo/why_probe.py`, reference capture `demo/output.txt`, Python 3.12 GitHub Actions workflow (`.github/workflows/demo.yml`), and curated scientific debate/RAG catalog; architecture and ecosystem profile documented in `bbef3b6`.",
+      "history": "Initialized in `6236123` (2026-11-18) with `demo/why_probe.py`, reference capture `demo/output.txt`, and curated scientific debate/RAG catalog (`bbef3b6`), followed by Phase-2 Lean 4 & `autolab-wire/v1` audit (`40af81d`) and the 14-dataset 2024-2026 open claim/conflict registry on `main` (`b8a9d51`, PR #31).",
       "unique_properties": [
         "Stance-neutral Socratic design that retrieves both `SUPPORT` (0.797 top-3) and `CONTRADICT` (0.775 top-3) rationales with near-equal fidelity instead of forcing premature verdict collapse",
         "Fast, deterministic, zero-API-cost CPU attribution baseline (`numpy` only) establishing an interpretable lexical floor before neural reranking or multi-agent debate",
@@ -39,7 +39,7 @@
           "note": "n = 138 SUPPORT pairs (Hit@1 0.507) and n = 71 CONTRADICT pairs (Hit@1 0.465)"
         }
       ],
-      "commit_head": "e8a033b",
+      "commit_head": "b8a9d51",
       "issue_count": 28,
       "concise": {
         "hook": "Does not pick a winner—surfaces the evidence on each side and names the test that settles it.",
@@ -54,8 +54,8 @@
             "SciFact recall@3"
           ],
           [
-            "188",
-            "claims"
+            "14",
+            "open QA corpora"
           ],
           [
             "0",
@@ -64,11 +64,11 @@
         ],
         "short": {
           "object": "Surface supporting/contradicting sentences and ask what experiment changes minds.",
-          "data": "SciFact dev (188 claims, 209 claim-abstract pairs, CC BY-NC 2.0).",
+          "data": "SciFact dev (209 pairs) + 14-corpus 2019-2026 registry (LABBench2, PeerQA-XT, SciVer, ConflictBank, ChemBench).",
           "model": "Pure-NumPy BM25 sentence ranker + 3 structured Socratic question templates.",
           "training": "Zero-training lexical baseline (0.789 recall@3 vs 0.528 random).",
-          "history": "6236123 initial SciFact probe -> bbef3b6 L6 brain spec.",
-          "property": "Treats SUPPORT (0.80) and CONTRADICT (0.78) symmetrically; never crowns a winner."
+          "history": "6236123 SciFact probe -> 40af81d Lean/wire audit -> b8a9d51 14-dataset 2026 registry.",
+          "property": "Treats SUPPORT (0.80) and CONTRADICT (0.78) symmetrically; blocks eval_only training."
         }
       }
     },
@@ -79,10 +79,10 @@
       "layer_name": "Metacognitive & Epistemic Brain",
       "tagline": "Uncertainty-aware experiment advisor combining split conformal prediction intervals, kNN trust-region abstention, and active boundary expansion",
       "object": "Epistemic decision and applicability-domain layer (`L6`) under the Auto-Lab brain: delivers distribution-free calibrated prediction intervals inside its trusted chemical/experimental manifold, emits explicit 'I don't know' abstentions outside it, and recalibrates as new laboratory measurements expand the boundary.",
-      "data": "Evaluates on ESOL aqueous solubility (`delaney-processed.csv`, Delaney 2004; 1,128 organic compounds fetched on demand to gitignored `data/`, split 676 train / 226 calibration / 226 test at `SEED = 0`) using 6 physical/topological descriptors while excluding the CSV's pre-fitted `ESOL predicted` column. Also curates 5 reaction/experiment optimization benchmarks (`ESOL`, `EDBO`, `EDBO+`, `rxn_yields`, `Olympus`), 12 BO & conformal libraries (`BoTorch`, `Ax`, `MAPIE`, `BayBE`, `TuRBO`, `SafeOpt`), and 12 papers (2012-2026).",
+      "data": "Evaluates on ESOL aqueous solubility (`delaney-processed.csv`, Delaney 2004; 1,128 organic compounds fetched on demand to gitignored `data/`, split 676 train / 226 calibration / 226 test at `SEED = 0` while excluding pre-fitted `ESOL predicted`) and integrates an 11-dataset `OpenCalibrationDataset` registry (`src/lab_decide/datasets.py`: `ESOL`, `AqSolDB` 9,982, `BigSolDB v2.2` 125,752 Sept 2026, `CALiSol-23` 13,825, `FreeSolv` 642, `AstraZeneca Lipophilicity` 4,200, `Biogen ADME` 3,521, `Buchwald-Hartwig Doyle` 4,599, `Suzuki-Miyaura Perera` 5,760, `Direct Arylation Shields` 1,728, and `BH-HTE-OOD 2026` 27,497) with deterministic `leakage_excluded_columns` filtering and SHA-256-verified fetching.",
       "model": "Scikit-learn `GradientBoostingRegressor(random_state=0)` paired with finite-sample Split Conformal Prediction (`alpha = 0.10`, quantile level `min(1, ceil((n_cal+1)*(1-alpha))/n_cal)` with `method='higher'`) and a standardized 6D Euclidean `NearestNeighbors(n_neighbors=5)` applicability-domain gate (`StandardScaler` + 80th-percentile calibration distance threshold `thr = 0.758`).",
       "training": "CPU-only surrogate fitting, split conformal calibration, and 3-round simulated boundary acquisition (< 1s on CPU; `numpy`, `pandas`, `scikit-learn`). Achieves 0.912 marginal test coverage (`q = 1.522` log units, width `3.044`, MAE `0.704`), stratifying into `0.656` MAE / `0.922` coverage inside the trust region (`n = 180`, 79.6% answered) vs. `0.892` MAE / `0.870` coverage outside (`n = 46`, 20.4% abstained). Locally adaptive intervals (CQR), separate pool/test splits, and `BoTorch` loops remain roadmapped.",
-      "history": "Initialized in `41dae77` (2026-11-18) with `demo/conformal_trust.py`, reference capture `demo/output.txt`, Python 3.12 GitHub Actions workflow (`.github/workflows/demo.yml`), and curated Bayesian optimization & conformal prediction catalog; architecture and ecosystem profile documented in `6b03cfc`.",
+      "history": "Initialized in `41dae77` (2026-11-18) with `demo/conformal_trust.py`, reference capture `demo/output.txt`, and BO/conformal catalog (`6b03cfc`), followed by Phase-2 Lean 4 & `autolab-wire/v1` audit (`6957f12`) and the 11-dataset 2024-2026 conformal calibration registry on `main` (`e37de97`, PR #31).",
       "unique_properties": [
         "Decouples distribution-free finite-sample interval calibration (`q = 1.522`) from kNN applicability-domain abstention (`d_5NN <= 0.758`), isolating low-error in-domain answers (`MAE 0.656`) from OOD queries (`MAE 0.892`)",
         "Excludes Delaney's pre-fitted `ESOL predicted` column to prevent target leakage into descriptor-based surrogate calibration",
@@ -110,7 +110,7 @@
           "note": "Moves 20, 20, 10 nearest outside points into training (676 -> 726 train rows)"
         }
       ],
-      "commit_head": "c19bca5",
+      "commit_head": "e37de97",
       "issue_count": 28,
       "concise": {
         "hook": "Answers only inside its calibrated zone, says 'I don't know' outside, and grows with new data.",
@@ -129,17 +129,17 @@
             "in-trust MAE"
           ],
           [
-            "20.4%",
-            "abstained"
+            "11",
+            "calibration corpora"
           ]
         ],
         "short": {
           "object": "Gate experiment proposals by conformal uncertainty and distance to training data.",
-          "data": "Delaney ESOL solubility (1,128 molecules: 676 train / 226 cal / 226 test).",
+          "data": "Delaney ESOL (1,128) + 10 open calibration corpora (BigSolDB v2.2, AqSolDB, CALiSol-23, ADME, BH-HTE-OOD 2026).",
           "model": "Gradient boosting + split conformal (90%) + 5-NN 80th-pct trust boundary.",
           "training": "Supervised GBDT fit + 3 active boundary-expansion rounds.",
-          "history": "41dae77 ESOL conformal demo -> 6b03cfc L6 calibration profile.",
-          "property": "Lower error inside trust zone (0.66 vs 0.89 MAE) with explicit abstention outside."
+          "history": "41dae77 ESOL conformal demo -> 6957f12 Lean/wire audit -> e37de97 11-dataset 2026 registry.",
+          "property": "Lower error inside trust zone (0.66 vs 0.89 MAE) with strict leakage-column exclusion."
         }
       }
     },
@@ -150,10 +150,10 @@
       "layer_name": "Executive Planning, Procurement & Scheduling",
       "tagline": "Cost-aware chemical vendor availability and N-step retrosynthetic reachability triage with conservative listed-price lower bounds, strict null/unknown honesty, and assayfold-aligned schemas.",
       "object": "Verifies whether candidate molecules proposed by L6/L5 scientific planners (lab-ask-why, lab-decide) are directly purchasable from chemical vendors or makeable in N steps from purchasable building blocks, computing conservative leaf-only stoichiometric cost lower bounds strictly from real listed catalog prices while keeping missing prices null and unverified molecules unknown.",
-      "data": "Twelve license-audited external data and model sources in buyormake/sources.py (PubChem PUG-REST/PUG-View, ZINC, Enamine, eMolecules, Mcule, AiZynthFinder models & ZINC stock, USPTO Lowe CC0-1.0, Open Reaction Database CC-BY-SA-4.0, RDKit SA_Score, Coley SCScore, RAscore; non-redistributable caches/catalogs isolated in gitignored data/), 5 Pydantic v2 / JSON Schema contracts (extra='forbid', schema/), and a 20-molecule CPU benchmark (examples/demo.py, examples/demo_output.md).",
+      "data": "Nineteen license-audited external data and model sources in `buyormake/sources.py` and `buyormake/open_corpora.py` (expanding PubChem PUG-REST/PUG-View, ZINC, Enamine, eMolecules, Mcule, AiZynthFinder, USPTO Lowe CC0-1.0, ORD CC-BY-SA-4.0, RDKit SA_Score, Coley SCScore, and RAscore with 7 checksummed 2024-2026 open corpora: `PaRoutes 2.0`, `ChEMBL 37` May 2026, `SureChEMBL` Nov 2026, `COCONUT 2.0` ~700k natural products, `ORDerly` 2024, `Syntheseus USPTO-50K & Retro*` 2024-2026, and `SynPlanner` 2024-2025; non-redistributable caches isolated in gitignored `data/`), 5 strict JSON Schemas (`extra='forbid'`), and a 20-molecule CPU benchmark.",
       "model": "RDKit canonical isomeric SMILES and InChIKey normalization, multi-format LocalStockBackend (.tsv, .csv, .jsonl, .smi, .sqlite, .hdf5) + rate-limited SQLite-cached PubChemVendorBackend, 3-tier retrosynthesis search (optional AiZynthFinder MCTS, local USPTO/ORD SQLite product lookup, and a 14-template RDKit SMARTS 2-step disconnection engine), mass-normalized USD/g stoichiometric leaf cost estimator, and SAscore + pure-NumPy 5-layer Morgan-FP SCScore inference.",
       "training": "Zero in-repository model training; combines deterministic RDKit cheminformatics, live/local catalog lookup, and stoichiometric cost algebra with RDKit's fragment-based SAscore heuristic and frozen pretrained Reaxys SCScore weights (6.18 MB NumPy JSON.gz, optional CC-BY-4.0 AiZynthFinder USPTO ONNX policy networks).",
-      "history": "Initial release 76991c8 on main (2026-11-18: buyormake package, 5 JSON Schemas, 8 fetch scripts, 20-molecule CPU demo, 7 pytest modules, Python 3.10-3.12 CI), open review branch origin/review-fixes (bbfa649, 2026-11-18: buyable cost_complete=False fix, mixed-currency/pack-size non-comparability, excluded-leaf reporting in est_cost_method, indirect ZINC license check marker, and 2-layer SCScore test), and conflict-free architecture documentation ff8e530 on main.",
+      "history": "Initial release `76991c8` on `main` (2026-11-18: `buyormake` package, 5 JSON Schemas, 8 fetch scripts, 20-molecule CPU demo, docs `ff8e530`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`5fd1afb`, PR #32) and 19-source 2024-2026 open synthesis/compound corpus adapters on `main` (`3be1f4a`, PR #33).",
       "unique_properties": [
         "Strict epistemic honesty on prices and reachability: never fabricates missing catalog prices (price=null, price_basis='unknown') and never conflates bounded search failure ('unknown') with synthetic impossibility.",
         "Completeness-tracked leaf-only route cost lower bounds (sum of cheapest USD/g * count * MW_leaf / MW_target per 1 g target) distinguishing complete leaf coverage from partial lower bounds.",
@@ -186,7 +186,7 @@
           "note": "Source, Offer, Route, AvailabilityRecord, and RankResult aligned with assayfold hub primitives"
         }
       ],
-      "commit_head": "cc2d33e",
+      "commit_head": "3be1f4a",
       "issue_count": 28,
       "concise": {
         "hook": "Buy it now or make it in N steps? Strict catalog lower bounds, never invented prices.",
@@ -201,8 +201,8 @@
             "cached / mol"
           ],
           [
-            "14",
-            "retro templates"
+            "19",
+            "SPDX-gated corpora"
           ],
           [
             "null",
@@ -211,10 +211,10 @@
         ],
         "short": {
           "object": "Classify molecules as buyable, makeable in <= N steps, or unknown with cost bounds.",
-          "data": "Live PubChem vendors + optional ZINC/eMolecules/ORD/USPTO (strict license table).",
+          "data": "PubChem + 19 SPDX-gated sources incl. PaRoutes 2.0, ChEMBL 37, SureChEMBL, COCONUT 2.0, ORDerly, Syntheseus & SynPlanner.",
           "model": "Vendor lookup + 14 RDKit SMARTS disconnections (or AiZynthFinder) + SA/SCScore.",
           "training": "Deterministic search + pretrained MIT SCScore weights (no training in repo).",
-          "history": "76991c8 v0.1 release -> bbfa649 cost/currency review PR #2 -> ff8e530.",
+          "history": "76991c8 v0.1 release -> 5fd1afb Lean/wire audit -> 3be1f4a 19-source 2026 corpora.",
           "property": "Missing prices stay null; mixed currencies are never silently compared."
         }
       }
@@ -290,7 +290,7 @@
           "data": "30 seeded synthetic benchmarks (small / medium / large, seeds 1000..1209).",
           "model": "Exact sweep-line checker + myopic greedy baseline + CP-SAT interval solver.",
           "training": "Combinatorial optimization (no neural training; ready as RLVR verifier).",
-          "history": "124a6d7 30-instance suite -> 58ec7f2 flow-tie note PR #2 -> 6b78480.",
+          "history": "124a6d7 30-instance suite -> 58ec7f2 flow-tie note PR #2 -> 6985986.",
           "property": "CP-SAT clears all 13 max_wait violations left by greedy scheduling."
         }
       }
@@ -302,10 +302,10 @@
       "layer_name": "Executive Planning, Procurement & Scheduling",
       "tagline": "Curated, zero-copy ecosystem map of automated-lab hardware, cloud foundries, open-source protocol/scheduling software, and protocol benchmarks with automated link verification.",
       "object": "Provides a neutral, license-aware semantic world map and pointer registry grounding hardware platform selection, protocol intermediate representation (IR) targeting, combinatorial solver choice, and open protocol dataset discovery across the Auto-Lab stack without copying external data or ranking commercial vendors.",
-      "data": "Five structured domain tables in README.md cataloging 30 platforms, software stacks, and protocol corpora (3 sibling Auto-Lab tools, 5 liquid-handling robot platforms, 4 cloud labs/foundries, 12 open-source lab automation software packages, and 6 open protocol datasets) verified on 2026-11-18 under a strict zero-copy policy with per-source license warnings.",
+      "data": "Machine-readable `atlas.json` cataloging 70 ecosystem entries across 5 categories (byte-for-byte synced with `README.md` via `scripts/sync_catalog.py`), including liquid-handling robots, cloud foundries, open-source protocol/orchestration stacks, and 17 license-audited open datasets (adding 11 verified 2024-2026 benchmarks/corpora—`FineBio`, `ChemBench`, `BixBench`, `MassSpecGym`, `MSD`, `AqSolDB`, `CALiSol-23`, `COD/ROD`, `OMAT24`, `DCASE Task 2 2024-2026`, and `DROID`—with explicit `eval_only`, canary, and non-commercial guards across 160 live-checked HTTPS URLs).",
       "model": "Five-faceted lab-automation ontology paired with a Python standard-library Markdown hyperlink extractor and HTTP status auditor (scripts/check_links.py). Explicitly trains and runs no neural network or statistical model inside this pointer-atlas repository.",
       "training": "Zero parametric training and zero third-party Python dependencies; maintained via manual primary-source verification (2026-11-18) and weekly scheduled GitHub Actions link-rot sweeps (.github/workflows/links.yml, Mondays 12:00 UTC).",
-      "history": "Initial commit f2e2e83 on main (2026-11-18: curated 5-section lab-automation pointer map, scripts/check_links.py HTTP verifier, weekly links.yml CI workflow, and MIT license), followed by architecture and ecosystem documentation 7c65b97 on main.",
+      "history": "Initial commit `f2e2e83` on `main` (2026-11-18: curated 5-section lab-automation pointer map, `scripts/check_links.py`, weekly `links.yml` CI, docs `7c65b97`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`cab4852`, PR #30) and the 70-entry 2024-2026 open-dataset expansion on `main` (`3b7d259`, PR #31).",
       "unique_properties": [
         "Strict zero-copy, vendor-neutral pointer posture: copies zero external datasets, ranks zero hardware vendors, and flags upstream non-commercial or per-record license terms.",
         "Unified vertical taxonomy connecting physical liquid handlers (Opentrons, Hamilton, Tecan), cloud foundries, protocol IRs/SDKs (PyLabRobot, Autoprotocol, LabOP, XDL, SiLA 2), orchestration/solvers (WEI, Bluesky, Atlas, OR-Tools), and benchmarks (WLP, BioPlanner, BioProBench, LAB-Bench).",
@@ -338,23 +338,23 @@
           "note": "Delegates license-gated dataset fetching and conversion to assayfold and buy-or-make"
         }
       ],
-      "commit_head": "49dafd9",
+      "commit_head": "3b7d259",
       "issue_count": 28,
       "concise": {
         "hook": "A checked, zero-hype map of lab robots, cloud foundries, protocol DSLs, and open datasets.",
         "flow": [
           "Ecosystem URLs",
           "Weekly HTTP link check",
-          "4 curated reference tables"
+          "70-entry JSON & MD atlas"
         ],
         "kpis": [
           [
-            "27",
+            "70",
             "checked entries"
           ],
           [
-            "4",
-            "taxonomy tables"
+            "17",
+            "open datasets"
           ],
           [
             "0",
@@ -363,10 +363,10 @@
         ],
         "short": {
           "object": "Index liquid handlers, cloud labs, open automation software, and protocol corpora.",
-          "data": "Curated pointer tables (Opentrons, PyLabRobot, SiLA 2, LabOP, XDL, WLP, BioProBench).",
+          "data": "70-entry pointer atlas (17 open datasets incl. FineBio, ChemBench, BixBench, MassSpecGym, OMAT24, COD/ROD, DROID).",
           "model": "Human-curated ontology + automated URL health script (no ML model).",
           "training": "None (reference atlas; grounds tool & dataset selection across Auto-Lab).",
-          "history": "f2e2e83 link-checked release (2026-11-18) -> 7c65b97 L5 ontology spec.",
+          "history": "f2e2e83 link-checked release -> cab4852 Lean/wire audit -> 3b7d259 70-entry 2026 atlas.",
           "property": "Pointer-only MIT index: copies zero external data and ranks zero vendors."
         }
       }
@@ -378,10 +378,10 @@
       "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
       "tagline": "Pre-execution liquid-handling digital-twin rehearsal loop: content-addressed episodic recall, deck simulation, default-deny verification gate, mock dispatch, and JSONL memory write-back.",
       "object": "Prevents unsafe or malformed liquid-handling protocols from reaching physical benchtop robots by running every candidate protocol through a closed five-stage safety loop (recall -> rehearse -> verify -> run -> write_back) between L5 protocol planners/compilers (lab-decide, labshift, stepbot) and L1/L2 hardware executors (lab-hands, Opentrons, PyLabRobot).",
-      "data": "Five deterministic JSON liquid-handling protocols in demo/protocols/ (one valid 43-step 8-well 1:2 serial dilution and four targeted failure fixtures: aspirate from empty, out-of-range pipette volume, well overfill, and cross-reagent tip reuse), a 10-run two-pass episodic ledger in demo/memory/runs.jsonl, captured reference stdout (demo/output.txt), and a zero-copy curated catalog of 4 embodied lab benchmarks (LabUtopia, AutoBio, Chemistry3D, Labimus) and 10 open-source robotics/automation simulators.",
+      "data": "Five deterministic JSON liquid-handling protocols in `demo/protocols/` (43-step 8-well 1:2 serial dilution + 4 seeded fault fixtures), a 10-run episodic ledger (`demo/memory/runs.jsonl`), and an expanded 14-dataset, 18-repository `catalog/simulators.json` + twin converter suite (`src/lab_rehearsal/open_datasets.py`) integrating 10 verified 2024-2026 wet-lab protocol & embodied corpora (`Opentrons shared-data v6/v7/v8`, `Opentrons/Protocols`, `FineBio`, `BioPlanner`, `BioProBench` ICML 2026, `LAB-Bench ProtocolQA`, `SciKnowEval`, `EmbodiedLab`, `Matterix`, and `WETOP-Bench`) behind default-deny `eval_only` and `commercial_use_ok` ingestion gates.",
       "model": "Zero-dependency deterministic discrete-event deck simulator (96-well plate capped at 300 uL/well, 12-column reservoir capped at 15,000 uL/col, 96-tip rack, 20-300 uL single-channel pipette) paired with a 7-check default-deny rule gate (known_step, volume_in_range, no_overfill, enough_liquid, tip_present, no_tip_reuse, all_tips_dropped). No neural network is trained inside this repository.",
       "training": "Zero parametric training; cross-session adaptation operates strictly via non-parametric episodic memory write-back (append-only JSONL keyed by 12-hex SHA-256 canonical JSON protocol hashes), enabling Pass 2 recall warnings before rehearsal executes.",
-      "history": "Initial commit 8219695 on main (2026-11-18: 5-stage rehearsal loop demo/rehearse.py, 5 JSON protocol fixtures, 2-pass episodic memory runs.jsonl, demo.yml CI, and curated simulation benchmarks/papers 2017-2026), followed by architecture and ecosystem documentation 5e47a8f on main.",
+      "history": "Initial commit `8219695` on `main` (2026-11-18: 5-stage rehearsal loop `demo/rehearse.py`, 5 JSON fixtures, `runs.jsonl`, docs `5e47a8f`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`9f64121`, PR #30) and 2024-2026 open protocol twin converters on `main` (`4013323`, PR #31).",
       "unique_properties": [
         "Five-stage closed safety loop (Recall -> Rehearse -> Verify -> Run -> Write-Back) blocking hardware dispatch unless every step is known and every volumetric/hygiene rule passes.",
         "Non-short-circuiting trajectory simulation using bounded physical volume clamping so all cascading step violations are surfaced in a single pass.",
@@ -414,7 +414,7 @@
           "note": "Covers Genesis, LeRobot, MuJoCo, IsaacLab, ManiSkill, PyLabRobot, Opentrons, LabUtopia, AutoBio, MATTERIX, and PRISM"
         }
       ],
-      "commit_head": "85fe9dd",
+      "commit_head": "4013323",
       "issue_count": 28,
       "concise": {
         "hook": "Recall past crashes, dry-run on a virtual 96-well deck, block bad runs, write outcomes back.",
@@ -429,8 +429,8 @@
             "fault classes caught"
           ],
           [
-            "43",
-            "steps in dilution"
+            "14",
+            "protocol datasets"
           ],
           [
             "100%",
@@ -439,10 +439,10 @@
         ],
         "short": {
           "object": "Catch volume, empty-well, overfill, and tip-reuse errors before touching hardware.",
-          "data": "5 bundled JSON protocols (1 valid serial dilution + 4 seeded fault cases) + runs.jsonl.",
+          "data": "5 bundled JSON protocols + runs.jsonl + 14-dataset catalog (Opentrons v6-v8, FineBio, BioPlanner, BioProBench, Matterix).",
           "model": "Stateful 96-well + 12-reservoir + 20-300 uL pipette bookkeeping twin.",
           "training": "Episodic memory write-back (runs.jsonl flags repeat failures before rehearsal).",
-          "history": "8219695 5-stage rehearsal loop -> 5e47a8f L4 safety profile.",
+          "history": "8219695 5-stage rehearsal loop -> 9f64121 Lean/wire audit -> 4013323 14-dataset 2026 twin converters.",
           "property": "Default-deny gate: zero commands reach the executor if any rule fails."
         }
       }
@@ -454,10 +454,10 @@
       "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
       "tagline": "Strict mechanical default-deny verification gate across SQL lab queries (4-layer AST + execution filter), Lean 4 formal proofs (linked to YLM/lean), and bench protocols.",
       "object": "Enforces zero-trust mechanical verification on LLM-generated structured artifacts—stopping malformed syntax, write/DDL injection, hallucinated schema columns, and silent semantic query errors before results touch laboratory databases (assayfold) or closed-loop experiment planners (lab-decide, lab-ask-why).",
-      "data": "Deterministic 30-row synthetic in-memory SQLite lab database (12 experiments, 14 samples, 4 instruments), 12 lab analytics questions paired with gold SQL and 22 labeled candidate queries (8 semantically equivalent correct queries and 14 realistic model error modes in demo/candidates.json), reference gate output (demo/output.txt), and curated catalogs of 5 text-to-SQL/Lean benchmarks and 11 verification repositories.",
+      "data": "Deterministic 30-row synthetic in-memory SQLite lab database (12 questions, 22 labeled candidate queries in `demo/candidates.json`), plus `catalog/sources.json` `v1.1.0` (16 datasets, 11 from 2024-2026, and 15 verification repositories) and read-only SQLite / Lean 4 benchmark adapters (`src/lab_verify/open_benchmarks.py`) covering `Spider 2.0`, `Spider 2.0-Lite`, `BIRD Mini-Dev`, `EHRSQL-2024` (clinical unanswerable abstention), `BIRD-CRITIC`, `LiveSQLBench`, `Lean-Workbook`, `PutnamBench`, `ProofNet-Lean4`, `MiniF2F-Lean4`, `FormalMATH-Lite`, and `NuminaMath-LEAN`.",
       "model": "Four-layer fail-fast SQL verification gate (demo/sql_gate.py): Layer 1 SQLite dialect syntax parse via sqlglot, Layer 2 single-statement AST Select/SetOperation check backed by SQLite PRAGMA query_only = ON, Layer 3 static table/alias/column schema checker, and Layer 4 float-rounded execution multiset equivalence against gold queries; linked without code duplication to the sound-and-complete Lean 4 LabLean protocol verifier in YLM/lean.",
       "training": "Zero parametric training; purely symbolic AST and execution-grounded checker providing runtime safety gating and deterministic layer-attributed reward/rejection diagnostics for L3 RLVR and property-guided repair pipelines (labbench-posttrain, twinstep).",
-      "history": "Initial commit 3255ec7 on main (2026-11-18: 4-layer SQLite gate demo/sql_gate.py, 12-question/22-candidate suite demo/candidates.json, demo.yml CI, YLM/lean linkage, and curated verification benchmarks/papers 2018-2026), followed by architecture and ecosystem documentation 775c3e9 on main.",
+      "history": "Initial commit `3255ec7` on `main` (2026-11-18: 4-layer SQLite gate `demo/sql_gate.py`, 22-candidate suite, `YLM/lean` linkage, docs `775c3e9`), followed by Phase-2 `lean-mcp/v1` & `autolab-wire/v1` merge (`a5f9aec`, PR #30) and 2024-2026 open SQL & Lean 4 benchmark gate adapters on `main` (`0c29ffc`, PR #31).",
       "unique_properties": [
         "Defense-in-depth read-only isolation enforcing single-statement SELECT rules at the sqlglot AST layer and PRAGMA query_only = ON at the SQLite engine layer.",
         "Empirical quantification of static vs. semantic verification gaps: proves 7/14 (50%) of wrong LLM SQL queries pass syntax, read-only, and schema gates and require Layer 4 execution checking.",
@@ -490,7 +490,7 @@
           "note": "12 experiments, 14 samples, and 4 instruments evaluated entirely in-memory on CPU"
         }
       ],
-      "commit_head": "ed775b6",
+      "commit_head": "0c29ffc",
       "issue_count": 28,
       "concise": {
         "hook": "Trust nothing a model emits until a mechanical checker says yes: SQL, Lean, and protocols.",
@@ -505,20 +505,20 @@
             "gate agreement"
           ],
           [
-            "0",
-            "false passes"
+            "16",
+            "SQL/Lean benchmarks"
           ],
           [
-            "7 / 14",
-            "caught at Layer 4"
+            "0",
+            "false passes"
           ]
         ],
         "short": {
           "object": "Filter LLM-generated SQL, Lean proofs, and protocols behind a strict default-deny gate.",
-          "data": "Synthetic SQLite lab DB (12 experiments, 14 samples, 4 instruments, 22 candidates).",
-          "model": "4-layer gate: sqlglot parse -> read-only AST -> schema check -> execution match.",
+          "data": "30-row lab SQLite suite (22 queries) + 16 open SQL/Lean benchmarks (Spider 2.0-Lite, BIRD, EHRSQL-2024, PutnamBench, ProofNet).",
+          "model": "4-layer gate: sqlglot parse -> read-only AST -> schema check -> execution match + lean-mcp/v1.",
           "training": "Deterministic verifier (serves as exact binary reward gate for RLVR).",
-          "history": "3255ec7 4-layer SQL gate & curated resources -> 775c3e9 L4 spec.",
+          "history": "3255ec7 4-layer SQL gate -> a5f9aec Lean-MCP audit -> 0c29ffc 16-benchmark 2026 adapters.",
           "property": "Proves syntax/schema alone miss 50% of wrong queries; execution checks catch all 7."
         }
       }
@@ -530,16 +530,16 @@
       "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
       "tagline": "Post-execution causal blame calculus, NNLS precursor ghost-peak deconvolution, EVOI orthogonal assay routing, and SHA-256 proof-carrying negative result ledgers in Python + Lean 4.",
       "object": "Closes the post-execution epistemic blind spot of self-driving laboratories by separating robotic/timing execution artifacts and unreacted precursor diffraction overlap (A-Lab failure mode) from Proof-Carrying Positive and Negative Results before updating scientific memory or recalibrating Chem-RRT frontier shells.",
-      "data": "Evaluates NNLS precursor deconvolution across multi-phase powder diffraction suites and runs 9-round x 5-seed closed-loop active molecular discovery on the real 1,128-compound Delaney ESOL dataset (plus deterministic fallback descriptors).",
+      "data": "Evaluates NNLS precursor deconvolution across multi-phase powder diffraction suites, 9-round x 5-seed closed-loop active molecular discovery on 1,128-compound Delaney ESOL, a bundled 11-phase Cu K-alpha XRD + paired Raman mineral/oxide reference panel (`Calcite`, `Quartz`, `Li2MgCl4`, `BaTiO3`, `ZrO2`), and a 9-dataset `OpenCharacterizationDataset` registry (`src/lab_attrib/open_datasets.py`: `RRUFF Powder XRD`, `RRUFF/WURM Raman`, `COD`, `MP-20`, Ceder Group `A-Lab GPSS` `.xrdml` scans, `MassSpecGym` 231k MS/MS, `NMRShiftDB2`, `BMRB NMR`, and `AqSolDB` 9,982).",
       "model": "Exact 4-way causal blame classifier (LabAttribLean: 25 Lean 4.36.0 theorems, 0 sorry) paired with dual-backend projected-coordinate-descent NNLS spectral deconvolution, Bayesian EVOI secondary modality router (Raman / LC-MS / 1H-NMR / TEM), and SHA-256 hash-chained ledger.",
       "training": "Zero parametric black-box drift in the core blame gate; exports contamination-free certified positive and negative pairs for downstream Bayesian surrogates and RLVR post-training.",
-      "history": "Created as the 15th Core Auto-Lab repository (8737ac9 -> 6b7f467 on main) with 25 machine-checked Lean 4 theorems, 42 passing unit tests, Ubuntu Python + Lean CI, and a standalone 5-page LaTeX monograph (paper/main.pdf).",
+      "history": "Created as the 15th Core Auto-Lab repository (`8737ac9` -> `6b7f467` on `main`), followed by Phase-2 wire & Lean audit (`0118a9c`, PR #11) and the 9-dataset XRD/Raman/MS/NMR open characterization registry (`b8df8ef`, PR #12), with 25 machine-checked Lean 4 theorems, 75 unit tests, Ubuntu Python + Lean CI, and a 5-page LaTeX monograph (`paper/main.pdf`).",
       "unique_properties": [
         "Machine-checked 25-theorem Lean 4.36.0 blame calculus (0 sorry) proving corrupted_run_never_poisons_memory and unidentifiable_spectrum_never_certified.",
         "Dual-backend NNLS precursor peak-overlap solver eliminating 100% of precursor ghost-phase false discoveries (FDR 40.2% / 66.7% -> 0.0%).",
         "Couples post-run causal attribution with micro-scale annular Chem-RRT stepping-stones (31.0 verified multi-ring hits, 96.4% conformal coverage, 0 poisoned ledger entries)."
       ],
-      "commit_head": "6b7f467",
+      "commit_head": "b8df8ef",
       "issue_count": 10,
       "concise": {
         "hook": "Separate robot glitches and precursor ghost peaks from proof-carrying negative truth after every run.",
@@ -558,16 +558,16 @@
             "false discovery rate"
           ],
           [
-            "+44.9%",
-            "multi-ring hits"
+            "9",
+            "open spectra corpora"
           ]
         ],
         "short": {
           "object": "Prevent post-run hardware glitches and precursor peak overlap from poisoning scientific memory.",
-          "data": "1,128-compound Delaney ESOL 9-round active campaigns + multi-phase diffraction suites.",
+          "data": "1,128-compound ESOL campaigns + 11-phase XRD/Raman panel + 9 open corpora (RRUFF, COD, MP-20, A-Lab GPSS, MassSpecGym, NMR).",
           "model": "4-way Lean 4 blame calculus + NNLS precursor deconvolver + EVOI orthogonal assay router.",
           "training": "Deterministic formal gate exporting verified positive/negative pairs for BO & RLVR.",
-          "history": "Published as the 15th Core Auto-Lab repo with standalone LaTeX monograph (paper/main.pdf).",
+          "history": "6b7f467 15th Core Repo & monograph -> 0118a9c wire audit -> b8df8ef 9-dataset spectra registry.",
           "property": "0.0% FDR and 0 poisoned ledger entries while unlocking 31.0 multi-ring hits."
         }
       }
@@ -579,10 +579,10 @@
       "layer_name": "Post-Training RLVR, Error Twins & GPU Packing",
       "tagline": "End-to-end SFT-to-RLVR post-training SDK, CLI, and anti-hack verifiable reward suite for wet-lab science, protocol reasoning, and robot execution",
       "object": "Unified post-training, benchmark evaluation, and reward-hacking audit stack (`labrl` v0.2.0) bridging multimodal scientific reasoning (Scientist track), robotic/liquid-handler execution (Operator track), biological protocol QA/repair (LAB-Bench & BioProBench), and experimental electrolyte design (CALiSol-23) across CPU/1xGPU PyTorch (`TorchLocalEngine`) and multi-node Ray/vLLM/Megatron (`NeMoRLEngine`).",
-      "data": "49,139 provenance-separated Lab v0 records from 20 sources (40,790 train / 4,189 val / 4,160 test, 0 group overlap) + 20,517 Open-X robot frames, 23,880 SFT rows, and 9,867 preference pairs; 13,228 clean CALiSol-23 electrolyte conductivity measurements across 27 DOIs (zero-DOI-leakage splits, CC-BY-4.0); 2,000 train sample + 4,333 test BioProBench items (CC BY-NC 4.0); 1,967 evaluation-only public LAB-Bench questions with canary guards (CC-BY-SA-4.0); and a 205-entry benchmark catalog.",
+      "data": "49,139 provenance-separated Lab v0 records from 20 sources (40,790 train / 4,189 val / 4,160 test, 0 group overlap) + 20,517 Open-X robot frames; 13,228 clean CALiSol-23 electrolyte conductivity measurements (27 DOIs, CC-BY-4.0); BioProBench (CC BY-NC 4.0); eval-only LAB-Bench (CC-BY-SA-4.0); a 205-entry catalog; and the 9-dataset 2024-2026 `open_science_2026` registry (`src/labrl/data/open_datasets_2026.py`: trainable `MassSpecGym`, `SMolInstruct`, `Mol-Instructions`, `AqSolDB`, and Union-Find DOI+scaffold `ORD 2026` under `SplitGuard`, plus `eval_only` canary-guarded `ChemBench`, `SuperGPQA`, `ether0-benchmark`, and `BixBench`).",
       "model": "Byte-level tiny GPT-2 models for zero-download CPU smoke verification plus Qwen3-1.7B/8B, Qwen2.5-7B/VL-7B, Llama-3.1-8B, and OLMo-2-7B configs with PEFT LoRA and causal PPO value heads; Scientist MolEncoder/SpectrumEncoder/ImageEncoder/TextEncoder + soft-token projector; Operator MLP behavior cloning + residual state-delta world model; and code-checked symbolic verifiers (`bioenvs` + 8 `VerifiedRewardTemplate` classes).",
       "training": "Completion-masked SFT warm start -> offline DPO, ORPO, hybrid MPO (DPO + BCO with EMA reward_shift + SFT), logit KD, and online multi-teacher TROPD -> online PPO (VAPO length-adaptive lambda + positive NLL) and GRPO (GDPO per-channel normalization, DAPO clip-higher & dynamic resampling, GSPO sequence ratios, CISPO, TIS/ICE-POP), all anchored by default to the frozen SFT checkpoint. 15/15 CPU smoke trainers pass locally; all single-GPU A100 Colab and multi-GPU NeMo-RL runs remain PENDING.",
-      "history": "Evolved across 11 main-branch milestones from Nov 3 to Nov 12, 2026 (`63697fb` -> `94f0cf5`, docs `a879d9d`): 205-entry catalog (`c247afe`), Lab v0 Scientist/Operator tracks (`b2bde46`), LAB-Bench/BioProBench harness (`101933a`), standalone `posttrain/` stack (`dbec763`), Milestones 1-3 (`34c1ccf`, `cdc897c`, `18b89b3`), CALiSol-23 RLVR suite (`0a306cd`), installable `labrl` SDK/CLI (`6cb46a7`), and 8 verified reward templates (`94f0cf5`).",
+      "history": "Evolved across 11 main-branch milestones (`63697fb` -> `94f0cf5`, docs `a879d9d`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`2e015d6`, PR #50) and the 9-dataset 2024-2026 Open Science RLVR & eval-only registry on `main` (`fbdd731`, PR #51; 177 pytest tests passing).",
       "unique_properties": [
         "Unbiased score-function Reverse-KL surrogate (`reverse_kl_loss_term`) restoring exact on-policy KL(pi || pi_SFT) gradients on Schulman's k3 estimator",
         "Multi-channel GDPO group standardization + conservative experimental-atlas kernel support gating to prevent format dominance and OOD chemical reward hacking",
@@ -615,7 +615,7 @@
           "note": "Tiny local byte-GPT-2 pipeline check; A100 Colab & NeMo-RL GPU runs PENDING"
         }
       ],
-      "commit_head": "c50955c",
+      "commit_head": "fbdd731",
       "issue_count": 28,
       "concise": {
         "hook": "Post-training stack turning raw models into verified Scientist and Operator policies.",
@@ -630,8 +630,8 @@
             "leak-free records"
           ],
           [
-            "8",
-            "anti-hack templates"
+            "9",
+            "2026 science corpora"
           ],
           [
             "0",
@@ -640,11 +640,11 @@
         ],
         "short": {
           "object": "Train and score Scientist & Operator models against code-checked lab & physics rewards.",
-          "data": "49,139 records (20 sources), BioProBench (4 tasks), CALiSol-23, eval-only LAB-Bench.",
+          "data": "49,139 Lab v0 records, CALiSol-23, BioProBench, LAB-Bench + 9-corpus 2024-2026 registry (MassSpecGym, SMolInstruct, ORD, BixBench).",
           "model": "labrl SDK: TorchLocalEngine (CPU/1xGPU) + NeMoRLEngine (8xA100 recipes).",
           "training": "SFT -> DPO/MPO/TROPD -> PPO/GRPO/GDPO+DAPO (CPU smoke run; full GPU PENDING).",
-          "history": "101933a BioProBench -> Milestones 1-3 -> 6cb46a7 labrl -> 94f0cf5 rewards -> a879d9d.",
-          "property": "SplitGuard blocks group leakage & LAB-Bench canary; rewards gate bonuses on truth."
+          "history": "101933a BioProBench -> 94f0cf5 rewards -> 2e015d6 Lean/wire audit -> fbdd731 2026 open science registry.",
+          "property": "SplitGuard blocks group leakage & LAB-Bench/BixBench canaries; rewards gate bonuses on truth."
         }
       }
     },
@@ -724,7 +724,7 @@
           "data": "3 seed protocols (serial dilution, wash-and-read, mix-incubate-read) -> N JSONL pairs.",
           "model": "6 typed injectors + transitive-reduced well-flow DAG + rule-based baseline.",
           "training": "Data generator & reference-blind baseline (66.7%-72.2% detection; feeds DPO/RLVR).",
-          "history": "8a17ea1 v0.1 release -> d598c32 unique-twin & wash fixes PR #2 -> b9b83fd.",
+          "history": "8a17ea1 v0.1 release -> d598c32 unique-twin & wash fixes PR #2 -> 996a282.",
           "property": "Stdlib-only runtime; scores ordering on minimal causal constraints, not rigid index."
         }
       }
@@ -805,7 +805,7 @@
           "data": "Synthetic 24-step protocols, 96-well plates, and lognormal 8..512 token streams.",
           "model": "Vectorized PyTorch rule tensors + 4-layer d=256 Transformer packing benchmark.",
           "training": "9-way throughput ablation on Xeon 1T (30.6% -> 92.1% useful tokens; GPU pending).",
-          "history": "ae91eb3 5 recipes -> PR #2 CPU tables (d1a7510) & PR #4 fixes (55eb158) -> 68d329e.",
+          "history": "ae91eb3 5 recipes -> PR #2 CPU tables (d1a7510) & PR #4 fixes (55eb158) -> f969496.",
           "property": "Fast PyTorch pre-filter aligned with YLM LabLean; cuts padding waste by 3x."
         }
       }
@@ -817,10 +817,10 @@
       "layer_name": "Multimodal Sensory & Protocol Cortex",
       "tagline": "Sensory ingestion layer turning written wet-lab protocols into checkable quantitative spans and monitoring benchtop instrument audio for unsupervised acoustic anomalies.",
       "object": "Provides the L2 sensory cortex of Auto-Lab across two complementary channels: (1) extracting structured quantitative parameters (Amount, Temperature, Time, Speed) from free-form wet-lab protocol prose on main so downstream planners and compilers do not rely on ungrounded free-text numbers, and (2) learning a one-class acoustic baseline of normal machine operation per instrument on origin/acoustic-anomaly, scoring live 16 kHz clips while stripping human speech frequencies (300-3400 Hz) and emitting step-indexed run-ledger events.",
-      "data": "Evaluates protocol parsing on the MIT-licensed Wet Lab Protocols (WLP) corpus test split (125 BRAT-annotated protocols containing 1,011 Amount, 810 Time, 509 Temperature, and 155 Speed contiguous spans). On origin/acoustic-anomaly, evaluates unsupervised sound monitoring on the CC BY 4.0 DCASE 2023 Task 2 development set (fan, valve, bearing: 1,000 normal 10 s 16 kHz training clips [990 source + 10 target] and 200 test clips per machine), synthetic 120 Hz + knock fixtures (tests/test_acoustic.py), and the lab-ears/audio-event/v1 JSONL schema.",
+      "data": "Evaluates protocol span extraction on the MIT Wet Lab Protocols (WLP) test split (125 BRAT-annotated protocols: 1,011 Amount, 810 Time, 509 Temperature, 155 Speed spans) and unsupervised machine sound monitoring on CC-BY-4.0 DCASE 2023 Task 2 (fan, valve, bearing: 1,000 normal 10 s 16 kHz train + 200 test clips/machine), plus a 12-dataset `OpenSensoryDataset` registry (`acoustic/open_datasets.py`: `DCASE 2024/2025/2026 Task 2`, `IMAD-DS 2024`, `MIMII`, `MIMII DG`, `ToyADMOS2` machine audio, and `LAB-Bench ProtocolQA`, `ChemBench`, `BioProBench`, `BioPlanner`, `ProtoAct` protocol text) with `[300, 3400] Hz` speech-band excision and fail-closed `commercial_use_ok` guards.",
       "model": "Zero-dependency regular-expression span recognizer with shared range grammar NUM and Speed-over-Amount exact-span disambiguation (demo/parse_protocol.py) on main; on origin/acoustic-anomaly, a numpy/scipy 64-bin HTK log-mel frontend (16 kHz, 1024-pt Hanning FFT, 512 hop, optional 300-3400 Hz speech-band excision) feeding three normal-only detectors: Ledoit-Wolf shrinkage Mahalanobis GaussianDetector, standardized 5-nearest-neighbor KNNDetector, and 5-frame stacked 128-128-8-128-128 MLP AutoencoderDetector.",
       "training": "Protocol span extractor on main is strictly rule-based (zero learned weights), achieving 0.748-0.907 exact F1 on WLP test. On origin/acoustic-anomaly, detectors fit exclusively on normal clips (zero anomalies seen in training; up to 60,000 subsampled 5-frame windows over 30 Adam epochs for the autoencoder), reaching 0.5548 (autoencoder), 0.5482 (gaussian), and 0.5023 (knn) harmonic mean AUC/pAUC fullband—and 0.5228 (gaussian), 0.4962 (autoencoder), 0.4868 (knn) when the 300-3400 Hz speech band is dropped.",
-      "history": "Initial baseline ba743be on main (2026-11-18: zero-dependency WLP regex parser, 125-protocol WLP test evaluation, CI workflow, and curated protocol/ASR datasets, repos, and papers), open PR branch origin/acoustic-anomaly (5476541, 2026-11-18: DCASE 2023 log-mel Gaussian/kNN/Autoencoder detectors, 300-3400 Hz speech-band privacy filter, AudioEvent v1 JSONL schema, CPU latency/AUC benchmark JSON, and synthetic pytest suite), and architecture documentation 082f2e1 on main.",
+      "history": "Initial baseline `ba743be` on `main` (2026-11-18: WLP regex parser, docs `082f2e1`), followed by acoustic-anomaly + Phase-2 Lean/`autolab-wire/v1` merge (`d3ba222`, PR #34) and the 12-dataset 2024-2026 open sensory & protocol registry on `main` (`079b9bb`, PR #35).",
       "unique_properties": [
         "Zero external dependencies on main (Python standard library only) and lightweight numpy/scipy/scikit-learn acoustic stack on origin/acoustic-anomaly without FFmpeg, librosa, or PyTorch bloat.",
         "Hard privacy invariant in AudioEvent.validate(): discards raw waveforms by default, supports 300-3400 Hz mel-bin excision, and raises ValueError if raw_audio_kept=True is combined with speech_band_dropped=True.",
@@ -858,7 +858,7 @@
           "note": "Full WAV read + 64-bin log-mel + anomaly score per 10 s 16 kHz clip on 1 Xeon core"
         }
       ],
-      "commit_head": "2675971",
+      "commit_head": "079b9bb",
       "issue_count": 30,
       "concise": {
         "hook": "Listen to protocol text and bench machines—pull clean parameters and flag strange sounds.",
@@ -869,7 +869,7 @@
         ],
         "kpis": [
           [
-            "0.75–0.91",
+            "0.75-0.91",
             "WLP slot F1"
           ],
           [
@@ -877,16 +877,16 @@
             "per 10 s clip"
           ],
           [
-            "300–3400 Hz",
+            "300-3400 Hz",
             "speech dropped"
           ]
         ],
         "short": {
           "object": "Extract Amount/Temp/Time/Speed from text and detect abnormal instrument sounds.",
-          "data": "Wet Lab Protocols (125 test protocols, MIT) + DCASE 2023 fan/valve/bearing (PR #2).",
-          "model": "Regex span extractor (main) + 64-bin log-mel Gaussian, kNN & Autoencoder (PR #2).",
-          "training": "Rule-based on main; normal-only unsupervised AE fit (~19 s CPU on PR #2).",
-          "history": "ba743be WLP baseline -> 5476541 DCASE acoustic anomaly PR #2 -> 082f2e1.",
+          "data": "WLP (125 test protocols) + DCASE 2023-2026, IMAD-DS 2024, MIMII, ChemBench, BioProBench & ProtoAct (14 corpora on main).",
+          "model": "Regex span extractor + 64-bin log-mel Gaussian, kNN & Autoencoder on main.",
+          "training": "Rule-based text parser; normal-only unsupervised acoustic detectors (~19 s CPU).",
+          "history": "ba743be WLP baseline -> d3ba222 acoustic-anomaly & wire merge -> 079b9bb 12-dataset 2026 registry.",
           "property": "Privacy-first audio: drops 300-3400 Hz speech band and never stores raw WAVs."
         }
       }
@@ -953,7 +953,7 @@
             "passing unit tests"
           ],
           [
-            "86–131",
+            "86-131",
             "sim commands"
           ]
         ],
@@ -962,7 +962,7 @@
           "data": "3 bundled workflows (dilution_series, plate_fill, reservoir_mix) + OT-2 catalog.",
           "model": "Static deck/slot/tip/volume validator + deterministic AST codegen + dual simulator.",
           "training": "Deterministic compiler (zero ML; pairs with LLM planners as execution target).",
-          "history": "4534ff1 initial compiler -> ef6865f liquid-volume & apiLevel PR #2 -> 9b18549.",
+          "history": "4534ff1 initial compiler -> ef6865f liquid-volume & apiLevel PR #2 -> 5012e29.",
           "property": "Works with real opentrons.simulate or built-in zero-dependency MockProtocolContext."
         }
       }
@@ -974,10 +974,10 @@
       "layer_name": "Protocol Compiler & Visuo-Tactile Manipulation",
       "tagline": "Collision-free articulated-arm motion planning to SBS microplate wells and visuo-tactile manipulation engineering map for transparent lab vessels.",
       "object": "Serves as the physical manipulation and contact-sensing half of Layer L1 in Auto-Lab: planning collision-free trajectories that move pipette tips, tubes, and microplates around benchtop obstacles while establishing the visuo-tactile roadmap for the 'last centimeter' of manipulation where optical depth cameras fail on clear glass and polypropylene vessels.",
-      "data": "Synthetic ANSI/SLAS (SBS) 96-well plate geometry (8x12 grid, 9 mm well pitch, origin [0.20, 0.05] m, supporting both row-major and column-major 1-based indexing) paired with a planar 2-link arm (L1=0.30 m, L2=0.25 m), source tube at (-0.05, 0.40) m, two static AABB bench obstacles (tube rack wall and reagent bottle), and 100 seeded planning episodes (10 wells x 10 seeds), alongside 9 curated robot, transparent-depth, and optical-tactile datasets.",
+      "data": "Synthetic ANSI/SLAS (SBS) 96-well plate geometry (8x12 grid, 9 mm pitch, dual row/column 1-based indexing) with planar 2R & 6-DoF `ArmSE3` kinematics and 100 seeded obstacle-cluttered RRT episodes, paired with a 12-dataset 2024-2026 `OpenManipulationDataset` registry (`lab_hands/datasets.py`: `FineBio` wet-lab video; `DROID`, `LeRobot ALOHA`, `AutoBio Pipette-MuJoCo` kinematics; `TransCG`, `TransProteus`, `ClearPose`, `LayeredDepth` ICCV 2025 transparent depth; and `TVL`, `TactX`, `FeelSight`, `Octopi-PhysiClear` visuo-tactile corpora) plus 96-well clearance, plunge verticality, and meniscus slosh safety auditors.",
       "model": "Analytical 2-link revolute forward and inverse kinematics (fk, ik with elbow=+1/-1 branch fallback), 30-point discrete link-vs-AABB collision and 0.02 rad joint-edge checking (in_collision, edge_free), vectorized joint-space Rapidly-exploring Random Tree planner (iters=3000, step=0.15 rad, goal_bias=0.1), and 100-iteration randomized waypoint shortcut smoother (demo/plan_to_well.py).",
       "training": "Classical sampling-based geometric planner with zero learned weights today: resolves 10/10 obstacle-blocked straight-line moves with 100/100 (100.0%) RRT success across 10 seeds, reducing mean joint path length from 2.44 rad to 2.08 rad (-14.8%) via shortcutting. Designed as the kinematic and well-indexing scaffold prior to 3D MuJoCo simulation and demonstration-trained ACT, Diffusion Policy, and visuo-tactile VLA models.",
-      "history": "Initial baseline eb4d967 on main (2026-11-18: planar 2R kinematics, dual-order SBS 96-well mapping, joint-space RRT + shortcut smoother, 100-trial CPU benchmark, GitHub Actions CI, and curated manipulation/transparent-object/tactile resources) and architecture documentation 8213dab on main.",
+      "history": "Initial baseline `eb4d967` on `main` (2026-11-18: planar 2R kinematics, dual-order SBS 96-well RRT + shortcut smoother, docs `8213dab`), followed by 6-DoF `ArmSE3` + Phase-2 Lean/wire merge (`2ac55e2`, PR #32) and the 12-dataset 2024-2026 manipulation, transparent-depth & tactile registry on `main` (`53d7ac4`, PR #33).",
       "unique_properties": [
         "Pure-NumPy single-file motion planner (requirements.txt = 'numpy') requiring zero simulator binaries, ROS/MoveIt/OMPL dependencies, or GPU drivers.",
         "Explicit dual-order SBS 96-well coordinate translation (well 65 -> F5 row-major vs A9 column-major), preventing row/column transposition bugs between plate readers and liquid handlers.",
@@ -1010,13 +1010,13 @@
           "note": "Mean joint-space path length reduction from 100 random shortcut iterations"
         }
       ],
-      "commit_head": "ffd7b96",
+      "commit_head": "53d7ac4",
       "issue_count": 30,
       "concise": {
         "hook": "Collision-free bench motion plus last-centimeter touch where clear glass fools cameras.",
         "flow": [
           "Target well (A1..H12)",
-          "2-link IK + RRT + shortcut",
+          "2-link/SE3 IK + RRT + shortcut",
           "Obstacle-free joint path"
         ],
         "kpis": [
@@ -1029,16 +1029,16 @@
             "mean plan CPU"
           ],
           [
-            "2.08 rad",
-            "shortcut path"
+            "12",
+            "open robot corpora"
           ]
         ],
         "short": {
-          "object": "Plan safe pipette-to-well arm trajectories and curate visuo-tactile manipulation.",
-          "data": "SBS 96-well geometry (9 mm pitch) + curated Open-X, AutoBio, TransCG, DIGIT index.",
-          "model": "Analytic 2-link IK + AABB link-collision checker + goal-biased RRT + shortcutting.",
+          "object": "Plan safe pipette-to-well arm trajectories and audit visuo-tactile manipulation.",
+          "data": "SBS 96-well geometry + 12 open 2024-2026 corpora (FineBio, DROID, AutoBio, LayeredDepth, ClearPose, TactX, FeelSight).",
+          "model": "Analytic 2-link & 6-DoF ArmSE3 IK + AABB/slosh safety auditors + goal-biased RRT.",
           "training": "Sampling-based geometric planner today; ACT / Diffusion Policy roadmap next.",
-          "history": "eb4d967 96-well RRT demo & tactile catalog -> 8213dab L1 motor spec.",
+          "history": "eb4d967 96-well RRT demo -> 2ac55e2 ArmSE3/wire audit -> 53d7ac4 12-dataset 2026 registry.",
           "property": "Solves 100/100 trials where straight joint moves collide on 10/10 target wells."
         }
       }
@@ -1050,10 +1050,10 @@
       "layer_name": "Edge Body & Quantized Runtime",
       "tagline": "Teacher-to-student logit distillation and byte-packed int8/4-bit post-training quantization baseline for low-power benchtop inference.",
       "object": "Forms the L0 compute substrate of Auto-Lab so the lab agent can run autonomously on inexpensive edge boards mounted beside instruments: cloud GPUs train large teacher models in short bursts, while compact student networks are distilled, quantized to int8 and packed 4-bit weights, and executed locally with deterministic batch-1 latency.",
-      "data": "Uses scikit-learn's bundled 8x8 handwritten digits dataset (1,797 images, 64 features, 10 classes, BSD-3-Clause), split stratified 70/30 into 1,257 training and 540 test samples (SEED=0) with train-fitted StandardScaler preprocessing, exported into canonical float32 (W, b) tuples, signed int8 arrays, and two's-complement nibble-packed uint8 4-bit buffers.",
+      "data": "Evaluates teacher-to-student distillation and byte-packed `int8` / `4-bit` quantization on scikit-learn's bundled 8x8 digits dataset (1,797 images, 70/30 split at `SEED=0`) and integrates a 7-dataset `OpenEdgeDataset` registry (`src/lab_feet/datasets.py`: `MNIST-1D`, `UCI Gas Sensor Array Drift` 10 chronological 36-month aging batches, `UCI HAR Inertial`, `CWRU Bearing Vibration`, `UCI Hydraulic Vibration`, `SERS Bacteria Raman 2026` 1,215 channels, and `Ethanol NIR Spectroscopy` 1,751 through-glass channels) with `SAFE_HOLD` temporal-drift abstaining `int4` evaluation and SPDX license verification.",
       "model": "ReLU MLPClassifier teacher with hidden layers (256, 256) (85,002 params, 340,008 B fp32) paired with 32-unit single-hidden-layer ReLU students (2,410 params, 9,640 B fp32; 35.3x fewer parameters) compressed via symmetric per-tensor post-training weight quantization to int8 (2,544 B) and packed two-nibbles-per-byte signed 4-bit (1,360 B; 250.0x smaller than teacher), evaluated through one shared numpy forward pass.",
       "training": "Compares hard-label cross-entropy student training (MLPClassifier, max_iter=300) against high-temperature scaled logit regression (MLPRegressor fit to teacher pre-softmax logits / T at T=4.0, max_iter=500, avoiding premature tol stopping on flat softmax targets). Honestly documents both that hard-label training slightly beats pure uncentered logit MSE on this clean toy task (0.9741 vs 0.9685) and that quantized models run dequantized fp32 matmuls in numpy (saving 3.8x-7.1x memory with 100% int8 / 98.89% 4-bit prediction agreement, while wall-clock integer speedups await C++/NPU runtimes).",
-      "history": "Initial baseline a7b1532 on main (2026-11-18: teacher-student T=4.0 logit distillation, symmetric int8 and packed 4-bit round-trip quantizer, Xeon batch-1 latency benchmark, GitHub Actions CI, and curated quantization/edge-runtime survey) and architecture documentation 6a600de on main.",
+      "history": "Initial baseline `a7b1532` on `main` (2026-11-18: teacher-student distillation, symmetric `int8` & nibble-packed `4-bit` quantizer, docs `6a600de`), followed by Phase-2 Lean/wire & `LFT1` runtime merge (`8b0338a`, PR #32) and the 7-dataset 2024-2026 edge sensor, gas-drift, vibration & Raman/NIR registry on `main` (`98a995b`, PR #33).",
       "unique_properties": [
         "True two's-complement nibble packing and unpacking (pack_4bit / unpack_4bit, two signed -8..7 weights per uint8 byte) verified in-loop during accuracy evaluation rather than simulated via float clamping alone.",
         "Framework-neutral batch-1 latency harness (200 warmup + 2,000 single-sample passes) using a single raw numpy forward() kernel across classifier, regressor, and quantized variants.",
@@ -1086,7 +1086,7 @@
           "note": "0.9889 (98.89%) prediction agreement with fp32 distilled student (7.09x smaller than student fp32)"
         }
       ],
-      "commit_head": "4fe3495",
+      "commit_head": "98a995b",
       "issue_count": 30,
       "concise": {
         "hook": "Distill big teachers into tiny int8 and 4-bit students that run right next to the bench.",
@@ -1105,17 +1105,17 @@
             "batch-1 CPU"
           ],
           [
-            "1.36 KB",
-            "4-bit weights"
+            "7",
+            "edge sensor corpora"
           ]
         ],
         "short": {
           "object": "Compress lab models via distillation and low-bit quantization for cheap edge boards.",
-          "data": "Bundled 8x8 digits probe (1,257 train / 540 test) + edge runtime reference index.",
-          "model": "Teacher MLP (256,256) -> Student MLP (32) + symmetric per-tensor int8 & int4.",
-          "training": "Hard-label CE (0.974 acc) vs T=4 logit MSE distillation (0.969 acc; int8 0.0% drop).",
-          "history": "a7b1532 distill/quantize CPU probe -> 6a600de L0 edge runtime spec.",
-          "property": "250x smaller footprint (340 KB -> 1.36 KB); honestly notes NumPy dequantizes before matmul."
+          "data": "8x8 digits probe + 7 open edge corpora (UCI 36-mo Gas Drift, CWRU/Hydraulic vibration, SERS Raman 2026, Ethanol NIR).",
+          "model": "Teacher MLP (256,256) -> Student MLP (32) + symmetric int8 & SAFE_HOLD drift int4.",
+          "training": "Hard-label CE (0.974 acc) vs KL+CE distillation + temporal-drift abstention.",
+          "history": "a7b1532 distill/quantize probe -> 8b0338a Lean/wire audit -> 98a995b 7-dataset 2026 registry.",
+          "property": "250x smaller footprint (340 KB -> 1.36 KB) with SAFE_HOLD abstention under sensor drift."
         }
       }
     }

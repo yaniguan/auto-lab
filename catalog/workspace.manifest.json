@@ -6,7 +6,7 @@
       "layer": "L6",
       "git_url": "https://github.com/yaniguan/lab-ask-why.git",
       "default_branch": "main",
-      "head_sha": "e8a033b",
+      "head_sha": "b8a9d51",
       "local_relative_path": "../lab-ask-why",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 28
@@ -16,7 +16,7 @@
       "layer": "L6",
       "git_url": "https://github.com/yaniguan/lab-decide.git",
       "default_branch": "main",
-      "head_sha": "c19bca5",
+      "head_sha": "e37de97",
       "local_relative_path": "../lab-decide",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 28
@@ -26,7 +26,7 @@
       "layer": "L5",
       "git_url": "https://github.com/yaniguan/buy-or-make.git",
       "default_branch": "main",
-      "head_sha": "cc2d33e",
+      "head_sha": "3be1f4a",
       "local_relative_path": "../buy-or-make",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 28
@@ -46,7 +46,7 @@
       "layer": "L5",
       "git_url": "https://github.com/yaniguan/lab-automation-atlas.git",
       "default_branch": "main",
-      "head_sha": "49dafd9",
+      "head_sha": "3b7d259",
       "local_relative_path": "../lab-automation-atlas",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 28
@@ -56,7 +56,7 @@
       "layer": "L4",
       "git_url": "https://github.com/yaniguan/lab-rehearsal.git",
       "default_branch": "main",
-      "head_sha": "85fe9dd",
+      "head_sha": "4013323",
       "local_relative_path": "../lab-rehearsal",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 28
@@ -66,7 +66,7 @@
       "layer": "L4",
       "git_url": "https://github.com/yaniguan/lab-verify.git",
       "default_branch": "main",
-      "head_sha": "ed775b6",
+      "head_sha": "0c29ffc",
       "local_relative_path": "../lab-verify",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 28
@@ -76,7 +76,7 @@
       "layer": "L4",
       "git_url": "https://github.com/yaniguan/lab-attrib.git",
       "default_branch": "main",
-      "head_sha": "6b7f467",
+      "head_sha": "b8df8ef",
       "local_relative_path": "../lab-attrib",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 10
@@ -86,7 +86,7 @@
       "layer": "L3",
       "git_url": "https://github.com/yaniguan/labbench-posttrain.git",
       "default_branch": "main",
-      "head_sha": "c50955c",
+      "head_sha": "fbdd731",
       "local_relative_path": "../labbench-posttrain",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 28
@@ -116,7 +116,7 @@
       "layer": "L2",
       "git_url": "https://github.com/yaniguan/lab-ears.git",
       "default_branch": "main",
-      "head_sha": "2675971",
+      "head_sha": "079b9bb",
       "local_relative_path": "../lab-ears",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
@@ -136,7 +136,7 @@
       "layer": "L1",
       "git_url": "https://github.com/yaniguan/lab-hands.git",
       "default_branch": "main",
-      "head_sha": "ffd7b96",
+      "head_sha": "53d7ac4",
       "local_relative_path": "../lab-hands",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
@@ -146,7 +146,7 @@
       "layer": "L0",
       "git_url": "https://github.com/yaniguan/lab-feet.git",
       "default_branch": "main",
-      "head_sha": "4fe3495",
+      "head_sha": "98a995b",
       "local_relative_path": "../lab-feet",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
