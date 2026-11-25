@@ -9,7 +9,7 @@
       "head_sha": "e8a033b",
       "local_relative_path": "../lab-ask-why",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 22
+      "issue_count": 28
     },
     {
       "repo": "lab-decide",
@@ -19,7 +19,7 @@
       "head_sha": "c19bca5",
       "local_relative_path": "../lab-decide",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 22
+      "issue_count": 28
     },
     {
       "repo": "buy-or-make",
@@ -29,7 +29,7 @@
       "head_sha": "cc2d33e",
       "local_relative_path": "../buy-or-make",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 22
+      "issue_count": 28
     },
     {
       "repo": "labshift",
@@ -39,7 +39,7 @@
       "head_sha": "6985986",
       "local_relative_path": "../labshift",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 24
+      "issue_count": 30
     },
     {
       "repo": "lab-automation-atlas",
@@ -49,7 +49,7 @@
       "head_sha": "49dafd9",
       "local_relative_path": "../lab-automation-atlas",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 22
+      "issue_count": 28
     },
     {
       "repo": "lab-rehearsal",
@@ -59,7 +59,7 @@
       "head_sha": "85fe9dd",
       "local_relative_path": "../lab-rehearsal",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 22
+      "issue_count": 28
     },
     {
       "repo": "lab-verify",
@@ -69,7 +69,7 @@
       "head_sha": "ed775b6",
       "local_relative_path": "../lab-verify",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 22
+      "issue_count": 28
     },
     {
       "repo": "lab-attrib",
@@ -79,7 +79,7 @@
       "head_sha": "6b7f467",
       "local_relative_path": "../lab-attrib",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 0
+      "issue_count": 10
     },
     {
       "repo": "labbench-posttrain",
@@ -89,7 +89,7 @@
       "head_sha": "c50955c",
       "local_relative_path": "../labbench-posttrain",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 22
+      "issue_count": 28
     },
     {
       "repo": "twinstep",
@@ -99,7 +99,7 @@
       "head_sha": "996a282",
       "local_relative_path": "../twinstep",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 24
+      "issue_count": 30
     },
     {
       "repo": "labfill",
@@ -109,7 +109,7 @@
       "head_sha": "f969496",
       "local_relative_path": "../labfill",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 24
+      "issue_count": 30
     },
     {
       "repo": "lab-ears",
@@ -119,7 +119,7 @@
       "head_sha": "2675971",
       "local_relative_path": "../lab-ears",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 24
+      "issue_count": 30
     },
     {
       "repo": "stepbot",
@@ -129,7 +129,7 @@
       "head_sha": "5012e29",
       "local_relative_path": "../stepbot",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 24
+      "issue_count": 30
     },
     {
       "repo": "lab-hands",
@@ -139,7 +139,7 @@
       "head_sha": "ffd7b96",
       "local_relative_path": "../lab-hands",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 24
+      "issue_count": 30
     },
     {
       "repo": "lab-feet",
@@ -149,7 +149,7 @@
       "head_sha": "4fe3495",
       "local_relative_path": "../lab-feet",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 24
+      "issue_count": 30
     }
   ]
 }

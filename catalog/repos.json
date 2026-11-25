@@ -40,7 +40,7 @@
         }
       ],
       "commit_head": "e8a033b",
-      "issue_count": 22,
+      "issue_count": 28,
       "concise": {
         "hook": "Does not pick a winner—surfaces the evidence on each side and names the test that settles it.",
         "flow": [
@@ -111,7 +111,7 @@
         }
       ],
       "commit_head": "c19bca5",
-      "issue_count": 22,
+      "issue_count": 28,
       "concise": {
         "hook": "Answers only inside its calibrated zone, says 'I don't know' outside, and grows with new data.",
         "flow": [
@@ -187,7 +187,7 @@
         }
       ],
       "commit_head": "cc2d33e",
-      "issue_count": 22,
+      "issue_count": 28,
       "concise": {
         "hook": "Buy it now or make it in N steps? Strict catalog lower bounds, never invented prices.",
         "flow": [
@@ -263,7 +263,7 @@
         }
       ],
       "commit_head": "6985986",
-      "issue_count": 24,
+      "issue_count": 30,
       "concise": {
         "hook": "Schedule multi-step wet-lab jobs across shared instruments without breaking wait windows.",
         "flow": [
@@ -339,7 +339,7 @@
         }
       ],
       "commit_head": "49dafd9",
-      "issue_count": 22,
+      "issue_count": 28,
       "concise": {
         "hook": "A checked, zero-hype map of lab robots, cloud foundries, protocol DSLs, and open datasets.",
         "flow": [
@@ -415,7 +415,7 @@
         }
       ],
       "commit_head": "85fe9dd",
-      "issue_count": 22,
+      "issue_count": 28,
       "concise": {
         "hook": "Recall past crashes, dry-run on a virtual 96-well deck, block bad runs, write outcomes back.",
         "flow": [
@@ -491,7 +491,7 @@
         }
       ],
       "commit_head": "ed775b6",
-      "issue_count": 22,
+      "issue_count": 28,
       "concise": {
         "hook": "Trust nothing a model emits until a mechanical checker says yes: SQL, Lean, and protocols.",
         "flow": [
@@ -540,7 +540,7 @@
         "Couples post-run causal attribution with micro-scale annular Chem-RRT stepping-stones (31.0 verified multi-ring hits, 96.4% conformal coverage, 0 poisoned ledger entries)."
       ],
       "commit_head": "6b7f467",
-      "issue_count": 0,
+      "issue_count": 10,
       "concise": {
         "hook": "Separate robot glitches and precursor ghost peaks from proof-carrying negative truth after every run.",
         "flow": [
@@ -616,7 +616,7 @@
         }
       ],
       "commit_head": "c50955c",
-      "issue_count": 22,
+      "issue_count": 28,
       "concise": {
         "hook": "Post-training stack turning raw models into verified Scientist and Operator policies.",
         "flow": [
@@ -697,7 +697,7 @@
         }
       ],
       "commit_head": "996a282",
-      "issue_count": 24,
+      "issue_count": 30,
       "concise": {
         "hook": "Deterministic error twins for protocol steps—teaching models to spot mistakes and order DAGs.",
         "flow": [
@@ -778,7 +778,7 @@
         }
       ],
       "commit_head": "f969496",
-      "issue_count": 24,
+      "issue_count": 30,
       "concise": {
         "hook": "Fill the plate, fill the GPU—batch thousands of protocol checks and pack short sequences.",
         "flow": [
@@ -859,7 +859,7 @@
         }
       ],
       "commit_head": "2675971",
-      "issue_count": 24,
+      "issue_count": 30,
       "concise": {
         "hook": "Listen to protocol text and bench machines—pull clean parameters and flag strange sounds.",
         "flow": [
@@ -935,7 +935,7 @@
         }
       ],
       "commit_head": "5012e29",
-      "issue_count": 24,
+      "issue_count": 30,
       "concise": {
         "hook": "Compile tiny YAML/JSON step files into deterministic Opentrons Python protocols and simulate.",
         "flow": [
@@ -1011,7 +1011,7 @@
         }
       ],
       "commit_head": "ffd7b96",
-      "issue_count": 24,
+      "issue_count": 30,
       "concise": {
         "hook": "Collision-free bench motion plus last-centimeter touch where clear glass fools cameras.",
         "flow": [
@@ -1087,7 +1087,7 @@
         }
       ],
       "commit_head": "4fe3495",
-      "issue_count": 24,
+      "issue_count": 30,
       "concise": {
         "hook": "Distill big teachers into tiny int8 and 4-bit students that run right next to the bench.",
         "flow": [

@@ -76,16 +76,21 @@ def test_catalog_and_issues_integrity_when_built() -> None:
         assert get_repo(r["repo"])["url"].startswith("https://github.com/yaniguan/")
 
     issues = load_issues_index()
-    assert issues["total_issues"] >= 280
+    assert issues["total_issues"] >= 416
+    assert issues.get("round1_issues") == 322
+    assert issues.get("round2_issues") >= 94
     for name in CORE_REPO_NAMES:
         if name == "lab-attrib":
-            continue
-        assert issues["repos"][name]["count"] >= 20
+            assert issues["repos"][name]["count"] >= 10
+        else:
+            assert issues["repos"][name]["count"] >= 28
 
     assert site_data.exists()
     payload = json.loads(site_data.read_text(encoding="utf-8"))
     assert len(payload["repos"]) == 15
     assert len(payload["layers"]) == 7
+    assert payload["issues"]["total_issues"] == issues["total_issues"]
+    assert payload["issues"]["repos"]["lab-attrib"]["count"] >= 10
 
 
 def test_cli_commands_smoke(capsys) -> None:
@@ -230,12 +235,19 @@ def test_site_files_present() -> None:
     repos_js = (site / "repos" / "repos.js").read_text(encoding="utf-8")
     assert "1 · Object" not in repos_js and "bento-6" not in repos_js
 
+    audit_html = (site / "audit" / "index.html").read_text(encoding="utf-8")
+    audit_js = (site / "audit" / "audit.js").read_text(encoding="utf-8")
+    assert 'id="filter-round"' in audit_html and "?v=13" in audit_html
+    assert "filter-round" in audit_js and "populateDynamicCategoryFilter" in audit_js
+
     cjk_re = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
     scan_paths = [
         *site.rglob("*"),
+        *(REPO_ROOT / "catalog").rglob("*.json"),
         REPO_ROOT / "README.md",
         *(REPO_ROOT / "autolab").rglob("*.py"),
         *(REPO_ROOT / "benchmarks").rglob("*.py"),
+        *(REPO_ROOT / "benchmarks").rglob("*.json"),
         *(REPO_ROOT / "docs").rglob("*.md"),
         *(REPO_ROOT / "paper").rglob("*.tex"),
         *(REPO_ROOT / "paper").rglob("*.sty"),
@@ -350,6 +362,64 @@ def test_cross_repo_lean_mcp_and_lab_attrib_integration() -> None:
         assert attribute_assay_outcome(ghost_overlap) is AttributionOutcome.AMBIGUOUS_CHARACTERIZATION
 
 
+def test_fifteen_repo_full_wire_pipeline() -> None:
+    """Verify the 15-repository `autolab-wire/v1` end-to-end integration pipeline.
+
+    Validates the measured `benchmarks/results/fifteen_repo_wire_results.json` report on
+    every checkout (including hub-only CI), and executes all 6 live 15-repository wire
+    scenarios whenever the sibling `<repo>/autolab_wire.py` modules are present locally.
+    """
+    import importlib.util
+    import sys
+
+    results_path = REPO_ROOT / "benchmarks" / "results" / "fifteen_repo_wire_results.json"
+    assert results_path.exists(), f"Missing {results_path}"
+    recorded = json.loads(results_path.read_text(encoding="utf-8"))
+    assert recorded["schema_version"] == "autolab-wire/v1"
+    assert recorded["repo_count"] == 15
+    assert set(recorded["repos"]) == set(CORE_REPO_NAMES)
+    assert recorded["scenario_count"] == 6
+    assert recorded["all_passed"] is True
+
+    wire_script = REPO_ROOT / "benchmarks" / "fifteen_repo_wire_check.py"
+    spec = importlib.util.spec_from_file_location("_autolab_fifteen_repo_wire_check", wire_script)
+    assert spec is not None and spec.loader is not None
+    wire_check = importlib.util.module_from_spec(spec)
+    sys.modules["_autolab_fifteen_repo_wire_check"] = wire_check
+    spec.loader.exec_module(wire_check)
+
+    if not wire_check.all_sibling_wires_present():
+        return
+
+    live = wire_check.run_all_six_scenarios()
+    assert live["all_passed"] is True
+    assert live["scenario_count"] == 6
+    s1 = live["scenarios"]["1_full_happy_path_and_round2_recalibration"]
+    assert s1["trace_len"] == 15
+    assert s1["bottom_reasoning_traces_len"] == 15
+    assert s1["executed_epoch"] == 1 and s1["next_deck_epoch"] == 2
+    assert s1["attribution_outcome"] == "CERTIFIED_POSITIVE"
+    assert s1["gated_reward"] == 1.0 and s1["admitted_to_sft_rlvr"] is True
+    assert s1["round1_effective_n_calib"] == 226 and s1["round2_effective_n_calib"] == 227
+    assert s1["round1_effective_threshold"] == 0.758 and s1["round2_effective_threshold"] == 0.778
+
+    assert live["scenarios"]["2_l6_ood_abstention"]["halt_reason"] == "L6_ABSTAIN"
+    assert live["scenarios"]["2_l6_ood_abstention"]["gated_reward"] == 0.25
+    assert live["scenarios"]["3_l4_prerun_dirty_tip_block"]["halt_reason"] == "L4_REHEARSAL_BLOCK"
+    assert (
+        live["scenarios"]["4_l1_lean_mcp_stale_epoch_block"]["halt_reason"]
+        == "L1_MCP_BLOCK:mcp_epoch_freshness"
+    )
+    assert (
+        live["scenarios"]["5_l4_postrun_precursor_ghost_peak_quarantine"]["halt_reason"]
+        == "L4_ATTRIB_QUARANTINE"
+    )
+    assert (
+        live["scenarios"]["6_l3_splitguard_canary_block"]["halt_reason"]
+        == "L3_SPLITGUARD_CANARY_BLOCK"
+    )
+
+
 import io
 import unittest
 from contextlib import redirect_stdout
@@ -374,6 +444,7 @@ class TestAutoLabStdlib(unittest.TestCase):
         test_lean_trust_regime_audit_and_parity()
         test_site_files_present()
         test_cross_repo_lean_mcp_and_lab_attrib_integration()
+        test_fifteen_repo_full_wire_pipeline()
         buf = io.StringIO()
         with redirect_stdout(buf):
             test_cli_commands_smoke(_CapsysShim(buf))

@@ -7,9 +7,9 @@
   <meta name="theme-color" content="#f8fafc">
   <title>Maintainer Backlog — Auto-Lab</title>
   <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css?v=12">
-  <script defer src="../shared.js?v=12"></script>
-  <script defer src="audit.js?v=12"></script>
+  <link rel="stylesheet" href="../styles.css?v=13">
+  <script defer src="../shared.js?v=13"></script>
+  <script defer src="audit.js?v=13"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -33,7 +33,7 @@
       <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;">
         <div>
           <p class="eyebrow"><span class="status-dot"></span> Internal Maintainer View · Unlisted</p>
-          <h1>Issue Backlog (<span id="kpi-total">322</span>)</h1>
+          <h1>Issue Backlog (<span id="kpi-total">416</span>)</h1>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <span class="pill high">High: <strong id="kpi-high" style="margin-left:4px;">-</strong></span>
@@ -49,20 +49,16 @@
       <div class="sandbox-card" style="padding:14px 18px;margin-bottom:18px;">
         <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;">
           <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <select id="filter-round" class="select-ctrl" aria-label="Filter by audit round">
+              <option value="ALL">All Rounds (416)</option>
+              <option value="2">Round 2 · Lean, Wire &amp; Attribution (94)</option>
+              <option value="1">Round 1 · Initial Audit (322)</option>
+            </select>
             <select id="filter-repo" class="select-ctrl" aria-label="Filter by repository">
-              <option value="ALL">All 14 Repositories</option>
+              <option value="ALL">All 15 Repositories</option>
             </select>
             <select id="filter-cat" class="select-ctrl" aria-label="Filter by category">
               <option value="ALL">All Categories</option>
-              <option value="bug">bug</option>
-              <option value="safety">safety</option>
-              <option value="numerics">numerics</option>
-              <option value="schema">schema</option>
-              <option value="testing">testing</option>
-              <option value="ci">ci</option>
-              <option value="performance">performance</option>
-              <option value="integration">integration</option>
-              <option value="feature">feature</option>
             </select>
             <select id="filter-sev" class="select-ctrl" aria-label="Filter by severity">
               <option value="ALL">All Severities</option>
@@ -73,7 +69,7 @@
             <button type="button" class="button secondary" id="btn-reset-filters" style="min-height:38px;padding:6px 13px;">Reset</button>
           </div>
           <input type="search" id="filter-search" class="input-ctrl" style="min-width:250px;"
-                 placeholder="Filter by file or keyword…" aria-label="Search issues">
+                 placeholder="Filter by file, tag, or keyword…" aria-label="Search issues">
         </div>
       </div>
 
@@ -83,6 +79,7 @@
             <tr>
               <th>Repo</th>
               <th>Issue</th>
+              <th>Round</th>
               <th>Severity</th>
               <th>Category</th>
               <th>Title &amp; Grounded Code Location</th>
