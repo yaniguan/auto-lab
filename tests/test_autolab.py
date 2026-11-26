@@ -30,6 +30,16 @@ from autolab.trust_regime import (
 )
 
 
+def _skip_or_fail(reason: str, require_env: str) -> None:
+    """Skip the test, or fail it when `require_env=1` says this check must run (set in CI)."""
+    import os
+
+    __tracebackhide__ = True  # report the calling test's line, not this helper's
+    if os.environ.get(require_env) == "1":
+        pytest.fail(f"{reason} ({require_env}=1)", pytrace=False)
+    pytest.skip(reason)
+
+
 def test_seven_layers_ordered_top_down() -> None:
     assert len(LAYERS) == 7
     codes = [layer.code for layer in LAYERS]
@@ -69,8 +79,7 @@ def test_catalog_and_issues_integrity_when_built() -> None:
     catalog_file = REPO_ROOT / "catalog" / "repos.json"
     manifest_file = REPO_ROOT / "catalog" / "workspace.manifest.json"
     site_data = REPO_ROOT / "site" / "assets" / "autolab-data.json"
-    if not catalog_file.exists():
-        return
+    assert catalog_file.exists()
 
     repos = load_catalog()
     assert len(repos) == 15
@@ -158,65 +167,67 @@ def test_lean_trust_regime_audit_and_parity() -> None:
 
     # When `autolab-lean` is compiled locally or in CI, verify exact kernel parity!
     kernel = LeanBatchKernel()
-    if kernel.available:
-        v_ok, v_ood, v_small = kernel.eval_lines(
-            [
-                "CONFORMAL\t180\t100\t410\t758\t-2410\t630\t-15000\t1750",
-                "CONFORMAL\t180\t100\t1380\t758\t-2410\t630\t-15000\t1750",
-                "CONFORMAL\t5\t100\t410\t758\t-2410\t630\t-15000\t1750",
-            ]
-        )
-        assert v_ok.allowed is py_check_conformal(180, 100, 410, 758, -2410, 630).allowed is True
-        assert v_ood.allowed is py_check_conformal(180, 100, 1380, 758, -2410, 630).allowed is False
-        assert v_small.allowed is py_check_conformal(5, 100, 410, 758, -2410, 630).allowed is False
+    if not kernel.available:
+        _skip_or_fail("autolab-lean binary not built (run `lake build` in lean/)", "AUTOLAB_REQUIRE_LEAN")
 
-        wells = [
-            {"wellId": 1, "vol": 2500, "cap": 3000, "deadVol": 50, "soluteAmt": 0, "hasBuffer": True, "hasSample": False, "frozen": False, "sealed": False},
-            {"wellId": 2, "vol": 1500, "cap": 3000, "deadVol": 50, "soluteAmt": 1500, "hasBuffer": False, "hasSample": True, "frozen": False, "sealed": False},
-            {"wellId": 3, "vol": 0, "cap": 3000, "deadVol": 50, "soluteAmt": 0, "hasBuffer": False, "hasSample": False, "frozen": False, "sealed": False},
+    v_ok, v_ood, v_small = kernel.eval_lines(
+        [
+            "CONFORMAL\t180\t100\t410\t758\t-2410\t630\t-15000\t1750",
+            "CONFORMAL\t180\t100\t1380\t758\t-2410\t630\t-15000\t1750",
+            "CONFORMAL\t5\t100\t410\t758\t-2410\t630\t-15000\t1750",
         ]
-        good_steps = [("pick",), ("xfer", 1, 3, 1000), ("drop",), ("pick",), ("xfer", 2, 3, 500), ("seal", 3), ("inc", 3, 95, 300), ("drop",)]
-        bad_steps = [("pick",), ("xfer", 2, 3, 500), ("xfer", 1, 3, 500), ("drop",)]
-        r_good, r_bad = kernel.eval_lines(
-            [
-                format_rehearsal_tsv(200, 3000, 101, [], wells, good_steps),
-                format_rehearsal_tsv(200, 3000, 102, [], wells, bad_steps),
-            ]
-        )
-        assert r_good.allowed is py_check_rehearsal(200, 3000, 101, [], wells, good_steps).allowed is True
-        assert r_bad.allowed is py_check_rehearsal(200, 3000, 102, [], wells, bad_steps).allowed is False
-        assert r_bad.rule == "no_tip_cross_contamination"
+    )
+    assert v_ok.allowed is py_check_conformal(180, 100, 410, 758, -2410, 630).allowed is True
+    assert v_ood.allowed is py_check_conformal(180, 100, 1380, 758, -2410, 630).allowed is False
+    assert v_small.allowed is py_check_conformal(5, 100, 410, 758, -2410, 630).allowed is False
 
-        # Verify NovelDirections.lean batch commands (ATTRIB, FRONTIER, MCP)
-        a_neg, a_xrd, f_ok, f_deep, m_ok, m_stale = kernel.eval_lines(
-            [
-                "ATTRIB\t1\t1\t1\t1\t1\t1\t80\t150\t40\t120\t0",
-                "ATTRIB\t1\t1\t1\t1\t1\t1\t80\t150\t310\t120\t1",
-                "FRONTIER\t1\t890\t750\t250\t350\t80\t100\t1\t0",
-                "FRONTIER\t1\t1200\t750\t250\t350\t80\t100\t1\t0",
-                "MCP\t42\t42\t1\t0\t0",
-                "MCP\t41\t42\t1\t0\t0",
-            ]
-        )
-        assert a_neg.rule == "CERTIFIED_NEGATIVE" and a_neg.extra == "1"
-        assert a_xrd.rule == "AMBIGUOUS_CHARACTERIZATION" and a_xrd.extra == "0"
-        assert f_ok.allowed is True
-        assert f_deep.allowed is False and f_deep.rule == "within_stepping_stone_shell"
-        assert m_ok.allowed is True
-        assert m_stale.allowed is False and m_stale.rule == "mcp_epoch_freshness"
+    wells = [
+        {"wellId": 1, "vol": 2500, "cap": 3000, "deadVol": 50, "soluteAmt": 0, "hasBuffer": True, "hasSample": False, "frozen": False, "sealed": False},
+        {"wellId": 2, "vol": 1500, "cap": 3000, "deadVol": 50, "soluteAmt": 1500, "hasBuffer": False, "hasSample": True, "frozen": False, "sealed": False},
+        {"wellId": 3, "vol": 0, "cap": 3000, "deadVol": 50, "soluteAmt": 0, "hasBuffer": False, "hasSample": False, "frozen": False, "sealed": False},
+    ]
+    good_steps = [("pick",), ("xfer", 1, 3, 1000), ("drop",), ("pick",), ("xfer", 2, 3, 500), ("seal", 3), ("inc", 3, 95, 300), ("drop",)]
+    bad_steps = [("pick",), ("xfer", 2, 3, 500), ("xfer", 1, 3, 500), ("drop",)]
+    r_good, r_bad = kernel.eval_lines(
+        [
+            format_rehearsal_tsv(200, 3000, 101, [], wells, good_steps),
+            format_rehearsal_tsv(200, 3000, 102, [], wells, bad_steps),
+        ]
+    )
+    assert r_good.allowed is py_check_rehearsal(200, 3000, 101, [], wells, good_steps).allowed is True
+    assert r_bad.allowed is py_check_rehearsal(200, 3000, 102, [], wells, bad_steps).allowed is False
+    assert r_bad.rule == "no_tip_cross_contamination"
 
-        ms_ok, ms_rusty_deny, mn_ok, mn_blind_deny = kernel.eval_lines(
-            [
-                "MEM_SKILL\t120\t30\t2\t2\t1\t1",
-                "MEM_SKILL\t120\t30\t2\t2\t0\t1",
-                "MEM_NOVEL\t0\t750\t600\t1\t1\t1",
-                "MEM_NOVEL\t0\t750\t600\t0\t1\t1",
-            ]
-        )
-        assert ms_ok.allowed is True
-        assert ms_rusty_deny.allowed is False and ms_rusty_deny.rule == "rusty_skill_requires_bottom_trace"
-        assert mn_ok.allowed is True
-        assert mn_blind_deny.allowed is False and mn_blind_deny.rule == "novel_requires_bottom_reasoning_trace"
+    # Verify NovelDirections.lean batch commands (ATTRIB, FRONTIER, MCP)
+    a_neg, a_xrd, f_ok, f_deep, m_ok, m_stale = kernel.eval_lines(
+        [
+            "ATTRIB\t1\t1\t1\t1\t1\t1\t80\t150\t40\t120\t0",
+            "ATTRIB\t1\t1\t1\t1\t1\t1\t80\t150\t310\t120\t1",
+            "FRONTIER\t1\t890\t750\t250\t350\t80\t100\t1\t0",
+            "FRONTIER\t1\t1200\t750\t250\t350\t80\t100\t1\t0",
+            "MCP\t42\t42\t1\t0\t0",
+            "MCP\t41\t42\t1\t0\t0",
+        ]
+    )
+    assert a_neg.rule == "CERTIFIED_NEGATIVE" and a_neg.extra == "1"
+    assert a_xrd.rule == "AMBIGUOUS_CHARACTERIZATION" and a_xrd.extra == "0"
+    assert f_ok.allowed is True
+    assert f_deep.allowed is False and f_deep.rule == "within_stepping_stone_shell"
+    assert m_ok.allowed is True
+    assert m_stale.allowed is False and m_stale.rule == "mcp_epoch_freshness"
+
+    ms_ok, ms_rusty_deny, mn_ok, mn_blind_deny = kernel.eval_lines(
+        [
+            "MEM_SKILL\t120\t30\t2\t2\t1\t1",
+            "MEM_SKILL\t120\t30\t2\t2\t0\t1",
+            "MEM_NOVEL\t0\t750\t600\t1\t1\t1",
+            "MEM_NOVEL\t0\t750\t600\t0\t1\t1",
+        ]
+    )
+    assert ms_ok.allowed is True
+    assert ms_rusty_deny.allowed is False and ms_rusty_deny.rule == "rusty_skill_requires_bottom_trace"
+    assert mn_ok.allowed is True
+    assert mn_blind_deny.allowed is False and mn_blind_deny.rule == "novel_requires_bottom_reasoning_trace"
 
 
 # Probe inputs from issue #2. The old batch parser read bad numbers as 0 and dropped steps it
@@ -430,98 +441,100 @@ def test_cross_repo_lean_mcp_and_lab_attrib_integration() -> None:
     verify_src = scratch_root / "lab-verify" / "src"
     attrib_src = scratch_root / "lab-attrib" / "src"
 
-    if stepbot_src.exists() and verify_src.exists():
-        for p in (str(stepbot_src), str(verify_src)):
-            if p not in sys.path:
-                sys.path.insert(0, p)
+    missing = [src.parent.name for src in (stepbot_src, verify_src, attrib_src) if not src.exists()]
+    if missing:
+        _skip_or_fail(f"sibling repos not checked out next to the hub: {', '.join(missing)}", "AUTOLAB_REQUIRE_SIBLINGS")
 
-        from lab_verify.mcp_gate import LeanMcpGate
-        from stepbot.mcp_runtime import (
-            McpSecurityViolation,
-            StepbotMcpExecutor,
-            compile_with_mcp_envelope,
-        )
+    for p in (str(stepbot_src), str(verify_src)):
+        if p not in sys.path:
+            sys.path.insert(0, p)
 
-        plate_yaml = scratch_root / "stepbot" / "examples" / "plate_fill.yaml"
-        bundle = compile_with_mcp_envelope(plate_yaml, secret_key="cross-repo-test-key", deck_epoch=1)
+    from lab_verify.mcp_gate import LeanMcpGate
+    from stepbot.mcp_runtime import (
+        McpSecurityViolation,
+        StepbotMcpExecutor,
+        compile_with_mcp_envelope,
+    )
 
-        # Direction A: stepbot-minted envelope verified by lab-verify's stateful gate!
-        gate_a = LeanMcpGate(secret_key="cross-repo-test-key", initial_deck_epoch=1, check_lean_kernel=False)
-        verdict_a = gate_a.verify(bundle.envelope, actual_protocol=bundle.python_code, mutates_deck_state=True)
-        assert verdict_a.passed is True
-        assert gate_a.current_deck_epoch == 2
+    plate_yaml = scratch_root / "stepbot" / "examples" / "plate_fill.yaml"
+    bundle = compile_with_mcp_envelope(plate_yaml, secret_key="cross-repo-test-key", deck_epoch=1)
 
-        # Direction B: lab-verify-minted envelope dispatched in stepbot's executor!
-        gate_b = LeanMcpGate(secret_key="cross-repo-test-key", initial_deck_epoch=1, check_lean_kernel=False)
-        minted = gate_b.mint(
-            bundle.python_code,
-            lean_proof_valid=True,
-            envelope_bounds=bundle.envelope["envelope_bounds"],
-        )
-        verdict_b = gate_b.verify(minted, actual_protocol=bundle.python_code, mutates_deck_state=True)
-        assert verdict_b.passed is True
-        assert gate_b.current_deck_epoch == 2
+    # Direction A: stepbot-minted envelope verified by lab-verify's stateful gate!
+    gate_a = LeanMcpGate(secret_key="cross-repo-test-key", initial_deck_epoch=1, check_lean_kernel=False)
+    verdict_a = gate_a.verify(bundle.envelope, actual_protocol=bundle.python_code, mutates_deck_state=True)
+    assert verdict_a.passed is True
+    assert gate_a.current_deck_epoch == 2
 
-        executor = StepbotMcpExecutor(secret_key="cross-repo-test-key", current_deck_epoch=1, use_mock=True)
-        receipt = executor.dispatch(bundle.python_code, minted.to_dict(), simulate=True)
-        assert receipt["ok"] is True
-        assert receipt["executed_epoch"] == 1
-        assert executor.current_deck_epoch == 2
+    # Direction B: lab-verify-minted envelope dispatched in stepbot's executor!
+    gate_b = LeanMcpGate(secret_key="cross-repo-test-key", initial_deck_epoch=1, check_lean_kernel=False)
+    minted = gate_b.mint(
+        bundle.python_code,
+        lean_proof_valid=True,
+        envelope_bounds=bundle.envelope["envelope_bounds"],
+    )
+    verdict_b = gate_b.verify(minted, actual_protocol=bundle.python_code, mutates_deck_state=True)
+    assert verdict_b.passed is True
+    assert gate_b.current_deck_epoch == 2
 
-        # Replay of the consumed token must fail immediately with McpSecurityViolation
-        replayed = False
-        try:
-            executor.dispatch(bundle.python_code, minted.to_dict(), simulate=True)
-        except McpSecurityViolation as exc:
-            replayed = exc.rule in {"mcp_epoch_freshness", "mcp_nonce_single_use"}
-        assert replayed is True
+    executor = StepbotMcpExecutor(secret_key="cross-repo-test-key", current_deck_epoch=1, use_mock=True)
+    receipt = executor.dispatch(bundle.python_code, minted.to_dict(), simulate=True)
+    assert receipt["ok"] is True
+    assert receipt["executed_epoch"] == 1
+    assert executor.current_deck_epoch == 2
 
-    if attrib_src.exists():
-        if str(attrib_src) not in sys.path:
-            sys.path.insert(0, str(attrib_src))
+    # Replay of the consumed token must fail immediately with McpSecurityViolation
+    replayed = False
+    try:
+        executor.dispatch(bundle.python_code, minted.to_dict(), simulate=True)
+    except McpSecurityViolation as exc:
+        replayed = exc.rule in {"mcp_epoch_freshness", "mcp_nonce_single_use"}
+    assert replayed is True
 
-        from lab_attrib.blame import (
-            AssayTelemetry,
-            AttributionOutcome,
-            attribute_assay_outcome,
-        )
+    if str(attrib_src) not in sys.path:
+        sys.path.insert(0, str(attrib_src))
 
-        clean_neg = AssayTelemetry(
-            dispense_error_permille=12,
-            aspiration_clean=True,
-            incubation_window_clean=True,
-            seal_intact=True,
-            positive_control_passed=True,
-            blank_uncontaminated=True,
-            detector_calibrated=True,
-            precursor_overlap_permille=35,
-            spectral_residual_permille=42,
-            snr_tenths=85,
-            target_signal_present=False,
-        )
-        ghost_overlap = AssayTelemetry(
-            dispense_error_permille=12,
-            aspiration_clean=True,
-            incubation_window_clean=True,
-            seal_intact=True,
-            positive_control_passed=True,
-            blank_uncontaminated=True,
-            detector_calibrated=True,
-            precursor_overlap_permille=340,
-            spectral_residual_permille=42,
-            snr_tenths=85,
-            target_signal_present=True,
-        )
-        assert attribute_assay_outcome(clean_neg) is AttributionOutcome.CERTIFIED_NEGATIVE
-        assert attribute_assay_outcome(ghost_overlap) is AttributionOutcome.AMBIGUOUS_CHARACTERIZATION
+    from lab_attrib.blame import (
+        AssayTelemetry,
+        AttributionOutcome,
+        attribute_assay_outcome,
+    )
+
+    clean_neg = AssayTelemetry(
+        dispense_error_permille=12,
+        aspiration_clean=True,
+        incubation_window_clean=True,
+        seal_intact=True,
+        positive_control_passed=True,
+        blank_uncontaminated=True,
+        detector_calibrated=True,
+        precursor_overlap_permille=35,
+        spectral_residual_permille=42,
+        snr_tenths=85,
+        target_signal_present=False,
+    )
+    ghost_overlap = AssayTelemetry(
+        dispense_error_permille=12,
+        aspiration_clean=True,
+        incubation_window_clean=True,
+        seal_intact=True,
+        positive_control_passed=True,
+        blank_uncontaminated=True,
+        detector_calibrated=True,
+        precursor_overlap_permille=340,
+        spectral_residual_permille=42,
+        snr_tenths=85,
+        target_signal_present=True,
+    )
+    assert attribute_assay_outcome(clean_neg) is AttributionOutcome.CERTIFIED_NEGATIVE
+    assert attribute_assay_outcome(ghost_overlap) is AttributionOutcome.AMBIGUOUS_CHARACTERIZATION
 
 
 def test_fifteen_repo_full_wire_pipeline() -> None:
     """Verify the 15-repository `autolab-wire/v1` end-to-end integration pipeline.
 
-    Validates the measured `benchmarks/results/fifteen_repo_wire_results.json` report on
+    Checks the committed `benchmarks/results/fifteen_repo_wire_results.json` report on
     every checkout (including hub-only CI), and executes all 6 live 15-repository wire
-    scenarios whenever the sibling `<repo>/autolab_wire.py` modules are present locally.
+    scenarios when all sibling `<repo>/autolab_wire.py` modules are present locally.
     """
     import importlib.util
     import sys
@@ -542,8 +555,11 @@ def test_fifteen_repo_full_wire_pipeline() -> None:
     sys.modules["_autolab_fifteen_repo_wire_check"] = wire_check
     spec.loader.exec_module(wire_check)
 
-    if not wire_check.all_sibling_wires_present():
-        return
+    missing = [repo for repo, path in wire_check.sibling_wire_paths().items() if not path.is_file()]
+    if missing:
+        _skip_or_fail(
+            f"autolab_wire.py missing in {len(missing)} sibling repos: {', '.join(missing)}", "AUTOLAB_REQUIRE_SIBLINGS"
+        )
 
     live = wire_check.run_all_six_scenarios()
     assert live["all_passed"] is True
@@ -572,34 +588,3 @@ def test_fifteen_repo_full_wire_pipeline() -> None:
         live["scenarios"]["6_l3_splitguard_canary_block"]["halt_reason"]
         == "L3_SPLITGUARD_CANARY_BLOCK"
     )
-
-
-import io
-import unittest
-from contextlib import redirect_stdout
-
-
-class _CapsysShim:
-    def __init__(self, buf: io.StringIO) -> None:
-        self._buf = buf
-
-    def readouterr(self):
-        val = self._buf.getvalue()
-        self._buf.seek(0)
-        self._buf.truncate(0)
-        return type("Out", (), {"out": val, "err": ""})()
-
-
-class TestAutoLabStdlib(unittest.TestCase):
-    def test_all(self) -> None:
-        test_seven_layers_ordered_top_down()
-        test_closed_loop_scenarios_behave_honestly()
-        test_catalog_and_issues_integrity_when_built()
-        test_lean_trust_regime_audit_and_parity()
-        test_site_files_present()
-        test_cross_repo_lean_mcp_and_lab_attrib_integration()
-        test_fifteen_repo_full_wire_pipeline()
-        buf = io.StringIO()
-        with redirect_stdout(buf):
-            test_cli_commands_smoke(_CapsysShim(buf))
-

@@ -34,7 +34,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
       - name: Run unit and catalog integrity tests
-        run: python -m pytest -q
+        run: python -m pytest
 
   lean-trust-regime:
     runs-on: ubuntu-latest
@@ -61,6 +61,44 @@ jobs:
           lake build
           lake exe autolab-lean
       - name: Verify Python <-> Lean 4 kernel parity & zero-sorry audit
+        env:
+          AUTOLAB_REQUIRE_LEAN: "1"
         run: |
           python -m pip install -e ".[dev]"
-          python -m pytest -q
+          python -m pytest
+
+  workspace:
+    # Cross-repo and 15-repo wire tests against the sibling repos at the SHAs pinned in
+    # catalog/workspace.manifest.json. The wire test fails here until labshift, twinstep, labfill
+    # and stepbot have autolab_wire.py at their pinned SHAs (README: pending sibling merges).
+    # The live wire run then also needs the siblings' runtime packages (numpy, torch, rdkit, ...).
+    # Remove continue-on-error once this job passes.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Clone the 15 sibling repos at the pinned SHAs
+        run: |
+          python - <<'EOF'
+          import json
+          import subprocess
+
+          with open("catalog/workspace.manifest.json", encoding="utf-8") as fh:
+              repos = json.load(fh)["repositories"]
+          for repo in repos:
+              dest = repo["local_relative_path"]
+              subprocess.run(["git", "clone", "--quiet", repo["git_url"], dest], check=True)
+              subprocess.run(["git", "-C", dest, "checkout", "--quiet", "--detach", repo["head_sha"]], check=True)
+          EOF
+      - name: Install autolab-hub and the siblings' light dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]" "pyyaml>=6.0" "sqlglot>=25.0,<31.0"
+      - name: Run cross-repo and wire tests with the siblings required
+        env:
+          AUTOLAB_REQUIRE_SIBLINGS: "1"
+        run: python -m pytest tests/test_autolab.py -k "cross_repo or fifteen_repo"
