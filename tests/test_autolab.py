@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import json
+import random
+from collections import Counter
 from pathlib import Path
+
+import pytest
 
 from autolab.catalog import (
     COMPANION_REPOS,
@@ -18,6 +22,7 @@ from autolab.cli import main as cli_main
 from autolab.loop_demo import SCENARIOS, run_closed_loop_scenario
 from autolab.trust_regime import (
     LeanBatchKernel,
+    TrustVerdict,
     audit_lean_sources,
     format_rehearsal_tsv,
     py_check_conformal,
@@ -212,6 +217,140 @@ def test_lean_trust_regime_audit_and_parity() -> None:
         assert ms_rusty_deny.allowed is False and ms_rusty_deny.rule == "rusty_skill_requires_bottom_trace"
         assert mn_ok.allowed is True
         assert mn_blind_deny.allowed is False and mn_blind_deny.rule == "novel_requires_bottom_reasoning_trace"
+
+
+# Probe inputs from issue #2. The old batch parser read bad numbers as 0 and dropped steps it
+# could not parse, so most of these were allowed.
+_PROBE_WELLS = [
+    {"wellId": 1, "vol": 2500, "cap": 3000, "deadVol": 50, "soluteAmt": 0, "hasBuffer": True, "hasSample": False, "frozen": False, "sealed": False},
+    {"wellId": 2, "vol": 1500, "cap": 3000, "deadVol": 50, "soluteAmt": 1500, "hasBuffer": False, "hasSample": True, "frozen": False, "sealed": False},
+    {"wellId": 3, "vol": 0, "cap": 3000, "deadVol": 50, "soluteAmt": 0, "hasBuffer": False, "hasSample": False, "frozen": False, "sealed": False},
+]
+_CONFORMAL_PROBES = [  # (kNN distance, expected rule)
+    (1384, "knn_trust_boundary"),
+    (1384.0, "malformed_input"),
+    ("1,384", "malformed_input"),
+]
+_REHEARSAL_PROBES = [  # (wells, steps, expected rule)
+    (_PROBE_WELLS, [("pick",), ("xfer", 1, 3), ("drop",)], "malformed_input"),
+    (_PROBE_WELLS, [("pick",), ("aspirate", 1, 99999), ("drop",)], "malformed_input"),
+    (_PROBE_WELLS, [("pick",), ("xfer", 1, 3, 500), ("inc", 3, 95, 300), ("drop",)], "high_temp_requires_seal"),
+    (_PROBE_WELLS, [("pick",), ("xfer", 1, 3, 500), ("incubate", 3, 95, 300), ("drop",)], "malformed_input"),
+    ([{**_PROBE_WELLS[0], "vol": -5}, *_PROBE_WELLS[1:]], [("pick",), ("drop",)], "malformed_input"),
+    # Well 1 is over capacity and listed twice: `initDeckOK` checks well IDs before capacity.
+    ([{**_PROBE_WELLS[0], "vol": 3500}, *_PROBE_WELLS], [("pick",), ("drop",)], "unique_well_ids"),
+    (_PROBE_WELLS, [], "valid"),  # zero steps, so the TSV line ends with an empty field
+]
+_PROBE_RULES = [probe[-1] for probe in _CONFORMAL_PROBES + _REHEARSAL_PROBES]
+_SQL_PROBES = ["SQL\t1\t1\t1\t1\tyes\t0\t0\t1\t1\t1", "SQL\t1\t1\t1\t1\t0\ttwo\t0\t1\t1\t1"]
+
+
+def _conformal_args(dist: object) -> tuple[object, ...]:
+    return (180, 100, dist, 758, -2410, 630, -15000, 1750)
+
+
+def _conformal_tsv(dist: object) -> str:
+    return "\t".join(str(x) for x in ("CONFORMAL", *_conformal_args(dist)))
+
+
+def _probe_py_verdicts() -> list[TrustVerdict]:
+    verdicts = [py_check_conformal(*_conformal_args(dist)) for dist, _ in _CONFORMAL_PROBES]
+    verdicts += [py_check_rehearsal(200, 3000, 101, [], wells, steps) for wells, steps, _ in _REHEARSAL_PROBES]
+    return verdicts
+
+
+def _lean_kernel_or_skip() -> LeanBatchKernel:
+    kernel = LeanBatchKernel()
+    if not kernel.available:
+        pytest.skip("autolab-lean binary not built (run `lake build` in lean/)")
+    return kernel
+
+
+def test_python_mirror_denies_malformed_input() -> None:
+    verdicts = _probe_py_verdicts()
+    assert [(v.allowed, v.rule) for v in verdicts] == [(rule == "valid", rule) for rule in _PROBE_RULES]
+    # Input is checked before any rule, as in the Lean parser, so the rule names match.
+    late_typo = py_check_rehearsal(200, 3000, 101, [101], _PROBE_WELLS, [("pick",), ("drop",), ("spin", 3)])
+    assert late_typo.rule == "malformed_input"
+
+
+def test_lean_batch_tsv_denies_malformed_input() -> None:
+    kernel = _lean_kernel_or_skip()
+    lines = [_conformal_tsv(dist) for dist, _ in _CONFORMAL_PROBES]
+    lines += [format_rehearsal_tsv(200, 3000, 101, [], wells, steps) for wells, steps, _ in _REHEARSAL_PROBES]
+    lean = kernel.eval_lines(lines)
+    assert [(v.allowed, v.rule) for v in lean] == [(rule == "valid", rule) for rule in _PROBE_RULES]
+    assert [(v.allowed, v.rule, v.extra) for v in lean] == [(v.allowed, v.rule, v.extra) for v in _probe_py_verdicts()]
+    assert lean[-1].detail == "accepted by the compiled Lean checker"
+    assert [v.rule for v in kernel.eval_lines(_SQL_PROBES)] == ["malformed_input"] * len(_SQL_PROBES)
+    # Only the line ending is stripped, so a CRLF line still parses.
+    assert kernel.eval_lines([_conformal_tsv(410) + "\r"])[0].allowed is True
+
+
+def _random_rehearsal_case(rng: random.Random) -> tuple:
+    """A small random deck and protocol. About one case in five gets one malformed field."""
+    ids = rng.sample(range(1, 6), rng.randint(1, 4))
+    if rng.random() < 0.1:
+        ids.append(ids[0])
+    wells = []
+    for wid in ids:
+        cap = rng.choice([1000, 3000])
+        wells.append(
+            {"wellId": wid, "vol": rng.randint(0, cap + 100), "cap": cap, "deadVol": rng.choice([0, 50]),
+             "soluteAmt": rng.choice([0, rng.randint(1, 1500)]), "hasBuffer": rng.random() < 0.5,
+             "hasSample": rng.random() < 0.5, "frozen": rng.random() < 0.15, "sealed": rng.random() < 0.15}
+        )
+    wids = ids + [9]  # well 9 is never on the deck
+    steps: list[tuple] = [("pick",)] if rng.random() < 0.8 else []
+    for _ in range(rng.randint(0, 6)):
+        op = rng.choice(["pick", "drop", "xfer", "xfer", "mix", "inc", "seal", "thaw"])
+        if op in ("pick", "drop"):
+            steps.append((op,))
+        elif op == "xfer":
+            steps.append((op, rng.choice(wids), rng.choice(wids), rng.choice([100, 500, 1000, 2900])))
+        elif op == "mix":
+            steps.append((op, rng.choice(wids), rng.choice([100, 500, 1000]), rng.randint(0, 3)))
+        elif op == "inc":
+            steps.append((op, rng.choice(wids), rng.choice([2, 37, 85, 99]), rng.choice([0, 300])))
+        else:
+            steps.append((op, rng.choice(wids)))
+    if rng.random() < 0.8:
+        steps.append(("drop",))
+    pip = rng.choice([(200, 3000)] * 18 + [(0, 3000), (500, 100)])
+    proto_hash = rng.randint(1, 40)
+    failed = [rng.randint(1, 40) for _ in range(rng.randint(0, 2))]
+    if rng.random() < 0.2:
+        kind = rng.randrange(5)
+        bad = rng.choice([-5, 1384.0, True])
+        if kind == 0 and steps:
+            i = rng.randrange(len(steps))
+            steps[i] = (rng.choice(["incubate", "aspirate", "INC"]), *steps[i][1:])
+        elif kind == 1 and steps:
+            i = rng.randrange(len(steps))
+            steps[i] = steps[i][:-1] if len(steps[i]) > 1 else (*steps[i], 1)
+        elif kind == 2:
+            rng.choice(wells)[rng.choice(["wellId", "vol", "cap", "deadVol", "soluteAmt"])] = bad
+        elif kind == 3:
+            pip = (bad, pip[1])
+        else:
+            failed.append(bad)
+    return (*pip, proto_hash, failed, wells, steps)
+
+
+def test_lean_and_python_rehearsal_agree_on_random_protocols() -> None:
+    kernel = _lean_kernel_or_skip()
+    rng = random.Random(2026)
+    cases = [_random_rehearsal_case(rng) for _ in range(10_000)]
+    py = [py_check_rehearsal(*case) for case in cases]
+    lean = kernel.eval_lines([format_rehearsal_tsv(*case) for case in cases])
+    verdict_mismatches = sum(p.allowed != q.allowed for p, q in zip(py, lean))
+    rule_mismatches = sum(p.rule != q.rule for p, q in zip(py, lean))
+    volume_mismatches = sum(p.extra != q.extra for p, q in zip(py, lean))
+    assert (verdict_mismatches, rule_mismatches, volume_mismatches) == (0, 0, 0)
+    # The cases reach allowed runs, malformed input and both initial-deck checks whose order now matches.
+    rules = Counter(v.rule for v in py)
+    for rule in ("valid", "malformed_input", "unique_well_ids", "initial_state_within_capacity"):
+        assert rules[rule] >= 100, rules
 
 
 def test_site_files_present() -> None:
