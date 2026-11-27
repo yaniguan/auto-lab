@@ -9,6 +9,7 @@ plus an exact pure-Python mirror verified for 100% parity against the Lean binar
 from __future__ import annotations
 
 import math
+import numbers
 import re
 import subprocess
 from dataclasses import dataclass
@@ -78,6 +79,45 @@ def conformal_rank_permille(n_calib: int, alpha_permille: int) -> int:
     return ((n_calib + 1) * (1000 - alpha_permille) + 999) // 1000
 
 
+# The mirrors deny the inputs that the strict `--batch-tsv` parser in `lean/Main.lean` rejects,
+# with the same `malformed_input` rule: Nat fields must be ints >= 0 and Int fields must be ints.
+# Bools are not accepted as numbers, because they format as `True` / `False`.
+_STEP_LEN = {"pick": 1, "drop": 1, "seal": 2, "thaw": 2, "xfer": 4, "mix": 4, "inc": 4}  # tuple length, op included
+_WELL_NAT_KEYS = ("wellId", "vol", "cap", "deadVol", "soluteAmt")
+_WELL_FLAG_KEYS = ("hasBuffer", "hasSample", "frozen", "sealed")
+
+
+def _is_int(x: Any) -> bool:
+    return isinstance(x, numbers.Integral) and not isinstance(x, bool)
+
+
+def _is_nat(x: Any) -> bool:
+    return _is_int(x) and x >= 0
+
+
+def _rehearsal_input_error(
+    pip_min: Any,
+    pip_max: Any,
+    proto_hash: Any,
+    failed_hashes: Sequence[Any],
+    wells: Sequence[dict[str, Any]],
+    steps: Sequence[tuple[Any, ...]],
+) -> str | None:
+    """Return why the Lean parser would reject this rehearsal input, or None if it parses."""
+    for x in (pip_min, pip_max, proto_hash, *failed_hashes):
+        if not _is_nat(x):
+            return f"expected a natural number, got {x!r}"
+    for w in wells:
+        if not (all(_is_nat(w.get(k)) for k in _WELL_NAT_KEYS) and all(k in w for k in _WELL_FLAG_KEYS)):
+            return f"bad well spec: {w!r}"
+    for st in steps:
+        if not (st and isinstance(st[0], str) and _STEP_LEN.get(st[0]) == len(st)):
+            return f"unknown step or wrong field count: {st!r}"
+        if not all(_is_nat(x) for x in st[1:]):
+            return f"expected natural numbers in step {st!r}"
+    return None
+
+
 def py_check_conformal(
     n_calib: int,
     alpha_permille: int,
@@ -88,6 +128,11 @@ def py_check_conformal(
     phys_min_milli: int = -15000,
     phys_max_milli: int = 1750,
 ) -> TrustVerdict:
+    if not (
+        all(_is_nat(x) for x in (n_calib, alpha_permille, knn_dist_permille, tau_dist_permille))
+        and all(_is_int(x) for x in (lo_milli, hi_milli, phys_min_milli, phys_max_milli))
+    ):
+        return TrustVerdict(False, "lab-decide", "malformed_input", "non-integer field, or negative count or distance")
     if not (0 < alpha_permille < 1000):
         return TrustVerdict(False, "lab-decide", "alpha_in_open_unit_interval", "alphaPermille must lie in (0, 1000)")
     if n_calib <= 0:
@@ -149,6 +194,9 @@ def py_check_rehearsal(
     wells: Sequence[dict[str, Any]],
     steps: Sequence[tuple[Any, ...]],
 ) -> TrustVerdict:
+    bad_input = _rehearsal_input_error(pip_min, pip_max, proto_hash, failed_hashes, wells, steps)
+    if bad_input is not None:
+        return TrustVerdict(False, "lab-rehearsal", "malformed_input", bad_input)
     if proto_hash in failed_hashes:
         return TrustVerdict(False, "lab-rehearsal", "episodic_recall_fast_deny", "hash previously failed")
     seen_ids: set[int] = set()
@@ -158,9 +206,11 @@ def py_check_rehearsal(
         if wid in seen_ids:
             return TrustVerdict(False, "lab-rehearsal", "unique_well_ids", "duplicate well ID")
         seen_ids.add(wid)
+        wmap[wid] = dict(w)
+    # Same order as `initDeckOK`: every well ID is checked before any capacity.
+    for w in wells:
         if not (0 <= int(w["vol"]) <= int(w["cap"]) and 0 <= int(w["deadVol"]) <= int(w["cap"])):
             return TrustVerdict(False, "lab-rehearsal", "initial_state_within_capacity", "invalid initial well capacity")
-        wmap[wid] = dict(w)
     if not (0 < pip_min <= pip_max):
         return TrustVerdict(False, "lab-rehearsal", "valid_pipette_spec", "invalid pipette range")
 
@@ -267,6 +317,8 @@ def py_check_rehearsal(
             if not wmap[w_id]["frozen"]:
                 return TrustVerdict(False, "lab-rehearsal", "thaw_requires_frozen", "already thawed")
             wmap[w_id]["frozen"] = False
+        else:
+            return TrustVerdict(False, "lab-rehearsal", "malformed_input", f"unknown step {op!r}")
 
     if tip_mode != "none":
         return TrustVerdict(False, "lab-rehearsal", "tip_dropped_at_end", "tip still mounted")
@@ -327,7 +379,7 @@ class LeanBatchKernel:
             parts = raw.split("\t")
             if parts[0] == "OK":
                 extra = parts[3] if len(parts) > 3 else ""
-                verdicts.append(TrustVerdict(True, parts[1], parts[2], "certified by Lean 4 kernel", extra))
+                verdicts.append(TrustVerdict(True, parts[1], parts[2], "accepted by the compiled Lean checker", extra))
             else:
                 detail = parts[3] if len(parts) > 3 else ""
                 verdicts.append(TrustVerdict(False, parts[1], parts[2], detail))

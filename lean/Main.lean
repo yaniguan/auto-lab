@@ -10,171 +10,209 @@ private def fmtExceptWorld : Except RegimeViolation LabWorld → String
   | .ok w    => s!"ALLOW (executed={w.executedCycles.length}, totalVol={totalWellsVol w.deck.wells}, reward={w.cumulativeReward})"
   | .error v => s!"DENY  {v.format}"
 
-private def trimStr (s : String) : String :=
-  String.ofList ((s.toList.dropWhile Char.isWhitespace).reverse.dropWhile Char.isWhitespace).reverse
+/-! `--batch-tsv` parsing is strict, so bad input is denied instead of being read as a default:
+Nat fields are ASCII digits only, Int fields may also start with `-`, and flags are exactly
+`0` or `1`. An unknown command or step name, a wrong field count or a bad well spec gives
+`ERR <repo> malformed_input <detail>`. -/
 
-private def parseNatD (s : String) (d : Nat := 0) : Nat :=
-  ((trimStr s).toNat?).getD d
+/-- Remove only the line ending. Tabs separate fields, so an empty last field is kept. -/
+private def stripEol (s : String) : String :=
+  String.ofList (s.toList.reverse.dropWhile (fun c => c == '\n' || c == '\r')).reverse
 
-private def parseIntD (s : String) (d : Int := 0) : Int :=
-  ((trimStr s).toInt?).getD d
+/-- Quote a field for an error detail, as printable ASCII so the reply stays on one line. -/
+private def quote (s : String) : String :=
+  "'" ++ s.map (fun c => if ' ' ≤ c && c ≤ '~' then c else '?') ++ "'"
 
-private def parseBoolD (s : String) : Bool :=
-  let t := (trimStr s).toLower
-  t == "1" || t == "true"
+private def parseNat (s : String) : Except String Nat :=
+  match (if s.all Char.isDigit then s.toNat? else none) with
+  | some n => pure n
+  | none   => throw s!"expected a natural number, got {quote s}"
+
+private def parseInt (s : String) : Except String Int :=
+  match (if s.all (fun c => c.isDigit || c == '-') then s.toInt? else none) with
+  | some n => pure n
+  | none   => throw s!"expected an integer, got {quote s}"
+
+private def parseBool : String → Except String Bool
+  | "0" => pure false
+  | "1" => pure true
+  | s   => throw s!"expected 0 or 1, got {quote s}"
 
 /-- Parse a semicolon-separated list of rehearsal steps:
     `pick;xfer:1:3:1000;mix:3:1000:3;seal:3;inc:3:95:600;thaw:2;drop` -/
-private def parseSteps (spec : String) : List RehearsalStep :=
-  if (trimStr spec).isEmpty then []
+private def parseSteps (spec : String) : Except String (List RehearsalStep) :=
+  if spec.isEmpty then pure []
   else
-    (spec.splitOn ";").filterMap fun (tok : String) =>
-      let parts := (trimStr tok).splitOn ":"
-      match parts with
-      | ["pick"] => some .pickTip
-      | ["drop"] => some .dropTip
-      | ["seal", w] => some (.sealWell (parseNatD w))
-      | ["thaw", w] => some (.thawWell (parseNatD w))
-      | ["xfer", s, d, v] => some (.transfer (parseNatD s) (parseNatD d) (parseNatD v))
-      | ["mix", w, v, r] => some (.mix (parseNatD w) (parseNatD v) (parseNatD r))
-      | ["inc", w, t, d] => some (.incubate (parseNatD w) (parseNatD t) (parseNatD d))
-      | _ => none
+    (spec.splitOn ";").mapM fun (tok : String) => do
+      match tok.splitOn ":" with
+      | ["pick"] => pure .pickTip
+      | ["drop"] => pure .dropTip
+      | ["seal", w] => pure (.sealWell (← parseNat w))
+      | ["thaw", w] => pure (.thawWell (← parseNat w))
+      | ["xfer", s, d, v] => pure (.transfer (← parseNat s) (← parseNat d) (← parseNat v))
+      | ["mix", w, v, r] => pure (.mix (← parseNat w) (← parseNat v) (← parseNat r))
+      | ["inc", w, t, d] => pure (.incubate (← parseNat w) (← parseNat t) (← parseNat d))
+      | _ => throw s!"unknown step or wrong field count: {quote tok}"
 
 /-- Parse semicolon-separated deck wells:
     `id:vol:cap:dead:solute:buf:samp:frozen:sealed` -/
-private def parseWells (spec : String) : List DeckWell :=
-  if (trimStr spec).isEmpty then []
+private def parseWells (spec : String) : Except String (List DeckWell) :=
+  if spec.isEmpty then pure []
   else
-    (spec.splitOn ";").filterMap fun (tok : String) =>
-      match (trimStr tok).splitOn ":" with
+    (spec.splitOn ";").mapM fun (tok : String) => do
+      match tok.splitOn ":" with
       | [wid, vol, cap, dead, sol, buf, samp, frz, sld] =>
-        some { wellId := parseNatD wid
-               vol := parseNatD vol
-               cap := parseNatD cap
-               deadVol := parseNatD dead
-               soluteAmt := parseNatD sol
-               hasBuffer := parseBoolD buf
-               hasSample := parseBoolD samp
-               frozen := parseBoolD frz
-               sealed := parseBoolD sld }
-      | _ => none
+        pure { wellId := (← parseNat wid)
+               vol := (← parseNat vol)
+               cap := (← parseNat cap)
+               deadVol := (← parseNat dead)
+               soluteAmt := (← parseNat sol)
+               hasBuffer := (← parseBool buf)
+               hasSample := (← parseBool samp)
+               frozen := (← parseBool frz)
+               sealed := (← parseBool sld) }
+      | _ => throw s!"bad well spec: {quote tok}"
 
-/-- Evaluate a single TSV command line through the verified Lean 4 checkers. -/
-private def evalBatchLine (line : String) : String :=
-  let cols := (trimStr line).splitOn "\t"
+/-- Evaluate a single TSV command line, split into columns, through the verified Lean 4 checkers.
+    Returns `.error detail` if any field fails to parse. -/
+private def evalBatchCols (cols : List String) : Except String String :=
   match cols with
-  | ["CONFORMAL", n, alpha, dist, tau, lo, hi, pmin, pmax] =>
+  | ["CONFORMAL", n, alpha, dist, tau, lo, hi, pmin, pmax] => do
     let q : ConformalQuery :=
-      { nCalib := parseNatD n, alphaPermille := parseNatD alpha,
-        knnDistPermille := parseNatD dist, tauDistPermille := parseNatD tau,
-        loMilli := parseIntD lo, hiMilli := parseIntD hi,
-        physMinMilli := parseIntD pmin, physMaxMilli := parseIntD pmax }
-    match checkDecide q with
+      { nCalib := (← parseNat n), alphaPermille := (← parseNat alpha),
+        knnDistPermille := (← parseNat dist), tauDistPermille := (← parseNat tau),
+        loMilli := (← parseInt lo), hiMilli := (← parseInt hi),
+        physMinMilli := (← parseInt pmin), physMaxMilli := (← parseInt pmax) }
+    return match checkDecide q with
     | none => "OK\tlab-decide\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | ["BUYMAKE", isBuy, steps, maxS, acyc, tC, tN, tO, dC, dN, dO, rC, rN, rO, inStock, comp, usdg, hasPrice, price, hasBud, bud, comm, allPerm] =>
+  | ["BUYMAKE", isBuy, steps, maxS, acyc, tC, tN, tO, dC, dN, dO, rC, rN, rO, inStock, comp, usdg, hasPrice, price, hasBud, bud, comm, allPerm] => do
+    -- Price and budget must parse even when their flag is 0.
+    let price ← parseNat price
+    let bud ← parseNat bud
     let prop : MakeOrBuyProposal :=
-      { isDirectBuy := parseBoolD isBuy, steps := parseNatD steps, maxSteps := parseNatD maxS,
-        bondIsAcyclic := parseBoolD acyc,
-        targetAtoms := { c := parseNatD tC, n := parseNatD tN, o := parseNatD tO, s := 0, hal := 0 },
-        leavingDelta := { c := parseNatD dC, n := parseNatD dN, o := parseNatD dO, s := 0, hal := 0 },
-        reactantAtoms := [{ c := parseNatD rC, n := parseNatD rN, o := parseNatD rO, s := 0, hal := 0 }],
-        allLeavesInStock := parseBoolD inStock, costComplete := parseBoolD comp,
-        isUsdPerGram := parseBoolD usdg,
-        priceCents := if parseBoolD hasPrice then some (parseNatD price) else none,
-        budgetCents := if parseBoolD hasBud then some (parseNatD bud) else none,
-        sourceLicenses := if parseBoolD allPerm then [.permissive] else [.shareAlike],
-        commercialMode := parseBoolD comm }
-    match checkBuyOrMake prop with
+      { isDirectBuy := (← parseBool isBuy), steps := (← parseNat steps), maxSteps := (← parseNat maxS),
+        bondIsAcyclic := (← parseBool acyc),
+        targetAtoms := { c := (← parseNat tC), n := (← parseNat tN), o := (← parseNat tO), s := 0, hal := 0 },
+        leavingDelta := { c := (← parseNat dC), n := (← parseNat dN), o := (← parseNat dO), s := 0, hal := 0 },
+        reactantAtoms := [{ c := (← parseNat rC), n := (← parseNat rN), o := (← parseNat rO), s := 0, hal := 0 }],
+        allLeavesInStock := (← parseBool inStock), costComplete := (← parseBool comp),
+        isUsdPerGram := (← parseBool usdg),
+        priceCents := if (← parseBool hasPrice) then some price else none,
+        budgetCents := if (← parseBool hasBud) then some bud else none,
+        sourceLicenses := if (← parseBool allPerm) then [.permissive] else [.shareAlike],
+        commercialMode := (← parseBool comm) }
+    return match checkBuyOrMake prop with
     | none => "OK\tbuy-or-make\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | ["REHEARSAL", pipMin, pipMax, pHash, failedCsv, wellsSpec, stepsSpec] =>
-    let failed := if (trimStr failedCsv).isEmpty then [] else (failedCsv.splitOn ",").map parseNatD
+  | ["REHEARSAL", pipMin, pipMax, pHash, failedCsv, wellsSpec, stepsSpec] => do
+    let failed ← if failedCsv.isEmpty then pure [] else (failedCsv.splitOn ",").mapM parseNat
     let deck : DeckState :=
-      { wells := parseWells wellsSpec, tip := .noTip,
-        pipMin := parseNatD pipMin, pipMax := parseNatD pipMax, failedHashes := failed }
-    let steps := parseSteps stepsSpec
-    match checkRehearsal deck (parseNatD pHash) steps with
+      { wells := (← parseWells wellsSpec), tip := .noTip,
+        pipMin := (← parseNat pipMin), pipMax := (← parseNat pipMax), failedHashes := failed }
+    let steps ← parseSteps stepsSpec
+    return match checkRehearsal deck (← parseNat pHash) steps with
     | .ok sEnd => s!"OK\tlab-rehearsal\tvalid\t{totalWellsVol sEnd.wells}"
     | .error v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | ["SQL", nonEmpty, stmts, astRO, authRO, sysTbl, unkCols, xJoin, goldOK, ceOK, propsOK] =>
+  | ["SQL", nonEmpty, stmts, astRO, authRO, sysTbl, unkCols, xJoin, goldOK, ceOK, propsOK] => do
     let sq : SqlCandidateCheck :=
-      { parsedNonEmpty := parseBoolD nonEmpty, statementCount := parseNatD stmts,
-        astReadOnly := parseBoolD astRO, authorizerReadOnly := parseBoolD authRO,
-        usesSystemTables := parseBoolD sysTbl, unknownColumnsCount := parseNatD unkCols,
-        hasImplicitCrossJoin := parseBoolD xJoin, matchesGoldResult := parseBoolD goldOK,
-        matchesCounterexDBs := parseBoolD ceOK, runtimePropsHold := parseBoolD propsOK }
-    match checkSqlGate sq with
+      { parsedNonEmpty := (← parseBool nonEmpty), statementCount := (← parseNat stmts),
+        astReadOnly := (← parseBool astRO), authorizerReadOnly := (← parseBool authRO),
+        usesSystemTables := (← parseBool sysTbl), unknownColumnsCount := (← parseNat unkCols),
+        hasImplicitCrossJoin := (← parseBool xJoin), matchesGoldResult := (← parseBool goldOK),
+        matchesCounterexDBs := (← parseBool ceOK), runtimePropsHold := (← parseBool propsOK) }
+    return match checkSqlGate sq with
     | none => "OK\tlab-verify\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | ["REWARD", coreOK, noLeak, thinkTok, maxThink, taskR, fmtB] =>
+  | ["REWARD", coreOK, noLeak, thinkTok, maxThink, taskR, fmtB] => do
     let rw : RolloutRewardSpec :=
-      { coreScientificVerified := parseBoolD coreOK, oracleFieldStripped := parseBoolD noLeak,
-        thinkTokens := parseNatD thinkTok, maxThinkTokens := parseNatD maxThink,
-        taskRewardPermille := parseNatD taskR, formatBonusPermille := parseNatD fmtB }
+      { coreScientificVerified := (← parseBool coreOK), oracleFieldStripped := (← parseBool noLeak),
+        thinkTokens := (← parseNat thinkTok), maxThinkTokens := (← parseNat maxThink),
+        taskRewardPermille := (← parseNat taskR), formatBonusPermille := (← parseNat fmtB) }
     let val := gatedRewardPermille rw
-    match checkRolloutGate rw with
+    return match checkRolloutGate rw with
     | none => s!"OK\tlabbench-posttrain\t{val}"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{val}"
-  | ["ATTRIB", preOK, acOK, winOK, tacOK, posOK, negOK, resP, maxRes, ovlP, maxOvl, sigHi] =>
+  | ["ATTRIB", preOK, acOK, winOK, tacOK, posOK, negOK, resP, maxRes, ovlP, maxOvl, sigHi] => do
     let t : AssayTelemetry :=
-      { preGateCertified := parseBoolD preOK, acousticNormal := parseBoolD acOK,
-        scheduleWindowsRespected := parseBoolD winOK, tactileSeatedCleanly := parseBoolD tacOK,
-        posControlPassed := parseBoolD posOK, negControlBlankClean := parseBoolD negOK,
-        spectralResidualPermille := parseNatD resP, maxResidualPermille := parseNatD maxRes,
-        precursorOverlapPermille := parseNatD ovlP, maxOverlapPermille := parseNatD maxOvl,
-        signalAboveActivityThresh := parseBoolD sigHi }
+      { preGateCertified := (← parseBool preOK), acousticNormal := (← parseBool acOK),
+        scheduleWindowsRespected := (← parseBool winOK), tactileSeatedCleanly := (← parseBool tacOK),
+        posControlPassed := (← parseBool posOK), negControlBlankClean := (← parseBool negOK),
+        spectralResidualPermille := (← parseNat resP), maxResidualPermille := (← parseNat maxRes),
+        precursorOverlapPermille := (← parseNat ovlP), maxOverlapPermille := (← parseNat maxOvl),
+        signalAboveActivityThresh := (← parseBool sigHi) }
     let out := attributeAssayOutcome t
     let tag := match out with
       | .executionArtifact         => "EXECUTION_ARTIFACT"
       | .ambiguousCharacterization => "AMBIGUOUS_CHARACTERIZATION"
       | .certifiedPositive         => "CERTIFIED_POSITIVE"
       | .certifiedNegative         => "CERTIFIED_NEGATIVE"
-    s!"OK\tattribution\t{tag}\t{if admitToScientificMemory out then 1 else 0}"
-  | ["FRONTIER", isProbe, dist, tau, eta, maxEta, vol, microCap, isBuy, usedPred] =>
+    return s!"OK\tattribution\t{tag}\t{if admitToScientificMemory out then 1 else 0}"
+  | ["FRONTIER", isProbe, dist, tau, eta, maxEta, vol, microCap, isBuy, usedPred] => do
     let p : FrontierProbeSpec :=
-      { mode := if parseBoolD isProbe then .frontierCalibration else .exploitation,
-        knnDistPermille := parseNatD dist, tauPermille := parseNatD tau,
-        etaStepPermille := parseNatD eta, maxEtaPermille := parseNatD maxEta,
-        assayVolTenthUL := parseNatD vol, microVolCapTenthUL := parseNatD microCap,
-        isDirectBuy := parseBoolD isBuy, usedAsPointPrediction := parseBoolD usedPred }
-    match checkFrontierAction p with
+      { mode := if (← parseBool isProbe) then .frontierCalibration else .exploitation,
+        knnDistPermille := (← parseNat dist), tauPermille := (← parseNat tau),
+        etaStepPermille := (← parseNat eta), maxEtaPermille := (← parseNat maxEta),
+        assayVolTenthUL := (← parseNat vol), microVolCapTenthUL := (← parseNat microCap),
+        isDirectBuy := (← parseBool isBuy), usedAsPointPrediction := (← parseBool usedPred) }
+    return match checkFrontierAction p with
     | none => "OK\tfrontier\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | ["MCP", tokEp, curEp, leanOK, isExc, humSign] =>
+  | ["MCP", tokEp, curEp, leanOK, isExc, humSign] => do
     let e : McpHardwareEnvelope :=
-      { tokenEpoch := parseNatD tokEp, currentDeckEpoch := parseNatD curEp,
-        leanProofValid := parseBoolD leanOK, isFrontierException := parseBoolD isExc,
-        humanSupervisorSign := parseBoolD humSign }
-    match checkMcpHardwareCall e with
+      { tokenEpoch := (← parseNat tokEp), currentDeckEpoch := (← parseNat curEp),
+        leanProofValid := (← parseBool leanOK), isFrontierException := (← parseBool isExc),
+        humanSupervisorSign := (← parseBool humSign) }
+    return match checkMcpHardwareCall e with
     | none => "OK\tmcp\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | ["MEM_SKILL", days, thresh, calEp, curEp, traceRev, microOK] =>
+  | ["MEM_SKILL", days, thresh, calEp, curEp, traceRev, microOK] => do
     let s : SkillInvocationCheck :=
-      { daysSinceLastUse := parseNatD days, staleThresholdDays := parseNatD thresh,
-        calibratedDeckEpoch := parseNatD calEp, currentDeckEpoch := parseNatD curEp,
-        bottomTraceReviewed := parseBoolD traceRev, microRehearsalPass := parseBoolD microOK }
-    match checkSkillReadiness s with
+      { daysSinceLastUse := (← parseNat days), staleThresholdDays := (← parseNat thresh),
+        calibratedDeckEpoch := (← parseNat calEp), currentDeckEpoch := (← parseNat curEp),
+        bottomTraceReviewed := (← parseBool traceRev), microRehearsalPass := (← parseBool microOK) }
+    return match checkSkillReadiness s with
     | none => "OK\tmemory_skill\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | ["MEM_NOVEL", seen, simP, minSimP, traceOK, toolOK, twinOK] =>
+  | ["MEM_NOVEL", seen, simP, minSimP, traceOK, toolOK, twinOK] => do
     let n : NovelOnboardingCheck :=
-      { seenBefore := parseBoolD seen, analogySimPermille := parseNatD simP,
-        minAnalogyPermille := parseNatD minSimP, analogBottomTraceLoaded := parseBoolD traceOK,
-        toolSpecsQueried := parseBoolD toolOK, twinDryRunCertified := parseBoolD twinOK }
-    match checkNovelOnboarding n with
+      { seenBefore := (← parseBool seen), analogySimPermille := (← parseNat simP),
+        minAnalogyPermille := (← parseNat minSimP), analogBottomTraceLoaded := (← parseBool traceOK),
+        toolSpecsQueried := (← parseBool toolOK), twinDryRunCertified := (← parseBool twinOK) }
+    return match checkNovelOnboarding n with
     | none => "OK\tmemory_novel\tvalid"
     | some v => s!"ERR\t{v.repo.name}\t{v.rule}\t{v.detail}"
-  | _ => "ERR\tunknown\tmalformed_command\tunrecognized TSV batch command"
+  | _ => throw s!"unknown command or wrong number of fields ({cols.length - 1}) for {quote (cols.headD "")}"
+
+/-- Repo label of each command's `OK` line, also used for its `malformed_input` errors. -/
+private def commandRepo : String → String
+  | "CONFORMAL" => "lab-decide"
+  | "BUYMAKE"   => "buy-or-make"
+  | "REHEARSAL" => "lab-rehearsal"
+  | "SQL"       => "lab-verify"
+  | "REWARD"    => "labbench-posttrain"
+  | "ATTRIB"    => "attribution"
+  | "FRONTIER"  => "frontier"
+  | "MCP"       => "mcp"
+  | "MEM_SKILL" => "memory_skill"
+  | "MEM_NOVEL" => "memory_novel"
+  | _           => "unknown"
+
+/-- Evaluate a single TSV command line. Input that does not parse is denied as `malformed_input`. -/
+private def evalBatchLine (line : String) : String :=
+  let cols := line.splitOn "\t"
+  match evalBatchCols cols with
+  | .ok out => out
+  | .error detail => s!"ERR\t{commandRepo (cols.headD "")}\tmalformed_input\t{detail}"
 
 private partial def runBatchLoop (stdin : IO.FS.Stream) (stdout : IO.FS.Stream) : IO Unit := do
   let line ← stdin.getLine
   if line.isEmpty then
     pure ()
   else
-    let trimmed := trimStr line
-    if !trimmed.isEmpty then
-      stdout.putStrLn (evalBatchLine trimmed)
+    let body := stripEol line
+    if !body.isEmpty then
+      stdout.putStrLn (evalBatchLine body)
       stdout.flush
     runBatchLoop stdin stdout
 
