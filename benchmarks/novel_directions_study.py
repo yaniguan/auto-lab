@@ -1,15 +1,16 @@
 """Frontier Study: Four Novel Research Directions Synthesized from 2025-2026 Ecosystem Gaps.
 
 Invokes the compiled `autolab-lean --batch-tsv` Lean 4.36.0 executable (`ATTRIB`,
-`FRONTIER`, `MCP`) across four quantitative experiments:
+`FRONTIER`, `MCP`, `REHEARSAL`) across four quantitative experiments:
 
-1. Direction 1 — Diagnostic Epistemic Attribution & Proof-Carrying Negative Results
-   (eliminating A-Lab XRD phantom discoveries & corrupted negative-result poisoning)
-2. Direction 2 — Stepped Frontier Calibration (`(1 + eta) * tau` micro-scale stepping-stones
+1. Direction 1 - Diagnostic Epistemic Attribution & Proof-Carrying Negative Results
+   (real Delaney ESOL compounds + simulated separable fault telemetry)
+2. Direction 2 - Stepped Frontier Calibration (`(1 + eta) * tau` micro-scale stepping-stones
    expanding trusted chemical space across real Delaney ESOL scaffolds)
-3. Direction 3 — Proof-Carrying `Lean-MCP` Hardware Envelopes (24/7 autonomous throughput
-   vs per-run human approval gates in OpenLabAI / Osprey)
-4. Direction 4 — Adversarial Saboteur-Verifier Co-Evolution (`Gen-0 -> Gen-1 -> Gen-2 AutoLabLean`)
+3. Direction 3 - Proof-Carrying `Lean-MCP` Hardware Envelopes (72h discrete-event clock
+   simulation vs per-run human approval gates)
+4. Direction 4 - Fixed Fault-Family Mutation Check (21 distinct cases: 3 templates x 7
+   fault classes, evaluated across 140 cyclic draws against Gen-0 / Gen-1 / Gen-2 verifiers)
 """
 
 from __future__ import annotations
@@ -20,45 +21,27 @@ import time
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRATCH_ROOT = REPO_ROOT.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from autolab.datasets import load_esol_dataset  # noqa: E402
 from autolab.trust_regime import LeanBatchKernel, audit_lean_sources, conformal_rank_permille  # noqa: E402
 
 
-def _load_esol_arrays() -> tuple[np.ndarray, np.ndarray, str]:
-    scratch_cache = Path(r"C:\Users\yanig\.gemini\antigravity\brain\c71e01d3-4bd5-4d18-ac6d-e5250d450367\scratch\delaney-processed.csv")
-    candidates = [scratch_cache, *list((SCRATCH_ROOT / "lab-decide").rglob("*delaney*.csv"))]
-    for p in candidates:
-        if p.exists():
-            import pandas as pd
+def _load_esol_arrays() -> tuple[Any, Any, str]:
+    import numpy as np
 
-            df = pd.read_csv(p)
-            cols = [
-                "Molecular Weight",
-                "Number of H-Bond Donors",
-                "Number of Rings",
-                "Number of Rotatable Bonds",
-                "Polar Surface Area",
-                "Minimum Degree",
-            ]
-            tcol = "measured log solubility in mols per litre"
-            sub = df[cols + [tcol]].dropna()
-            return sub[cols].to_numpy(dtype=float), sub[tcol].to_numpy(dtype=float), f"real_esol ({len(sub)} compounds)"
-    rng = np.random.default_rng(42)
-    X = rng.uniform([80, 0, 0, 0, 10, 1], [460, 5, 5, 10, 140, 2], size=(800, 6))
-    y = 0.7 - 0.011 * X[:, 0] - 0.35 * X[:, 2] + 0.15 * X[:, 1] + rng.normal(0, 0.4, 800)
-    return X, y, "synthetic_esol (800 compounds)"
+    features, targets, source_desc = load_esol_dataset()
+    return np.asarray(features, dtype=float), np.asarray(targets, dtype=float), source_desc
 
 
 # ---------------------------------------------------------------------------
 # Direction 1: Causal Blame Calculus & Proof-Carrying Negative Results
 # ---------------------------------------------------------------------------
 def run_direction1_epistemic_attribution(kernel: LeanBatchKernel) -> dict[str, Any]:
+    import numpy as np
     from sklearn.ensemble import GradientBoostingRegressor
     from sklearn.preprocessing import StandardScaler
 
@@ -100,20 +83,19 @@ def run_direction1_epistemic_attribution(kernel: LeanBatchKernel) -> dict[str, A
                 for cid in chosen_ids:
                     avail.remove(cid)
 
-                # Simulate physical execution + analytical characterization on the chosen batch
+                # Simulate physical execution + analytical characterization on the chosen batch.
+                # Note: fault telemetry is drawn from separable threshold regimes to test 4-way routing.
                 tsv_lines: list[str] = []
                 sim_obs: list[tuple[int, float, bool, bool]] = []
                 for cid in chosen_ids:
                     u = rng_m.random()
                     if u < 0.20:
-                        # Silent hardware/control fault (centrifuge cavitation or dead positive control -> artificial -7.5 collapse!)
                         ac_ok = int(rng_m.random() >= 0.5)
                         pos_ok = 0 if ac_ok == 1 else 1
                         res_p, ovl_p = 45, 40
                         y_meas = -7.5 + float(rng_m.normal(0, 0.2))
                         is_exec_fault, is_ambig = True, False
                     elif u < 0.35:
-                        # A-Lab XRD / spectral precursor overlap illusion (unreacted starting material mimics +0.2 hit!)
                         ac_ok, pos_ok = 1, 1
                         res_p = int(rng_m.integers(110, 220))
                         ovl_p = int(rng_m.integers(240, 480))
@@ -132,24 +114,19 @@ def run_direction1_epistemic_attribution(kernel: LeanBatchKernel) -> dict[str, A
                 verdicts = kernel.eval_lines(tsv_lines)
                 total_lean_calls += len(tsv_lines)
 
-                for (cid, y_meas, is_exec_fault, is_ambig), v in zip(sim_obs, verdicts):
-                    tag = v.rule  # EXECUTION_ARTIFACT | AMBIGUOUS_CHARACTERIZATION | CERTIFIED_POSITIVE | CERTIFIED_NEGATIVE
+                for (cid, y_meas, is_exec_fault, _is_ambig), v in zip(sim_obs, verdicts):
+                    tag = v.rule
                     if mode == "naive_sdl":
-                        # Naive SDL blindly updates surrogate & claims hits whenever y_meas >= hit_thresh
                         tr_X.append(X[cid])
                         tr_y.append(y_meas)
-                        if is_exec_fault and y[cid] >= hit_thresh:
-                            poisoned_count += 1
-                        elif is_exec_fault:
+                        if is_exec_fault:
                             poisoned_count += 1
                         if y_meas >= hit_thresh:
                             claimed_hits.append(cid)
                     else:
                         if tag == "EXECUTION_ARTIFACT":
-                            # Quarantine corrupted run (do NOT poison surrogate!) and return compound to queue for clean retry
                             avail.append(cid)
                         elif tag == "AMBIGUOUS_CHARACTERIZATION":
-                            # Trigger orthogonal secondary assay (resolves true y[cid] cleanly without precursor overlap)
                             y_orth = float(y[cid] + rng_m.normal(0, 0.10))
                             tr_X.append(X[cid])
                             tr_y.append(y_orth)
@@ -163,7 +140,6 @@ def run_direction1_epistemic_attribution(kernel: LeanBatchKernel) -> dict[str, A
                             tr_X.append(X[cid])
                             tr_y.append(y_meas)
 
-            # Final model accuracy on untouched clean test split
             scaler_f = StandardScaler().fit(np.asarray(tr_X))
             reg_f = GradientBoostingRegressor(random_state=sd, n_estimators=90, max_depth=3)
             reg_f.fit(scaler_f.transform(np.asarray(tr_X)), np.asarray(tr_y))
@@ -179,9 +155,15 @@ def run_direction1_epistemic_attribution(kernel: LeanBatchKernel) -> dict[str, A
             stats[mode]["true_hits_found"].append(true_hits)
 
     return {
-        "direction": "Direction 1 · Diagnostic Epistemic Attribution & Certified Negative Results",
+        "direction": "Direction 1 - Diagnostic Epistemic Attribution & Certified Negative Results",
         "inspired_by": "A-Lab XRD characterization debate, Sakana AI Scientist-v2 negative results, La Agente Optima sensor faults",
         "data_source": src,
+        "input_type": "real_esol_plus_simulated_separable_telemetry",
+        "evaluation_note": (
+            "Compound descriptors and true solubility come from real Delaney ESOL (n=1,128); "
+            "post-run acoustic/control/spectral fault telemetry is simulated from separable "
+            "distributions, so 0.0% poisoned admission under ATTRIB reflects exact routing on modeled faults."
+        ),
         "lean_kernel_calls": total_lean_calls,
         "comparison": {
             k: {
@@ -199,13 +181,12 @@ def run_direction1_epistemic_attribution(kernel: LeanBatchKernel) -> dict[str, A
 # Direction 2: Stepped Frontier Calibration (Active Trust-Boundary Expansion)
 # ---------------------------------------------------------------------------
 def run_direction2_stepped_frontier(kernel: LeanBatchKernel) -> dict[str, Any]:
+    import numpy as np
     from sklearn.ensemble import GradientBoostingRegressor
     from sklearn.neighbors import NearestNeighbors
     from sklearn.preprocessing import StandardScaler
 
     X, y, src = _load_esol_arrays()
-    # Initial historical library: small acyclic/1-ring molecules (MW <= 175 and Rings <= 1)
-    # Target novel scaffold hypothesis: multi-ring heterocycles (MW >= 220 and Rings >= 2)
     small_idx = np.where((X[:, 0] <= 175.0) & (X[:, 2] <= 1.0))[0]
     rest_idx = np.where(~((X[:, 0] <= 175.0) & (X[:, 2] <= 1.0)))[0]
     target_proto = np.array([265.0, 1.5, 2.5, 3.0, 65.0, 1.0])
@@ -243,7 +224,6 @@ def run_direction2_stepped_frontier(kernel: LeanBatchKernel) -> dict[str, Any]:
                 cal_ids = known[-n_cal:]
 
                 scaler = StandardScaler().fit(X[tr_ids])
-                # Guard near-zero variance columns in narrow initial islands
                 scaler.scale_ = np.where(scaler.scale_ < 0.5, 1.0, scaler.scale_)
                 nn = NearestNeighbors(n_neighbors=min(5, len(tr_ids))).fit(scaler.transform(X[tr_ids]))
                 cal_d = nn.kneighbors(scaler.transform(X[cal_ids]))[0].mean(axis=1)
@@ -278,7 +258,6 @@ def run_direction2_stepped_frontier(kernel: LeanBatchKernel) -> dict[str, Any]:
                     if mode == "undirected_shell_probes":
                         shell_idxs.sort(key=lambda i: -pool_d[i])
                     else:
-                        # Chem-RRT: pick certified in-shell stepping-stones closest to the novel scaffold goal!
                         dist_to_goal = np.linalg.norm(pool_s - target_s, axis=1)
                         shell_idxs.sort(key=lambda i: float(dist_to_goal[i]))
                     picked = [pool[i] for i in shell_idxs[:probes_per_round]]
@@ -320,9 +299,14 @@ def run_direction2_stepped_frontier(kernel: LeanBatchKernel) -> dict[str, Any]:
             out[mode]["prod_coverage_pct"].append(cov)
 
     return {
-        "direction": "Direction 2 · Stepped Frontier Calibration (Active Trust-Boundary Expansion)",
+        "direction": "Direction 2 - Stepped Frontier Calibration (Active Trust-Boundary Expansion)",
         "inspired_by": "Resolving the static guardrail vs novel-scaffold discovery paradox in self-driving labs",
         "data_source": src,
+        "input_type": "real_esol_active_learning_simulation",
+        "evaluation_note": (
+            "Descriptors and measured logS come from real Delaney ESOL (n=1,128); "
+            "0.0 uncalibrated production runs for shell regimes is enforced by construction via FRONTIER."
+        ),
         "lean_kernel_calls": lean_calls,
         "comparison": {
             k: {
@@ -340,11 +324,12 @@ def run_direction2_stepped_frontier(kernel: LeanBatchKernel) -> dict[str, Any]:
 # Direction 3: Proof-Carrying `Lean-MCP` Envelopes vs Per-Run Human Approval
 # ---------------------------------------------------------------------------
 def run_direction3_lean_mcp(kernel: LeanBatchKernel) -> dict[str, Any]:
+    import numpy as np
+
     rng = np.random.default_rng(20261123)
     n_calls = 500
-    exec_min = 6.0  # 6 minutes physical robot runtime per protocol on average
+    exec_min = 6.0
 
-    # Generate 500 MCP tool requests: 88% valid routine in-regime, 6% stale-epoch replay attacks/glitches, 6% genuine frontier exceptions
     tsv_lean: list[str] = []
     call_kinds: list[str] = []
     for i in range(n_calls):
@@ -358,21 +343,16 @@ def run_direction3_lean_mcp(kernel: LeanBatchKernel) -> dict[str, Any]:
             tsv_lean.append(f"MCP\t{cur_ep - 1}\t{cur_ep}\t1\t0\t0")
         else:
             call_kinds.append("frontier_exception")
-            # First checked without human signature (triggers escalation), then co-signed during daytime
             tsv_lean.append(f"MCP\t{cur_ep}\t{cur_ep}\t0\t1\t0")
 
     verdicts = kernel.eval_lines(tsv_lean)
 
-    # Simulate 72-hour (4,320 min) continuous lab clock (human supervisor online 8h/day = [0..480) min of each 1440-min day, 10 min review latency)
     def sim_clock(mode: str) -> dict[str, Any]:
         t_min = 0.0
         completed = 0
         human_pings = 0
         unsafe_exec = 0
         if mode == "proof_carrying_lean_mcp":
-            # Proof-Carrying Lean-MCP with non-blocking daytime exception deferral:
-            # routine certified protocols execute 24/7 with 0 human clicks;
-            # out-of-regime frontier exceptions are parked for daytime co-signing without blocking overnight runs!
             deferred_exceptions = 0
             for kind, verd in zip(call_kinds, verdicts):
                 if t_min >= 4320.0:
@@ -381,7 +361,7 @@ def run_direction3_lean_mcp(kernel: LeanBatchKernel) -> dict[str, Any]:
                     t_min += exec_min
                     completed += 1
                 elif kind == "stale_replay_bug":
-                    t_min += 0.01  # Blocked instantaneously by `mcp_epoch_freshness`
+                    t_min += 0.01
                 elif kind == "frontier_exception":
                     day_offset = t_min % 1440.0
                     if day_offset < 480.0:
@@ -390,7 +370,6 @@ def run_direction3_lean_mcp(kernel: LeanBatchKernel) -> dict[str, Any]:
                         completed += 1
                     else:
                         deferred_exceptions += 1
-                # Drain deferred exceptions when human comes online at 9 AM
                 while deferred_exceptions > 0 and (t_min % 1440.0) < 480.0 and t_min < 4320.0:
                     human_pings += 1
                     t_min += 10.0 + exec_min
@@ -402,25 +381,23 @@ def run_direction3_lean_mcp(kernel: LeanBatchKernel) -> dict[str, Any]:
                 "unsafe_or_replay_executions": unsafe_exec,
             }
 
-        for kind, verd in zip(call_kinds, verdicts):
+        for kind, _verd in zip(call_kinds, verdicts):
             if t_min >= 4320.0:
                 break
             if mode == "advisory_prompt_mcp":
-                # Executes everything without cryptographic epoch or proof checks
                 if kind == "stale_replay_bug":
                     unsafe_exec += 1
                 t_min += exec_min
-                if kind == "routine_valid" or kind == "frontier_exception":
+                if kind in ("routine_valid", "frontier_exception"):
                     completed += 1
             elif mode == "per_run_human_approval_mcp":
-                # OpenLabAI / Osprey style: EVERY run pauses for human approval
                 day_offset = t_min % 1440.0
                 if day_offset >= 480.0:
-                    t_min += 1440.0 - day_offset  # Wait until 9 AM next morning!
+                    t_min += 1440.0 - day_offset
                 if t_min >= 4320.0:
                     break
                 human_pings += 1
-                t_min += 10.0  # 10 min human review & click
+                t_min += 10.0
                 if kind != "stale_replay_bug":
                     t_min += exec_min
                     completed += 1
@@ -431,8 +408,13 @@ def run_direction3_lean_mcp(kernel: LeanBatchKernel) -> dict[str, Any]:
         }
 
     return {
-        "direction": "Direction 3 · Proof-Carrying `Lean-MCP` Hardware Envelopes (72-Hour Continuous Lab Simulation)",
+        "direction": "Direction 3 - Proof-Carrying `Lean-MCP` Hardware Envelopes (72-Hour Lab Clock Simulation)",
         "inspired_by": "2026 MCP lab harnesses (plr-mcp, LabMCP, OpenLabAI, Osprey, Anthropic Model Hardware Standard)",
+        "input_type": "simulation",
+        "evaluation_note": (
+            "Discrete-event 72-hour clock simulation over 500 synthetic MCP requests "
+            "(88% routine, 6% stale-epoch replay, 6% frontier exception); 0 unsafe runs is by construction."
+        ),
         "lean_kernel_calls": len(tsv_lean),
         "comparison": {
             "advisory_prompt_mcp": sim_clock("advisory_prompt_mcp"),
@@ -443,28 +425,24 @@ def run_direction3_lean_mcp(kernel: LeanBatchKernel) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# Direction 4: Adversarial Saboteur-Verifier Co-Evolution
+# Direction 4: Fixed Fault-Family Mutation Check (21 Distinct Cases)
 # ---------------------------------------------------------------------------
 def run_direction4_adversarial_coevolution(kernel: LeanBatchKernel) -> dict[str, Any]:
-    from benchmarks.trust_regime_study import _clean_protocol, _coarse_heuristic_ok, _corrupt_protocol
     from autolab.trust_regime import format_rehearsal_tsv
+    from benchmarks.trust_regime_study import _clean_protocol, _coarse_heuristic_ok, _corrupt_protocol
 
-    # Evaluate 140 adversarial fault injections across 7 attack families against:
-    # Gen-0 (volume [0, cap] only), Gen-1 (2-bit reagent presence mask), Gen-2 (AutoLabLean full invariant suite)
     gen0_evade = 0
     gen1_evade = 0
-    gen2_evade = 0
     tsv_lines: list[str] = []
-    attacks: list[tuple[list[dict[str, Any]], list[tuple[Any, ...]]]] = []
+    distinct_signatures: set[tuple[Any, ...]] = set()
 
     for i in range(140):
         wells, clean = _clean_protocol(i)
         fk = i % 7
         bad_steps = _corrupt_protocol(wells, clean, fk)
-        attacks.append((wells, bad_steps))
+        distinct_signatures.add((i % 3, fk, tuple(bad_steps)))
         tsv_lines.append(format_rehearsal_tsv(200, 3000, 50000 + i, [], wells, bad_steps))
 
-        # Gen-0: checks only well [0, cap] bounds (ignores tips, deadVol, freeze, seal, conc.)
         vols = {int(w["wellId"]): int(w["vol"]) for w in wells}
         caps = {int(w["wellId"]): int(w["cap"]) for w in wells}
         g0_ok = True
@@ -486,9 +464,16 @@ def run_direction4_adversarial_coevolution(kernel: LeanBatchKernel) -> dict[str,
     gen2_evade = sum(1 for v in lean_v if v.allowed)
 
     return {
-        "direction": "Direction 4 · Adversarial Saboteur-Verifier Co-Evolution (`twinstep` x `LeanEvolve`)",
+        "direction": "Direction 4 - Fixed Fault-Family Mutation Check (21 Distinct Cases)",
         "inspired_by": "Lean4Agent / LeanEvolve (arXiv:2606.06523), BenchBench-Protocol, and RLVR verifier-gaming debates",
+        "input_type": "simulation",
+        "distinct_cases": len(distinct_signatures),
         "adversarial_mutations_tested": len(tsv_lines),
+        "evaluation_note": (
+            "Fixed fault-family mutation check over 3 clean templates x 7 fault classes = 21 distinct "
+            "cases (cycled to 140 draws; not an adaptive adversary). Gen-2 0.0% evasion is by construction "
+            "against the 7 modeled fault classes."
+        ),
         "generations": {
             "gen0_volume_bounds_only": {"saboteur_evasion_pct": round(100.0 * gen0_evade / len(tsv_lines), 1)},
             "gen1_presence_bitmask": {"saboteur_evasion_pct": round(100.0 * gen1_evade / len(tsv_lines), 1)},
@@ -527,9 +512,9 @@ def main() -> int:
     }
 
     out_path = REPO_ROOT / "benchmarks" / "results" / "novel_directions_results.json"
-    out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    out_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     site_path = REPO_ROOT / "site" / "assets" / "novel-directions-data.json"
-    site_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    site_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(payload, indent=2))
     return 0
 
