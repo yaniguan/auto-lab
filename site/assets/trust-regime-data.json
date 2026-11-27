@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-27T05:19:37Z",
+  "generated_at_utc": "2026-11-27T08:04:18Z",
   "lean_toolchain": "leanprover/lean4:v4.36.0",
   "lean_audit": {
     "lean_files": [
@@ -74,7 +74,7 @@
     "zero_sorry_verified": true,
     "violations": []
   },
-  "total_runtime_sec": 93.26,
+  "total_runtime_sec": 81.31,
   "experiments": {
     "exp1_molecular_discovery": {
       "task": "L6 + L5 Molecular Discovery Campaign (Independent Held-Out Delaney ESOL `logS`)",
@@ -142,7 +142,7 @@
       "candidates_per_task": 8,
       "candidates_verified_in_lean": 1626,
       "unique_protocols_checked_in_stepbot_simulator": 21,
-      "lean_throughput_protocols_per_sec": 14798.9,
+      "lean_throughput_protocols_per_sec": 40204.8,
       "regimes": {
         "ungated_top1": {
           "valid_completion_pct": 22.0,
@@ -196,7 +196,7 @@
           "feasible_instances": "30/30",
           "feasible_pct": 100.0,
           "window_violations": 0,
-          "mean_makespan_min": 116.6
+          "mean_makespan_min": 116.4
         }
       }
     },

@@ -188,9 +188,9 @@ job_01 Gantt   : L[0–18] -> L[18–28] -> I[29–56] -> R[58–62]  (all min/m
         },
       ],
       tabs: {
-        how: 'Models chained wet-lab operations across five shared instrument pools (`liquid_handler`, `incubator`, `plate_reader`, `centrifuge`, `washer`) with release times, deadlines, and `min_wait`/`max_wait` bounds, paired with an exact sweep-line feasibility checker.',
-        guarantee: 'Independent checker validates every solver output for pool capacity, precedence, release times, deadlines, and inter-step wait windows—making `labshift` ready both as an operations scheduler and a code-checked RLVR reward environment.',
-        status: 'Complete CLI (`bench`, `gantt`, `generate`, `check`) and 30-instance benchmark suite (`seeds 1000..1209`). Active review note documents alternate-optimal mean-flow ties under pure makespan minimization.',
+        how: 'Models chained wet-lab operations across shared station and `robot_arm` pools (`liquid_handler`, `incubator`, `plate_reader`, `centrifuge`, `washer`, `raman_spectrometer`, `lc_ms`) with release/deadline bounds, `min_wait`/`max_wait` windows, Jackson/Carlier energetic lower bounds, stdlib `solve_lns`, OR-Tools CP-SAT, and `PyJobShop`.',
+        guarantee: 'Independent sweep-line checker validates every solver output and reports feasible-only summary means plus a valid lower-bound `gap%` for every solver—ready both as a fleet scheduler and an RLVR verifier.',
+        status: 'Merged on `main` (`fc5bba5`): 30-instance v1 suite (`CP-SAT` `30/30`, `116.4m`), 20-instance planted hard tier (`CP-SAT` `20/20 OPT` vs `17/20` stdlib `LNS` vs `7/20` `greedy_repair`), native `stepbot` import, and JSSP/PSPLIB/Opentrons benchmarks.',
       },
     },
 
@@ -439,9 +439,9 @@ Step ordering : 100% pairwise causal constraint satisfaction via topological sor
         },
       ],
       tabs: {
-        how: 'Validates generic liquid-handling workflows (`transfer`, `mix`, `incubate`, `wash`, `read`) as frozen dataclasses, extracts minimal causal dependency DAGs across well liquid flows and plate barriers, and runs six seeded error injectors (`swap_order`, `wrong_volume`, `wrong_unit`, `missing_step`, `wrong_temperature`, `wrong_time`).',
-        guarantee: 'Pure Python standard-library runtime; evaluates step ordering against true causal dependencies (`constraints` & `pairwise`) rather than penalizing valid permutations of independent well transfers.',
-        status: '29 passing unit tests and CLI (`twinstep generate | baseline | eval`); active review branch tightens unique-twin retirement warnings and post-wash dispense rules.',
+        how: 'Validates 96/384-well workflows (`transfer`, `mix`, `incubate`, `wash`, `read`), builds per-well stage-barrier dependency DAGs, runs 6 seeded fault injectors across 24 split-isolated protocols (`8 train / 4 val / 12 test`), and trains a zero-leakage stdlib graph-feature fault localizer.',
+        guarantee: 'Pure Python standard-library runtime (`dependencies = []`) with zero train/test protocol overlap, clean multi-stage ELISA/TMB dataflow rules, and 100% causal DAG step-ordering satisfaction.',
+        status: 'Merged on `main` (`a781fc0`, 96 passing tests): 20-seed held-out test ED `57.7% -> 81.3%` (`87.3%` ProcessBench balanced, `70.7%` `step_index`) plus `WLP`, `BioProBench`, `BioPlanner`, and `Opentrons` public corpora.',
       },
     },
 
@@ -488,9 +488,9 @@ Intent-safe repair  : Repairs wrong_pipette, missing_tip, skip_thaw, sealed_plat
         },
       ],
       tabs: {
-        how: 'Implements five runnable PyTorch recipes—batched protocol rule validation, seeded-twin filtering & single-edit repair, DAG beam search + parallel annealing scheduling, sequence-packed Transformer training ablations, and batched 96-well plate volume simulation.',
-        guarantee: 'Explicitly positioned as a fast vectorized pre-filter (not a replacement for the formal Lean 4 `LabLean` checker in `YLM`), with every CPU number reported alongside machine load and GPU columns honestly marked `not yet measured` until run on CUDA.',
-        status: '5 recipes + `pytest` suite on `main`, with complete 1-thread/8-thread CPU benchmark tables and intent-preserving repair fixes ready in open review branches.',
+        how: 'Implements five PyTorch recipes—120-bit overflow-free batched protocol checking (up to `10,000 mL`), `K=26` twin repair with `exact_recovery_rate`, DAG beam search, Ding et al. (2024) `O(N log N)` Segment-Tree OBFD sequence packing, and 96-well plate rehearsal.',
+        guarantee: 'Continuously verified in CI against live `YLM` `LabLean` (`310/310` compiled, `308/310` verdict match, `0` unexplained diffs) and `12,000` random `300 mL` reservoir pairs, with 5-seed `[min, max]` intervals and GPU columns marked `PENDING_GPU`.',
+        status: 'Merged on `main` (`38f23ee`, 86 passing tests): 120-bit checker, compact twin/DPO `step_index`, live 310-protocol `LabLean` CI, `O(N log N)` OBFD across 5 public corpora (`SMolInstruct` `98.8%`, `ORD` `90.8%`), and `PENDING_GPU` A100/H100 harness.',
       },
     },
 
@@ -575,9 +575,9 @@ Result       : Rejected before any .py file is emitted or run on an OT-2.`,
         },
       ],
       tabs: {
-        how: 'Validates deck slots (`1–11`), labware catalog load names, pipette volume bounds, well range expansions (`plate:A1-A8`), tip counts, and running per-well volumes, then lowers high-level primitives (`transfer`, `distribute`, `mix`, `dilution_series`, `delay`) into formatted Python.',
-        guarantee: 'Emits identical, diff-friendly Python regardless of dict ordering, and ships a zero-dependency `MockProtocolContext` fallback because upstream Opentrons v9+ dropped OT-2 simulation.',
-        status: 'CLI (`stepbot compile`, `stepbot check`) with 40+ unit tests on `main` and deterministic `apiLevel` + `liquids` volume-tracking enhancements in review PR #2.',
+        how: 'Validates OT-2 (`2.16`) and Flex (`2.18–2.20`) decks, `30` labware specs, `16` 1-/8-channel pipettes, canonical two-stage 8.8.2 stroke splits, destination-contact lineage (`bottom` vs `top`), and 4 liquid rheology profiles into deterministic Python.',
+        guarantee: 'Rejects `NaN`/`Infinity` across all numeric fields, enforces `lean-mcp/v1` epoch/nonce dispatch, and achieves `100.0%` action-and-tip parity (`ALLOWED_DIFFERENCES = {}`) between `MockProtocolContext` and live `opentrons.simulate` `8.8.2`.',
+        status: 'Merged on `main` (`ffd1347`, 278 passing tests, `mypy --strict` 0 errors): `311/311` seeded protocols + `36/36` public multi-step wet-lab assays (`3,607` actions, `971` tips) verified 100% against `opentrons.simulate` `8.8.2`.',
       },
     },
 
@@ -615,9 +615,9 @@ Learned policies  : ACT · Diffusion Policy · OpenVLA · pi0 · cuRobo · AutoB
         },
       ],
       tabs: {
-        how: 'Implements SBS 96-well coordinate mapping, analytic 2-link inverse kinematics, link-vs-AABB obstacle checking, joint-space RRT exploration, and randomized path shortcutting in pure NumPy, paired with a license-checked catalog of manipulation & tactile datasets.',
-        guarantee: 'Verifies continuous link segments along every shortcut edge before accepting it, and flags non-commercial datasets (`TransCG`, `Touch-Slide`, `Sparsh`) explicitly.',
-        status: 'Merged on `main` (`53d7ac4`, 44 passing tests): 2D & 6-DoF `ArmSE3` RRT planners, 96-well clearance/slosh auditors, and 12-dataset 2024-2026 registry (`FineBio`, `DROID`, `AutoBio`, `LayeredDepth`, `ClearPose`, `TactX`, `FeelSight`).',
+        how: 'Implements 6-DoF UR5e, 7-DoF Franka Panda, and 4-DoF Opentrons Flex PoE/DH kinematics, 3D capsule-AABB continuous swept collision checking, `RRT-Connect` + `Informed RRT*` + `TOPP-RA`, 2D nonlinear Bessel slosh + `ZV`/`ZVD`/`EI` shapers, and active spiral Bayesian tactile insertion.',
+        guarantee: 'Evaluates all 4 insertion regimes on the exact same `0.70 mm` SBS chamfer and 3D Whitney/Coulomb contact mechanics (`99.0%` active spiral vs `1.2%` open-loop & `19.0%` local shear), and validates canonical LeRobot `(T, 7)` & Opentrons `(T, 3)` mm shapes.',
+        status: 'Merged on `main` (`e296fb5`, 80 passing tests + `LabHandsLean`): UR5e/Panda `TOPP-RA` (`100%` 3D success), `EI` slosh (`10.2x` ringdown cut), `495/500` active tactile insertion, and 12 open robot/depth/tactile corpora.',
       },
     },
 
@@ -655,9 +655,9 @@ Honest caveat   : NumPy dequantizes before matmul—storage drops 250x; real run
         },
       ],
       tabs: {
-        how: 'Trains a two-hidden-layer teacher and compact student via both hard labels and temperature-scaled (`T=4`) logit regression, packs weights into `int8` and `4-bit` representations, benchmarks single-sample latency, and indexes edge runtimes (`llama.cpp`, `ExecuTorch`, `MLC-LLM`, `AWQ`, `GPTQ`, `Embodied.cpp`).',
-        guarantee: 'Reports negative and nuanced findings plainly—showing both where simple hard-label training edges out soft distillation on an easy task and why true integer kernels are required for wall-clock gains.',
-        status: 'Merged on `main` (`98a995b`, 40 passing tests): `int8`/`4-bit` distillation + `SAFE_HOLD` drift abstention across 7 open edge sensor corpora (`UCI 36-mo Gas Drift`, `CWRU` & `Hydraulic` vibration, `SERS Raman 2026`, `Ethanol NIR`).',
+        how: 'Compares hybrid `T^2`-scaled `KL+CE` against matched same-trainer `CE` controls over 10 seeds, quantizes MLP and `39.1k`-param `SpectralResNet1D` models via `WHT+GPTQ W4A8`, exports freestanding C99 & ONNX `opset >= 21` `qlinear` (`int32` output), and evaluates `TTN+CRC` drift adaptation.',
+        guarantee: 'Enforces fail-closed `autolab_wire` calibration and accuracy floors, separates `(dequantized fp32 timing)` from `(int32)` passes, and verifies `0.000000` diff against `onnxruntime` (`>= 0.99` C99 parity) in CI.',
+        status: 'Merged on `main` (`e6e0600`, 45 passing tests + `LabFeetLean`): `0.9352` 4-bit `SpectralResNet1D` on `MNIST-1D`, `66.0%–88.1%` `TTN+CRC` accepted accuracy across drifted UCI Gas Batches `4..9`, and 10 SHA-256-pinned open corpora.',
       },
     },
 

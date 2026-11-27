@@ -36,7 +36,7 @@
       "layer": "L5",
       "git_url": "https://github.com/yaniguan/labshift.git",
       "default_branch": "main",
-      "head_sha": "ebc7f19",
+      "head_sha": "fc5bba5",
       "local_relative_path": "../labshift",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
@@ -96,7 +96,7 @@
       "layer": "L3",
       "git_url": "https://github.com/yaniguan/twinstep.git",
       "default_branch": "main",
-      "head_sha": "aa755c7",
+      "head_sha": "a781fc0",
       "local_relative_path": "../twinstep",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
@@ -106,7 +106,7 @@
       "layer": "L3",
       "git_url": "https://github.com/yaniguan/labfill.git",
       "default_branch": "main",
-      "head_sha": "e122b53",
+      "head_sha": "38f23ee",
       "local_relative_path": "../labfill",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
@@ -126,7 +126,7 @@
       "layer": "L1",
       "git_url": "https://github.com/yaniguan/stepbot.git",
       "default_branch": "main",
-      "head_sha": "11dd693",
+      "head_sha": "ffd1347",
       "local_relative_path": "../stepbot",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
@@ -136,7 +136,7 @@
       "layer": "L1",
       "git_url": "https://github.com/yaniguan/lab-hands.git",
       "default_branch": "main",
-      "head_sha": "53d7ac4",
+      "head_sha": "e296fb5",
       "local_relative_path": "../lab-hands",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30
@@ -146,7 +146,7 @@
       "layer": "L0",
       "git_url": "https://github.com/yaniguan/lab-feet.git",
       "default_branch": "main",
-      "head_sha": "98a995b",
+      "head_sha": "e6e0600",
       "local_relative_path": "../lab-feet",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 30

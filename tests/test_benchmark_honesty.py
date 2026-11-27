@@ -289,7 +289,7 @@ def test_readme_and_docs_zero_number_drift() -> None:
     validate_what_is_real_table(study_doc_text)
 
     # Verify the drift detector actively fails when a README headline number is tampered with!
-    tampered = readme_text.replace("116.6 min", "112.9 min", 1)
+    tampered = readme_text.replace("116.4 min", "112.9 min", 1)
     assert tampered != readme_text
     with pytest.raises(AssertionError):
         assert_readme_prose_matches_results(tampered)

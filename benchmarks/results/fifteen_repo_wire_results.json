@@ -1,6 +1,6 @@
 {
   "schema_version": "autolab-wire/v1",
-  "generated_at_utc": "2026-11-27T04:38:51Z",
+  "generated_at_utc": "2026-11-27T07:58:35Z",
   "repo_count": 15,
   "repos": [
     "lab-ears",
@@ -21,7 +21,7 @@
   ],
   "scenario_count": 6,
   "all_passed": true,
-  "runtime_sec": 7.935,
+  "runtime_sec": 8.063,
   "scenarios": {
     "1_full_happy_path_and_round2_recalibration": {
       "passed": true,
@@ -32,7 +32,7 @@
       "next_deck_epoch": 2,
       "attribution_outcome": "CERTIFIED_POSITIVE",
       "ledger_entry_sha256": "92e46e6319bb3efd37b501b3099600b5494fa98e47cccd086c506b0bbea4bee3",
-      "packed_total_real_tokens": 560,
+      "packed_total_real_tokens": 668,
       "gated_reward": 1.0,
       "admitted_to_sft_rlvr": true,
       "round1_effective_n_calib": 226,
