@@ -271,9 +271,10 @@ def _probe_py_verdicts() -> list[TrustVerdict]:
 
 
 def _lean_kernel_or_skip() -> LeanBatchKernel:
+    __tracebackhide__ = True
     kernel = LeanBatchKernel()
     if not kernel.available:
-        pytest.skip("autolab-lean binary not built (run `lake build` in lean/)")
+        _skip_or_fail("autolab-lean binary not built (run `lake build` in lean/)", "AUTOLAB_REQUIRE_LEAN")
     return kernel
 
 

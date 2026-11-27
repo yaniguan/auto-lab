@@ -68,14 +68,10 @@ jobs:
           python -m pytest
 
   workspace:
-    # Cross-repo and 15-repo wire tests against the sibling repos at the SHAs pinned in
-    # catalog/workspace.manifest.json. The wire test fails here until labshift, twinstep, labfill
-    # and stepbot have autolab_wire.py at their pinned SHAs (README: pending sibling merges).
-    # The live wire run then also needs the siblings' runtime packages (numpy, torch, rdkit, ...).
-    # Remove continue-on-error once this job passes.
+    # Cross-repo and live 15-repo wire tests against all 15 sibling repos at the SHAs pinned in
+    # catalog/workspace.manifest.json.
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -94,10 +90,11 @@ jobs:
               subprocess.run(["git", "clone", "--quiet", repo["git_url"], dest], check=True)
               subprocess.run(["git", "-C", dest, "checkout", "--quiet", "--detach", repo["head_sha"]], check=True)
           EOF
-      - name: Install autolab-hub and the siblings' light dependencies
+      - name: Install autolab-hub and sibling wire runtime dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[dev]" "pyyaml>=6.0" "sqlglot>=25.0,<31.0"
+          pip install --index-url https://download.pytorch.org/whl/cpu torch
+          pip install -e ".[dev]" pyyaml sqlglot numpy scipy scikit-learn pandas rdkit pydantic httpx ortools --extra-index-url https://download.pytorch.org/whl/cpu torch
       - name: Run cross-repo and wire tests with the siblings required
         env:
           AUTOLAB_REQUIRE_SIBLINGS: "1"

@@ -176,7 +176,6 @@ Every hard physical, statistical, stoichiometric, temporal, security, privacy, l
 ## Scientific Honesty & Status
 
 - **CPU vs GPU**: Every benchmark reported in `auto-lab` and its 15 child repositories distinguishes completed CPU measurements (`labfill`, `labshift`, `twinstep`, `stepbot`, `buy-or-make`, `lab-ears`, `lab-decide`, `lab-verify`, `lab-rehearsal`, `lab-attrib`, `lab-hands`, `lab-feet`, and `labbench-posttrain` smoke runs) from full A100/H100 post-training campaigns, which remain explicitly marked `PENDING` until executed.
-- **15-Repo Wire Check (pending sibling merges)**: The committed `benchmarks/results/fifteen_repo_wire_results.json` (`all_passed: true`) cannot yet be reproduced from the SHAs pinned in `catalog/workspace.manifest.json`: `labshift`, `twinstep`, `labfill`, and `stepbot` have no `autolab_wire.py` on `main` yet (their adapters are still on unmerged `fix/phase2-audit-and-wire` branches). The `workspace` CI job runs the live check against the pins and will fail until those branches merge and the pins are updated.
 - **License Discipline**: Non-commercial benchmarks and datasets (`BioProBench`, `SciFact`, `TransCG`, `Touch-Slide`) and ShareAlike evaluation suites (`LAB-Bench` with canary strings) retain their upstream licenses and are never laundered into MIT/commercial exports.
 
 ## Citation
