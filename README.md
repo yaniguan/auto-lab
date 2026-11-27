@@ -75,7 +75,8 @@ autolab loop --scenario broken_tip_reuse
 autolab loop --scenario precursor_ghost_peak
 autolab loop --scenario uncalibrated_molecule
 
-# Run hub integrity & cross-repo lean-mcp/v1 wire tests
+# Run hub integrity & cross-repo lean-mcp/v1 wire tests (Lean and sibling checks skip with a reason
+# when missing; AUTOLAB_REQUIRE_LEAN=1 or AUTOLAB_REQUIRE_SIBLINGS=1 turns those skips into failures)
 pytest
 ```
 

@@ -34,7 +34,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
       - name: Run unit and catalog integrity tests
-        run: python -m pytest -q
+        run: python -m pytest
 
   lean-trust-regime:
     runs-on: ubuntu-latest
@@ -61,6 +61,41 @@ jobs:
           lake build
           lake exe autolab-lean
       - name: Verify Python <-> Lean 4 kernel parity & zero-sorry audit
+        env:
+          AUTOLAB_REQUIRE_LEAN: "1"
         run: |
           python -m pip install -e ".[dev]"
-          python -m pytest -q
+          python -m pytest
+
+  workspace:
+    # Cross-repo and live 15-repo wire tests against all 15 sibling repos at the SHAs pinned in
+    # catalog/workspace.manifest.json.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Clone the 15 sibling repos at the pinned SHAs
+        run: |
+          python - <<'EOF'
+          import json
+          import subprocess
+
+          with open("catalog/workspace.manifest.json", encoding="utf-8") as fh:
+              repos = json.load(fh)["repositories"]
+          for repo in repos:
+              dest = repo["local_relative_path"]
+              subprocess.run(["git", "clone", "--quiet", repo["git_url"], dest], check=True)
+              subprocess.run(["git", "-C", dest, "checkout", "--quiet", "--detach", repo["head_sha"]], check=True)
+          EOF
+      - name: Install autolab-hub and sibling wire runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --index-url https://download.pytorch.org/whl/cpu torch
+          pip install -e ".[dev]" pyyaml sqlglot numpy scipy scikit-learn pandas rdkit pydantic httpx ortools --extra-index-url https://download.pytorch.org/whl/cpu torch
+      - name: Run cross-repo and wire tests with the siblings required
+        env:
+          AUTOLAB_REQUIRE_SIBLINGS: "1"
+        run: python -m pytest tests/test_autolab.py -k "cross_repo or fifteen_repo"

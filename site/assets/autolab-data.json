@@ -319,7 +319,7 @@
           "note": "CP-SAT enforces deadlines as hard constraints; mean flow time 68.9 min (non-unique under pure makespan objective)"
         }
       ],
-      "commit_head": "6985986",
+      "commit_head": "ebc7f19",
       "issue_count": 30,
       "concise": {
         "hook": "Schedule multi-step wet-lab jobs across shared instruments without breaking wait windows.",
@@ -347,7 +347,7 @@
           "data": "30 seeded synthetic benchmarks (small / medium / large, seeds 1000..1209).",
           "model": "Exact sweep-line checker + myopic greedy baseline + CP-SAT interval solver.",
           "training": "Combinatorial optimization (no neural training; ready as RLVR verifier).",
-          "history": "124a6d7 30-instance suite -> 58ec7f2 flow-tie note PR #2 -> 6985986.",
+          "history": "124a6d7 30-instance suite -> 6985986 arm transit & greedy_repair -> ebc7f19 Lean/wire & >100-job CP-SAT.",
           "property": "CP-SAT clears all 13 max_wait violations left by greedy scheduling."
         }
       }
@@ -753,7 +753,7 @@
           "note": "Verified locally in sandbox with pytest 8.4.2 on Python 3.13.13 (CPU)"
         }
       ],
-      "commit_head": "996a282",
+      "commit_head": "aa755c7",
       "issue_count": 30,
       "concise": {
         "hook": "Deterministic error twins for protocol steps—teaching models to spot mistakes and order DAGs.",
@@ -781,7 +781,7 @@
           "data": "3 seed protocols (serial dilution, wash-and-read, mix-incubate-read) -> N JSONL pairs.",
           "model": "6 typed injectors + transitive-reduced well-flow DAG + rule-based baseline.",
           "training": "Data generator & reference-blind baseline (66.7%-72.2% detection; feeds DPO/RLVR).",
-          "history": "8a17ea1 v0.1 release -> d598c32 unique-twin & wash fixes PR #2 -> 996a282.",
+          "history": "8a17ea1 v0.1 release -> 996a282 multi-fault & DPO export -> aa755c7 TwinStepLean & wire twins.",
           "property": "Stdlib-only runtime; scores ordering on minimal causal constraints, not rigid index."
         }
       }
@@ -834,7 +834,7 @@
           "note": "Exact 0.1 uL volume conservation + geometric 2^-k dilution profile; 16/16 pytest unit tests passing"
         }
       ],
-      "commit_head": "f969496",
+      "commit_head": "e122b53",
       "issue_count": 30,
       "concise": {
         "hook": "Fill the plate, fill the GPU—batch thousands of protocol checks and pack short sequences.",
@@ -862,7 +862,7 @@
           "data": "Synthetic 24-step protocols, 96-well plates, and lognormal 8..512 token streams.",
           "model": "Vectorized PyTorch rule tensors + 4-layer d=256 Transformer packing benchmark.",
           "training": "9-way throughput ablation on Xeon 1T (30.6% -> 92.1% useful tokens; GPU pending).",
-          "history": "ae91eb3 5 recipes -> PR #2 CPU tables (d1a7510) & PR #4 fixes (55eb158) -> f969496.",
+          "history": "ae91eb3 5 recipes -> f969496 FlexAttention & LabLean bridge -> e122b53 cu_seqlens, BFD & wire packing.",
           "property": "Fast PyTorch pre-filter aligned with YLM LabLean; cuts padding waste by 3x."
         }
       }
@@ -991,7 +991,7 @@
           "note": "Adds 33 regression tests for well-volume conservation, liquids, YAML 2.10, and multichannel guards"
         }
       ],
-      "commit_head": "5012e29",
+      "commit_head": "11dd693",
       "issue_count": 30,
       "concise": {
         "hook": "Compile tiny YAML/JSON step files into deterministic Opentrons Python protocols and simulate.",
@@ -1019,7 +1019,7 @@
           "data": "3 bundled workflows (dilution_series, plate_fill, reservoir_mix) + OT-2 catalog.",
           "model": "Static deck/slot/tip/volume validator + deterministic AST codegen + dual simulator.",
           "training": "Deterministic compiler (zero ML; pairs with LLM planners as execution target).",
-          "history": "4534ff1 initial compiler -> ef6865f liquid-volume & apiLevel PR #2 -> 5012e29.",
+          "history": "4534ff1 initial compiler -> 5012e29 lineage & manifest -> 11dd693 Flex 2.20, StepbotLean & wire telemetry.",
           "property": "Works with real opentrons.simulate or built-in zero-dependency MockProtocolContext."
         }
       }

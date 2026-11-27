@@ -1,6 +1,6 @@
 {
   "schema_version": "autolab-wire/v1",
-  "generated_at_utc": "2026-11-25T20:15:29Z",
+  "generated_at_utc": "2026-11-27T04:38:51Z",
   "repo_count": 15,
   "repos": [
     "lab-ears",
@@ -21,7 +21,7 @@
   ],
   "scenario_count": 6,
   "all_passed": true,
-  "runtime_sec": 8.936,
+  "runtime_sec": 7.935,
   "scenarios": {
     "1_full_happy_path_and_round2_recalibration": {
       "passed": true,
