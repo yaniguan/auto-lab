@@ -20,7 +20,7 @@ A systematic survey of 2025–2026 X/Twitter research threads, open-source repos
 
 ## 2. Four Novel Research Directions Formalized & Evaluated in `AutoLabLean`
 
-To bridge these four blind spots, we extend `AutoLabLean` with `lean/AutoLabLean/NovelDirections.lean` (bringing the formal kernel to **11 Lean files, 44 machine-checked theorems, 21 `#guard` checks, and `0 sorry`**) and evaluate all four directions empirically in `benchmarks/novel_directions_study.py`.
+To bridge these four blind spots, we extend `AutoLabLean` with `lean/AutoLabLean/NovelDirections.lean` (part of the **12 Lean files, 50 machine-checked theorems, 27 `#guard` checks, and `0 sorry`** in `lean/`) and evaluate all four directions in `benchmarks/novel_directions_study.py` (with real Delaney ESOL data where noted and explicit simulation labels where telemetry or clock arrivals are synthetic).
 
 ### Direction 1 · Diagnostic Epistemic Attribution & Proof-Carrying Negative Results (`ATTRIB`)
 
@@ -78,22 +78,22 @@ To bridge these four blind spots, we extend `AutoLabLean` with `lean/AutoLabLean
 
 ---
 
-### Direction 4 · Adversarial Saboteur–Verifier Co-Evolution (`twinstep` $\times$ `LeanEvolve`)
+### Direction 4 · Fixed Fault-Family Mutation Check (`21` Distinct Cases across `twinstep` Fault Classes)
 
-- **Core Idea**: Inspired by `Lean4Agent` / `LeanEvolve` (arXiv:2606.06523) and `BenchBench-Protocol`, pit an adversarial protocol saboteur (`twinstep` generating subtle state-dependent laboratory bugs across 7 fault families) against successively stronger verifier generations so RLVR post-training (`labbench-posttrain`) can never exploit blind spots in heuristic gates.
-- **Empirical Result (`140` adversarial protocol mutations across 7 wet-lab fault classes)**:
-  - **Gen-0 Verifier** (scalar volume bounds `[0, cap]` only): **`85.7%` saboteur evasion rate**
-  - **Gen-1 Verifier** (coarse 2-bit reagent presence mask): **`71.4%` saboteur evasion rate** (evaded by `B1 -> A1` concentration back-entry, unsealed `95 C` evaporation, dead-volume underflow, frozen aspiration, and forgotten tip drop)
-  - **Gen-2 Verifier** (`AutoLabLean` stateful conservation + concentration monotonicity + thermal-seal invariants): **`0.0%` saboteur evasion rate**
+- **Core Idea**: Inspired by `Lean4Agent` / `LeanEvolve` (arXiv:2606.06523) and `BenchBench-Protocol`, evaluate 3 clean protocol templates across 7 state-dependent laboratory fault classes (**21 distinct fault cases**, cycled deterministically to 140 checks; not an adaptive adversary) against three verifier generations:
+- **Simulation Result (`21` distinct cases / `140` deterministic draws across 7 modeled fault classes)**:
+  - **Gen-0 Verifier** (scalar volume bounds `[0, cap]` only): **`85.7%` fault evasion rate**
+  - **Gen-1 Verifier** (coarse 2-bit reagent presence mask): **`57.1%` fault evasion rate** (evaded by `B1 -> A1` concentration back-entry, unsealed `95 C` evaporation, `5 uL` dead-volume cone underflow, and frozen stock aspiration)
+  - **Gen-2 Verifier** (`AutoLabLean` stateful conservation + concentration monotonicity + thermal-seal invariants): **`0.0%` fault evasion rate (by construction on the 7 modeled fault classes)**
 
 ---
 
 ## 3. Reproducing All Results
 
 ```bash
-# 1. Compile all 11 Lean 4.36.0 modules (44 theorems, 21 #guard checks, 0 sorry)
+# 1. Compile all 12 Lean 4.36.0 modules (50 theorems, 27 #guard checks, 0 sorry)
 cd lean && lake build && cd ..
 
-# 2. Run the 4-direction empirical benchmark suite (~10s on CPU)
+# 2. Run the 4-direction benchmark suite (~10s on CPU; requires Delaney ESOL CSV)
 python -m benchmarks.novel_directions_study
 ```

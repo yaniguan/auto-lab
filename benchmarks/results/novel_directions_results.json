@@ -1,17 +1,19 @@
 {
-  "generated_at_utc": "2026-11-23T08:43:22Z",
+  "generated_at_utc": "2026-11-27T05:12:39Z",
   "lean_audit": {
-    "file_count": 11,
-    "theorem_count": 44,
-    "guard_count": 21,
+    "file_count": 12,
+    "theorem_count": 50,
+    "guard_count": 27,
     "zero_sorry_verified": true
   },
-  "runtime_sec": 10.37,
+  "runtime_sec": 25.91,
   "directions": {
     "d1_epistemic_attribution": {
-      "direction": "Direction 1 \u00b7 Diagnostic Epistemic Attribution & Certified Negative Results",
+      "direction": "Direction 1 - Diagnostic Epistemic Attribution & Certified Negative Results",
       "inspired_by": "A-Lab XRD characterization debate, Sakana AI Scientist-v2 negative results, La Agente Optima sensor faults",
-      "data_source": "real_esol (1128 compounds)",
+      "data_source": "real_esol (1128 compounds, sha256=8c06a76f0c64, via sibling:lab-decide/data/delaney-processed.csv)",
+      "input_type": "real_esol_plus_simulated_separable_telemetry",
+      "evaluation_note": "Compound descriptors and true solubility come from real Delaney ESOL (n=1,128); post-run acoustic/control/spectral fault telemetry is simulated from separable distributions, so 0.0% poisoned admission under ATTRIB reflects exact routing on modeled faults.",
       "lean_kernel_calls": 960,
       "comparison": {
         "naive_sdl": {
@@ -29,9 +31,11 @@
       }
     },
     "d2_stepped_frontier": {
-      "direction": "Direction 2 \u00b7 Stepped Frontier Calibration (Active Trust-Boundary Expansion)",
+      "direction": "Direction 2 - Stepped Frontier Calibration (Active Trust-Boundary Expansion)",
       "inspired_by": "Resolving the static guardrail vs novel-scaffold discovery paradox in self-driving labs",
-      "data_source": "real_esol (1128 compounds)",
+      "data_source": "real_esol (1128 compounds, sha256=8c06a76f0c64, via sibling:lab-decide/data/delaney-processed.csv)",
+      "input_type": "real_esol_active_learning_simulation",
+      "evaluation_note": "Descriptors and measured logS come from real Delaney ESOL (n=1,128); 0.0 uncalibrated production runs for shell regimes is enforced by construction via FRONTIER.",
       "lean_kernel_calls": 54239,
       "comparison": {
         "static_trust_wall_v1": {
@@ -61,8 +65,10 @@
       }
     },
     "d3_lean_mcp": {
-      "direction": "Direction 3 \u00b7 Proof-Carrying `Lean-MCP` Hardware Envelopes (72-Hour Continuous Lab Simulation)",
+      "direction": "Direction 3 - Proof-Carrying `Lean-MCP` Hardware Envelopes (72-Hour Lab Clock Simulation)",
       "inspired_by": "2026 MCP lab harnesses (plr-mcp, LabMCP, OpenLabAI, Osprey, Anthropic Model Hardware Standard)",
+      "input_type": "simulation",
+      "evaluation_note": "Discrete-event 72-hour clock simulation over 500 synthetic MCP requests (88% routine, 6% stale-epoch replay, 6% frontier exception); 0 unsafe runs is by construction.",
       "lean_kernel_calls": 500,
       "comparison": {
         "advisory_prompt_mcp": {
@@ -83,15 +89,18 @@
       }
     },
     "d4_adversarial_coevolution": {
-      "direction": "Direction 4 \u00b7 Adversarial Saboteur-Verifier Co-Evolution (`twinstep` x `LeanEvolve`)",
+      "direction": "Direction 4 - Fixed Fault-Family Mutation Check (21 Distinct Cases)",
       "inspired_by": "Lean4Agent / LeanEvolve (arXiv:2606.06523), BenchBench-Protocol, and RLVR verifier-gaming debates",
+      "input_type": "simulation",
+      "distinct_cases": 21,
       "adversarial_mutations_tested": 140,
+      "evaluation_note": "Fixed fault-family mutation check over 3 clean templates x 7 fault classes = 21 distinct cases (cycled to 140 draws; not an adaptive adversary). Gen-2 0.0% evasion is by construction against the 7 modeled fault classes.",
       "generations": {
         "gen0_volume_bounds_only": {
           "saboteur_evasion_pct": 85.7
         },
         "gen1_presence_bitmask": {
-          "saboteur_evasion_pct": 71.4
+          "saboteur_evasion_pct": 57.1
         },
         "gen2_autolablean_formal": {
           "saboteur_evasion_pct": 0.0

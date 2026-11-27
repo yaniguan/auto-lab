@@ -1,0 +1,1740 @@
+{
+  "generated_at_utc": "2026-11-27T05:44:28Z",
+  "lean_toolchain": "leanprover/lean4:v4.36.0",
+  "simulator_backend": "opentrons.simulate (CPU)",
+  "runtime_sec": 175.65,
+  "pinned_repositories": {
+    "Opentrons/Protocols": {
+      "git_url": "https://github.com/Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)"
+    },
+    "Opentrons/opentrons": {
+      "git_url": "https://github.com/Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "upstream_license": "Apache-2.0"
+    }
+  },
+  "summary": {
+    "n_total": 85,
+    "n_imported": 58,
+    "n_unsupported": 27,
+    "imported_pct": 68.2,
+    "n_allowed": 35,
+    "n_denied": 23,
+    "allowed_of_imported_pct": 60.3,
+    "denied_of_imported_pct": 39.7,
+    "lean_python_mirror_mismatches": 0,
+    "audited_denies_count": 23,
+    "audited_true_hazard_count": 12,
+    "audited_false_alarm_count": 11,
+    "audited_false_alarm_rate_pct": 47.8
+  },
+  "unsupported_by_reason": {
+    "mixed_single_and_multichannel_pipettes": 7,
+    "magnetic_module_command": 5,
+    "residual_disposal_volume_blown_out_to_trash": 5,
+    "manual_human_pause_intervention": 3,
+    "undispensed_liquid_discarded_with_tip": 3,
+    "liquid_dispense_to_trash_unsupported": 1,
+    "non_positive_volume": 1,
+    "simultaneous_multi_pipette_tips": 1,
+    "thermocycler_profile_without_pipetted_wells": 1
+  },
+  "deny_counts_by_rule": {
+    "enough_recoverable_volume": 5,
+    "distinct_transfer_wells": 4,
+    "mix_sufficient_well_volume": 4,
+    "no_well_overfill": 4,
+    "no_tip_cross_contamination": 3,
+    "pipette_volume_range": 3
+  },
+  "audited_denies": [
+    {
+      "protocol_id": "protocol_library:00a214-protocol-1",
+      "title": "Seeding Plates with Mammalian Cells",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/00a214-protocol-1/00a214-protocol-1.ot2.apiv2.py.json",
+      "rule": "no_tip_cross_contamination",
+      "failing_step_index": 17,
+      "failing_step": [
+        "xfer",
+        1,
+        7,
+        1400
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Dispenses cell suspension from `.top()` (non-contact air dispense) above pre-wetted plate wells and reuses tips back into the cell reservoir; `REHEARSAL` models all `xfer` dispenses as meniscus-contacting."
+    },
+    {
+      "protocol_id": "protocol_library:0961d2-part1",
+      "title": "plexWell LP384 Part 1",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/0961d2-part1/0961d2-part1.ot2.apiv2.py.json",
+      "rule": "mix_sufficient_well_volume",
+      "failing_step_index": 2,
+      "failing_step": [
+        "mix",
+        13,
+        60,
+        5
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Adds 6.0 uL buffer to `Destination 1` (`biorad_96_wellplate_200ul_pcr[A1]`) containing undeclared pre-plated sample DNA (API v2.0) and mixes 6.0 uL; without `load_liquid`, inferred volume `6.0 uL` fails `deadVol (5.0 uL) + 6.0 <= 6.0`."
+    },
+    {
+      "protocol_id": "protocol_library:0a9b58",
+      "title": "Pooling and Normalization via CSV",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/0a9b58/0a9b58.ot2.apiv2.py.json",
+      "rule": "pipette_volume_range",
+      "failing_step_index": 4,
+      "failing_step": [
+        "xfer",
+        2,
+        3,
+        105
+      ],
+      "classification": "true_hazard",
+      "explanation": "Routes a 10.5 uL sample transfer (`xfer 2 -> 3, 105 tenths`) through `p300_single_gen2` (20.0-200.0 uL filter-tip range), violating the 20.0 uL minimum calibrated P300 volume."
+    },
+    {
+      "protocol_id": "protocol_library:0e525c",
+      "title": "droplet digital PCR Prep",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/0e525c/0e525c.ot2.apiv2.py.json",
+      "rule": "enough_recoverable_volume",
+      "failing_step_index": 25,
+      "failing_step": [
+        "xfer",
+        18,
+        8,
+        1600
+      ],
+      "classification": "true_hazard",
+      "explanation": "Aspirates 180.0 uL followed by 160.0 uL (340.0 uL total) from a single `biorad_96_wellplate_200ul_pcr[A8]` well whose physical capacity is only 200.0 uL (impossible without undocumented mid-run refill)."
+    },
+    {
+      "protocol_id": "protocol_library:131de0",
+      "title": "Copy Number Variant (CNV) Plating",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/131de0/cnv.ot2.apiv2.py.json",
+      "rule": "enough_recoverable_volume",
+      "failing_step_index": 3,
+      "failing_step": [
+        "xfer",
+        1,
+        14,
+        100
+      ],
+      "classification": "true_hazard",
+      "explanation": "Aspirates 3 x 10.0 uL = 30.0 uL per channel from `microampoptical_384_wellplate_30ul[A1]` (30.0 uL brim capacity), leaving zero dead-volume reserve in a 384-well optical plate."
+    },
+    {
+      "protocol_id": "protocol_library:154ec5",
+      "title": "Custom Cherrypicking",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/154ec5/154ec5.ot2.apiv2.py.json",
+      "rule": "distinct_transfer_wells",
+      "failing_step_index": 1,
+      "failing_step": [
+        "xfer",
+        5,
+        5,
+        60
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Default example CSV includes a same-well `B2 -> B2` (6.0 uL) entry that lowers to `xfer(5, 5, 60)`; `REHEARSAL` enforces `src != dst` (`distinct_transfer_wells`) rather than treating same-well aspirate+dispense as a 1-stroke mix."
+    },
+    {
+      "protocol_id": "protocol_library:158d42",
+      "title": "RNA Normalization I & II",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/158d42/1584d2.ot2.apiv2.py.json",
+      "rule": "mix_sufficient_well_volume",
+      "failing_step_index": 7,
+      "failing_step": [
+        "mix",
+        90,
+        500,
+        5
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Adds 50.0 uL diluent to a 1.5 mL tube holding undeclared starting RNA stock (API v2.11) and mixes 50.0 uL; without `load_liquid`, inferred volume `50.0 uL` fails `deadVol (5.0 uL) + 50.0 <= 50.0`."
+    },
+    {
+      "protocol_id": "protocol_library:1adec6-2",
+      "title": "Seed Cells [2/7]",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/1adec6-2/1adec6-2.ot2.apiv2.py.json",
+      "rule": "no_well_overfill",
+      "failing_step_index": 2,
+      "failing_step": [
+        "xfer",
+        13,
+        1,
+        2500
+      ],
+      "classification": "true_hazard",
+      "explanation": "Dispenses 250.0 uL per channel into `spl_96_wellplate_200ul_round[A1]` whose labware definition specifies a 200.0 uL maximum well capacity (+50.0 uL overfill missed by legacy Opentrons simulation)."
+    },
+    {
+      "protocol_id": "protocol_library:269b21",
+      "title": "PCR Prep",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/269b21/pcr_prep.ot2.apiv2.py.json",
+      "rule": "enough_recoverable_volume",
+      "failing_step_index": 58,
+      "failing_step": [
+        "xfer",
+        133,
+        13,
+        50
+      ],
+      "classification": "true_hazard",
+      "explanation": "Draws 4 x 5.0 uL = 20.0 uL out of `genmate_96_aluminumblock_20ul[A1]` (20.0 uL brim capacity), leaving 0.0 uL dead-volume margin and aspirating air on the final replicate."
+    },
+    {
+      "protocol_id": "protocol_library:384b23-plate-transfer",
+      "title": "Sample Transfer to 96 Well-Plate",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/384b23-plate-transfer/384b23-plate-transfer.ot2.apiv2.py.json",
+      "rule": "no_well_overfill",
+      "failing_step_index": 1,
+      "failing_step": [
+        "xfer",
+        25,
+        49,
+        2000
+      ],
+      "classification": "true_hazard",
+      "explanation": "Default `vol_dispensed` transfers 200.0 uL from a 6x4 tube rack into `microamp_96_wellplate_100ul[A1]` whose maximum capacity is 100.0 uL (2.0x well overfill)."
+    },
+    {
+      "protocol_id": "protocol_library:412ec7",
+      "title": "Serial Dilution for Eskil",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/412ec7/412ec7.ot2.apiv2.py.json",
+      "rule": "enough_recoverable_volume",
+      "failing_step_index": 28,
+      "failing_step": [
+        "xfer",
+        2,
+        5,
+        1000
+      ],
+      "classification": "true_hazard",
+      "explanation": "Attempts to aspirate 100.0 uL in a single stroke from `opentrons_96_aluminumblock_nest_wellplate_100ul[A1]` (100.0 uL max capacity), exhausting 100% of brim volume with zero dead-volume reserve."
+    },
+    {
+      "protocol_id": "protocol_library:422b1e",
+      "title": "Titration Procedure",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/422b1e/422b1e.ot2.apiv2.py.json",
+      "rule": "enough_recoverable_volume",
+      "failing_step_index": 4,
+      "failing_step": [
+        "xfer",
+        1,
+        2,
+        10000
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Adds 2,000.0 uL titrant into `custom_beaker[A1]` and withdraws 2,000.0 uL; because API v2.x pre-2.14 lacks `Well.load_liquid` to declare the initial titrand already in the beaker, `REHEARSAL` infers `init_vol = 0` and flags a 5.0 uL dead-volume deficit."
+    },
+    {
+      "protocol_id": "protocol_library:4883fc",
+      "title": "Normalization",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/4883fc/normalization.ot2.apiv2.py.json",
+      "rule": "no_tip_cross_contamination",
+      "failing_step_index": 16,
+      "failing_step": [
+        "xfer",
+        2,
+        6,
+        335
+      ],
+      "classification": "true_hazard",
+      "explanation": "Splits a 67.0 uL sample normalization transfer (`33.5 + 33.5 uL` on `p50_single`) with `mix_after=(3, 50)` inside diluted well `B1` and re-enters concentrated sample stock `C1` with the same diluted tip."
+    },
+    {
+      "protocol_id": "protocol_library:5191b6",
+      "title": "High-Throughput Synthesis",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/5191b6/5191b6.ot2.apiv2.py.json",
+      "rule": "no_well_overfill",
+      "failing_step_index": 61,
+      "failing_step": [
+        "xfer",
+        15,
+        7,
+        2700
+      ],
+      "classification": "true_hazard",
+      "explanation": "Cumulative multi-reagent transfers into `opentrons_24_tuberack_nest_2ml_screwcap[A1]` (2,000.0 uL max capacity) exceed 2.0 mL on step 61 (+270.0 uL dispense causes tube overflow)."
+    },
+    {
+      "protocol_id": "protocol_library:543bf9",
+      "title": "Standard Curve Dilutions with CSV File",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/543bf9/543bf9.ot2.apiv2.py.json",
+      "rule": "distinct_transfer_wells",
+      "failing_step_index": 1,
+      "failing_step": [
+        "xfer",
+        2,
+        2,
+        208
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Pre-wets the `p50_single` tip in stock tube `B1` via explicit `aspirate(20.8) + dispense(20.8)` in `B1` before transferring; `REHEARSAL` rejects `src == dst` unless written as `pip.mix()`."
+    },
+    {
+      "protocol_id": "protocol_library:56b4ec",
+      "title": "Sample Prep with Custom Labware",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/56b4ec/56b4ec.ot2.apiv2.py.json",
+      "rule": "no_tip_cross_contamination",
+      "failing_step_index": 29,
+      "failing_step": [
+        "xfer",
+        3,
+        4,
+        400
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Splits an 80.0 uL transfer (`40.0 + 40.0 uL` on `p50_single`) from mixed intermediate tube `A1` into empty tube `A2`; integer floor division `(soluteAmt * v) // vol` rounds down by 1 unit on stroke 1, tripping strict concentration monotonicity on stroke 2."
+    },
+    {
+      "protocol_id": "protocol_library:60d861-2",
+      "title": "CYP Induction, Part 2/3",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/60d861-2/pcr_prep.ot2.apiv2.py.json",
+      "rule": "distinct_transfer_wells",
+      "failing_step_index": 25,
+      "failing_step": [
+        "xfer",
+        49,
+        49,
+        20
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "`p20_multi_gen2.distribute()` returns 2.0 uL residual `disposal_volume` back into `nest_1_reservoir_195ml[A1]` via `dispense(2.0, rt_mix)`, which lowers to `xfer(49, 49, 20)` and trips `distinct_transfer_wells`."
+    },
+    {
+      "protocol_id": "protocol_library:6bc986-part-2",
+      "title": "Apostle Prot. K",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/6bc986-part-2/6bc986-part-2.ot2.apiv2.py.json",
+      "rule": "pipette_volume_range",
+      "failing_step_index": 1,
+      "failing_step": [
+        "xfer",
+        1,
+        2,
+        40
+      ],
+      "classification": "true_hazard",
+      "explanation": "Uses a `p50_multi` pipette (calibrated range 5.0-50.0 uL) to aspirate 4.0 uL of Proteinase K from `aspir8_1_reservoir_taped[A1]`, below the 5.0 uL minimum volume specification."
+    },
+    {
+      "protocol_id": "protocol_library:6c27ee",
+      "title": "Custom CSV Transfer",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/6c27ee/6c27ee.ot2.apiv2.py.json",
+      "rule": "mix_sufficient_well_volume",
+      "failing_step_index": 2,
+      "failing_step": [
+        "mix",
+        2,
+        300,
+        10
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Transfers 30.0 uL into `corning_96_wellplate_360ul_flat[A1]` (pre-filled assay plate undeclared in API v2.8) and mixes 30.0 uL x 10 reps; inferred `30.0 uL` fails `deadVol (5.0 uL) + 30.0 <= 30.0`."
+    },
+    {
+      "protocol_id": "protocol_library:6cb818",
+      "title": "Anti-CD154 Labeling of Peptide- and PMA-Stimulated Cells",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/6cb818/6cb818.ot2.apiv2.py.json",
+      "rule": "distinct_transfer_wells",
+      "failing_step_index": 26,
+      "failing_step": [
+        "xfer",
+        1,
+        1,
+        200
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Performs a manual 1-stroke `aspirate(20.0) + dispense(20.0)` mix in `nest_96_wellplate_320ul[A1]` after reagent addition instead of calling `pip.mix()`, tripping `distinct_transfer_wells`."
+    },
+    {
+      "protocol_id": "protocol_library:6d901d-2",
+      "title": "Cherrypicking with multi-channel pipette substituting for a single channel pipette",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/6d901d-2/6d901d-2.ot2.apiv2.py.json",
+      "rule": "pipette_volume_range",
+      "failing_step_index": 1,
+      "failing_step": [
+        "xfer",
+        1,
+        2,
+        10
+      ],
+      "classification": "true_hazard",
+      "explanation": "Default parameter bundle pairs `p300_multi_gen2` (calibrated minimum 20.0 uL) with a 1.0 uL CSV transfer on step 1, operating 20x below the pipette's minimum calibrated volume."
+    },
+    {
+      "protocol_id": "protocol_library:74312c",
+      "title": "PCB Board Plating",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/74312c/74312c.ot2.apiv2.py.json",
+      "rule": "no_well_overfill",
+      "failing_step_index": 1,
+      "failing_step": [
+        "xfer",
+        251,
+        1,
+        100
+      ],
+      "classification": "true_hazard",
+      "explanation": "Transfers 10.0 uL of tetrahydrofuran twice into custom `pcb_board_250_wells[A1]`, whose custom labware definition declares a 2.0 uL micro-cavity capacity (5x single-dispense overfill)."
+    },
+    {
+      "protocol_id": "protocol_library:76c562",
+      "title": "Cherrypicking and Normalization",
+      "repo": "Opentrons/Protocols",
+      "rel_path": "protoBuilds/76c562/76c562.ot2.apiv2.py.json",
+      "rule": "mix_sufficient_well_volume",
+      "failing_step_index": 11,
+      "failing_step": [
+        "mix",
+        4,
+        50,
+        3
+      ],
+      "classification": "abstraction_false_alarm",
+      "explanation": "Dispenses 5.0 uL into `nest_96_wellplate_100ul_pcr_full_skirt[A11]` (undeclared pre-staged diluent, plus conservative 5.0 uL default `deadVol` on a 100 uL PCR well) and mixes 5.0 uL x 3 reps."
+    }
+  ],
+  "protocols": [
+    {
+      "protocol_id": "protocol_library:00222e-dd",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/00222e-dd/00222e.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f69a42a71ddf18d8e5949e99859c2c4b15661b2e44f3827e664a287c41e32d2b",
+      "title": "Drug Dosing",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 30,
+      "n_steps": 42,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:0045f1",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0045f1/0045f1.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "b7594528158c613dcb37eaf85e6b461f45287d73e7b4598fd255438285c1070c",
+      "title": "Variable Slide Dispensing",
+      "status": "unsupported",
+      "unsupported_reason": "liquid_dispense_to_trash_unsupported",
+      "unsupported_detail": "Dispensing liquid into trash/waste chute cannot conserve deck volume: Dispensing 1.0 uL into A1 of Opentrons Fixed Trash on 12 at 7.56 uL/sec"
+    },
+    {
+      "protocol_id": "protocol_library:00a214-protocol-1",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/00a214-protocol-1/00a214-protocol-1.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "bbb484260d48517c2effb86af88f6e466bd2e1516654ee14a6752c371fb98957",
+      "title": "Seeding Plates with Mammalian Cells",
+      "status": "denied",
+      "rule": "no_tip_cross_contamination",
+      "n_wells": 14,
+      "n_steps": 29,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:00a6e5",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/00a6e5/00a6e5.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "26cf9fcd06ca57679e6e3f53c731b6bc9dc90a7e4e785eed7fe48e11bed8ddd7",
+      "title": "LCMS Urine Extraction",
+      "status": "unsupported",
+      "unsupported_reason": "residual_disposal_volume_blown_out_to_trash",
+      "unsupported_detail": "Blow-out discarded 20.0 uL of residual disposal volume outside source well"
+    },
+    {
+      "protocol_id": "protocol_library:00c517-pt2",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/00c517-pt2/00c517-pt2.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "554b244dac668604ff2bc3eac827f1df89b1e41302b68a4403ce8035317efa78",
+      "title": "VIB UGENT - Part 2",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 2,
+      "n_steps": 4,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:00f7b1_part10",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/00f7b1_part10/00f7b1_part10.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "85650f1761c9b71a595812db2a0d688a70202c94d4052b432bdb2c5cb24a4a08",
+      "title": "NEBNext Ultra II Directional RNA Library Prep Kit for Illumina Part 10: Purification of PCR Product",
+      "status": "unsupported",
+      "unsupported_reason": "magnetic_module_command",
+      "unsupported_detail": "Disengaging Magnetic Module"
+    },
+    {
+      "protocol_id": "protocol_library:010d6c",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/010d6c/010d6c.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "7ee0e3037acee8d09654fd56b79481284095ea63fe066baebc68f68737863172",
+      "title": "Ribogreen Assay",
+      "status": "unsupported",
+      "unsupported_reason": "mixed_single_and_multichannel_pipettes",
+      "unsupported_detail": "Protocol mixes 1-channel and 8-channel pipettes across shared deck state"
+    },
+    {
+      "protocol_id": "protocol_library:017860",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/017860/017860.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f3fcb4028f300df748e05704f6439a56035af65da79a715560d1f1e22825cb5e",
+      "title": "CSV Plate Filling - Upgrade for OT2",
+      "status": "unsupported",
+      "unsupported_reason": "simultaneous_multi_pipette_tips",
+      "unsupported_detail": "Mount 'left' picked up a tip while ['right'] still holds a tip"
+    },
+    {
+      "protocol_id": "protocol_library:019a7d",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/019a7d/019a7d.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "7d14291421e7d4d3e9950f4d89bf1d4fe4f543c448fbcb303ec99b8f41895bf9",
+      "title": "Nucleic Acid Purification/Cloning",
+      "status": "unsupported",
+      "unsupported_reason": "mixed_single_and_multichannel_pipettes",
+      "unsupported_detail": "Protocol mixes 1-channel and 8-channel pipettes across shared deck state"
+    },
+    {
+      "protocol_id": "protocol_library:01b4a2",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/01b4a2/01b4a2.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "60a6e7f64cea4afbd09e202cd5c87fe76d1b7658ad6dfeacd2292dac0adfc2c6",
+      "title": "Sample Prep with DMSO and CSV Input",
+      "status": "unsupported",
+      "unsupported_reason": "manual_human_pause_intervention",
+      "unsupported_detail": "Protocol pauses for manual off-deck operator action: Pausing robot operation: Check vials then select `Resume` in the Opentrons app"
+    },
+    {
+      "protocol_id": "protocol_library:022a99",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/022a99/spheroidtransfer.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "daf9ff937259ceb0ffdb427f464034141f3bba2069430f4d9c0f1fa615a3d446",
+      "title": "Spheroid Transfer",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 96,
+      "n_steps": 52,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:02b308",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/02b308/pcr_prep.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "61ba0f81aa20ea09c4f13f219b7573706aa6e88d2ef9e9d4baaea90af2196f2d",
+      "title": "PCR Prep",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 308,
+      "n_steps": 616,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:030dd8-amplify",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/030dd8-amplify/amplify.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "870415e0f24152932649ac2eed92fb5171de80f2c5b89cd1f8591146785e65a1",
+      "title": "3. Illumina COVIDSeq - Amplify cDNA",
+      "status": "unsupported",
+      "unsupported_reason": "magnetic_module_command",
+      "unsupported_detail": "Disengaging Magnetic Module"
+    },
+    {
+      "protocol_id": "protocol_library:0451f3",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0451f3/miniprep.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "418dd7ae42cf2feadb61031e6a9620960f73b0419848f2499dbbbc78fda3bbad",
+      "title": "Zymo Zyppy\u2122-96 Plasmid MagBead Miniprep",
+      "status": "unsupported",
+      "unsupported_reason": "magnetic_module_command",
+      "unsupported_detail": "Disengaging Magnetic Module"
+    },
+    {
+      "protocol_id": "protocol_library:04711e",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/04711e/04711e.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "8624f91b23a9923f9abfa35d8834f5ee95b8aadd34ef5a09746e66e75f4f4127",
+      "title": "PCR Prep",
+      "status": "unsupported",
+      "unsupported_reason": "mixed_single_and_multichannel_pipettes",
+      "unsupported_detail": "Protocol mixes 1-channel and 8-channel pipettes across shared deck state"
+    },
+    {
+      "protocol_id": "protocol_library:04fed3",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/04fed3/04fed3.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "7c15693a6a3ffec74ff8576a233c8a37e22781c76e515df4577b9b59abebce1e",
+      "title": "Custom Normalization",
+      "status": "unsupported",
+      "unsupported_reason": "mixed_single_and_multichannel_pipettes",
+      "unsupported_detail": "Protocol mixes 1-channel and 8-channel pipettes across shared deck state"
+    },
+    {
+      "protocol_id": "protocol_library:0556be-bmda",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0556be-bmda/0556be-bmda.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "012da12edab4247b529fd6c1ab0663bcd0061f9ca8cc4f77e7edaa2d12738af0",
+      "title": "BMDA - Dengue Protocol",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 45,
+      "n_steps": 1084,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:056f47",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/056f47/056f47.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "83e76c67e892959ce56c2798a980eaeb9f876f9f783d85c3faf45bcf6783e3be",
+      "title": "DMSO and Compound Stock Solution Addition - Part 2",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 26,
+      "n_steps": 72,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:058124",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/058124/058124.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "3b9efcfd02b8f14c9abf54d5409a185cfcb48d25ba616b3472d888464d47cb4e",
+      "title": "Custom Serial Dilution for Protein Quantification",
+      "status": "unsupported",
+      "unsupported_reason": "manual_human_pause_intervention",
+      "unsupported_detail": "Protocol pauses for manual off-deck operator action: Pausing robot operation: \n***\nEnsure reservoir is filled with\n     27.16 mL dilu"
+    },
+    {
+      "protocol_id": "protocol_library:05f673",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/05f673/05f673.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "5cb8c37264ab68e2450f8abbd376130a77794656d461aa0e49556a54227affcf",
+      "title": "Cell Normalization",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 3,
+      "n_steps": 7,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p1000_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:060c4f",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/060c4f/060c4f.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "ba8b6cf883bf53642098f70fd6e289aa8645914e7305aadc2c77286d625a0c64",
+      "title": "96-well to 384-well transfer",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 32,
+      "n_steps": 40,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:06ab09",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/06ab09/06ab09.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "170d78a792ef9bc1d71ed212685e2c0eedb8f97756b86ad2d13bb5aade0ad68c",
+      "title": "DNA Transfer",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 22,
+      "n_steps": 33,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p10_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:06e5b6",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/06e5b6/protein_crystallization.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "2078f818c3ef24e8984985760358a159062a3e6a8247c75ba6c3dd6938cb4f5f",
+      "title": "Protein Crystallization",
+      "status": "unsupported",
+      "unsupported_reason": "undispensed_liquid_discarded_with_tip",
+      "unsupported_detail": "Pipette dropped tip while still holding 18.0 uL of aspirated liquid"
+    },
+    {
+      "protocol_id": "protocol_library:075bee",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/075bee/075bee.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f0cbb56bebfc8c45f7b6b825829010a96b7abba1cacea9f9832623288e727312",
+      "title": "Material Synthesis Prep with CSV Input",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 97,
+      "n_steps": 300,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:079db2",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/079db2/079db2.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "ef504cf8412b3988231f1aeed4d59f4357db3bcc6a07206393bf90493487ca87",
+      "title": "Reformatting with Custom Tube Rack",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 172,
+      "n_steps": 258,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:08878b",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/08878b/08878b.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "72dc27587edb76fa8066b438f769795935659aed20068814124e9256609f17e2",
+      "title": "Transfer with Temperature Module",
+      "status": "unsupported",
+      "unsupported_reason": "undispensed_liquid_discarded_with_tip",
+      "unsupported_detail": "Pipette dropped tip while still holding 5.0 uL of aspirated liquid"
+    },
+    {
+      "protocol_id": "protocol_library:08aeaa",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/08aeaa/08aeaa.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "0605a5db419a61a6ba1d1b4bb9e39bf61e48869bf7efd1b667718da37385669e",
+      "title": "Custom Normalization & Transfer",
+      "status": "unsupported",
+      "unsupported_reason": "manual_human_pause_intervention",
+      "unsupported_detail": "Protocol pauses for manual off-deck operator action: Pausing robot operation: Failed Samples:"
+    },
+    {
+      "protocol_id": "protocol_library:08e3eb",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/08e3eb/08e3eb.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "20908a711a48fa92d00156a3014e7f31e2c436348f80305c1350b0913452ad5e",
+      "title": "Custom Plate Filling",
+      "status": "unsupported",
+      "unsupported_reason": "non_positive_volume",
+      "unsupported_detail": "Volume 0.0 uL -> 0 tenths <= 0 in dispense"
+    },
+    {
+      "protocol_id": "protocol_library:0961d2-part1",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0961d2-part1/0961d2-part1.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "310ff9de43339a74ad1faf7105cfc48819c2beb062d41b4744846b1df69181ee",
+      "title": "plexWell LP384 Part 1",
+      "status": "denied",
+      "rule": "mix_sufficient_well_volume",
+      "n_wells": 49,
+      "n_steps": 192,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p10_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:09cdbe",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/09cdbe/cherrypick.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "bd0b2f67f9326dacbdb3cfdb18ee562c645f1c37cde20e73069b9eaed8972b78",
+      "title": "Consolidation from .csv",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 6,
+      "n_steps": 12,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:0a9b58",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0a9b58/0a9b58.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "586c754c3a99c960d76d7a7b21098bc7c798a5f0adef5a0c35ec05b9a7f1159e",
+      "title": "Pooling and Normalization via CSV",
+      "status": "denied",
+      "rule": "pipette_volume_range",
+      "n_wells": 3,
+      "n_steps": 6,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:0bd707",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0bd707/0bd707.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f38f238a9b4ae6788c6b9778e7a1f6f68a8bf4ded454f2999f7110e436cb6f1d",
+      "title": "Media Aliquotting",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 170,
+      "n_steps": 672,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p1000_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:0df680",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0df680/cherrypicking.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "26991c7db79bcf5f0fb333a7a7b2176d2a773ec46a67ed2a3ced4142f0bd288b",
+      "title": "Cherrypicking",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 36,
+      "n_steps": 378,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:0e525c",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0e525c/0e525c.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "19c026dc95818bd3ccb7b14b76a71c129f04ae8f9d5bf5678ba56fc4facf2593",
+      "title": "droplet digital PCR Prep",
+      "status": "denied",
+      "rule": "enough_recoverable_volume",
+      "n_wells": 24,
+      "n_steps": 81,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2",
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:0f7910",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/0f7910/0f7910.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "b3f0072acbb2fdf14d9579893457bbf1809577a590bb5801edd33af23f5588d3",
+      "title": "Plate Filling with CSV Import",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 4,
+      "n_steps": 8,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:131de0",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/131de0/cnv.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "7627942dc6680a4ee17d1cd5c80a51536b78a6823a7feb78554ac6e061a070e4",
+      "title": "Copy Number Variant (CNV) Plating",
+      "status": "denied",
+      "rule": "enough_recoverable_volume",
+      "n_wells": 62,
+      "n_steps": 244,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p10_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:154ec5",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/154ec5/154ec5.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "99b2991e74a0dba001ae3a70851e233da1169d0af2a35cd91bf9ae3b073ab669",
+      "title": "Custom Cherrypicking",
+      "status": "denied",
+      "rule": "distinct_transfer_wells",
+      "n_wells": 7,
+      "n_steps": 20,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:158d42",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/158d42/1584d2.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "c476157e29cb26bf6994b37cf104c577f08d8d9067c657972c545fa1b7ba652a",
+      "title": "RNA Normalization I & II",
+      "status": "denied",
+      "rule": "mix_sufficient_well_volume",
+      "n_wells": 143,
+      "n_steps": 383,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:1601a9",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/1601a9/1601a9.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "d21dd378df35145ef77645bec1ebc4f6251f71ab0438e5f1b84e882a92619c49",
+      "title": "Illumina Beadchip Amplification",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 25,
+      "n_steps": 95,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p10_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:17cb2d",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/17cb2d/17cb2d.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f280e5ff7e87d46d7ded051680b535e7d7eda4d1923914d8ed2418e6ca5ba41c",
+      "title": "Plate Filling Master Mix in AB 384 Well Plate",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 50,
+      "n_steps": 52,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:18050b",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/18050b/drug_screening.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "beb3f0709d818318bebff3b60a39a23573d6eeb438cf3d0b970e974af42eca1b",
+      "title": "Drug Screening",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 80,
+      "n_steps": 120,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p10_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:18e62e",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/18e62e/18e62e.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "e6852bdd7fcc298b72b6816c5ce986fbe95d102e0a7aed8dda8acbaab61e0518",
+      "title": "PCR Prep with 384-Well Plate and Temperature Module",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 96,
+      "n_steps": 240,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:1980cd",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/1980cd/1980cd.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "97ee623e1b3f7589a62162f03e48cd418c5b777ea5c1a9d834ac3398c334800a",
+      "title": "Sarah Daley Protocol (check mesoscale.com link)",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 25,
+      "n_steps": 28,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:1adec6-2",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/1adec6-2/1adec6-2.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "8b28eb1f66bb8ee81055875b42f882ba98efa2764d3274c5d06214607f02ae30",
+      "title": "Seed Cells [2/7]",
+      "status": "denied",
+      "rule": "no_well_overfill",
+      "n_wells": 14,
+      "n_steps": 18,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:1c8468",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/1c8468/1c8468.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "5aecff0cc573aa3ab196d1b9d4bc7c340fa4998e45bf48bf0a7343abeb63ffb3",
+      "title": "Cherry Picking PCR Prep with CSV File",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 3,
+      "n_steps": 4,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:1dec68",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/1dec68/1dec68.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f22f2b5e4fe5f2faf5144f2ca3a6233c88c8217beb207deb0c51d8bb79714b5d",
+      "title": "Covid Sample Prep with Custom 96 Tube Rack",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 192,
+      "n_steps": 288,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:1f8b55",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/1f8b55/1f8b55.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "40cfd2119ac44c0bf7040d89c2d3a5d1b100978b102bf896280a966dba22a974",
+      "title": "Custom Slide Transfer Protocol",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 116,
+      "n_steps": 344,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:269b21",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/269b21/pcr_prep.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "3e173c4f88d56d26f25ca9ffa810c88344338c2bee8bd19218bc148bea6d0ce3",
+      "title": "PCR Prep",
+      "status": "denied",
+      "rule": "enough_recoverable_volume",
+      "n_wells": 158,
+      "n_steps": 408,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:274d2a",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/274d2a/cherrypicking.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "aa077dc169bcc10a1f6a016f4b20ca18e706cc0433d86724f6672eece4089975",
+      "title": "Cherrypicking",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 6,
+      "n_steps": 7,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:2942dd",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/2942dd/2942dd.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f67fd8cd19671df8c077070232bf05c5231a2d166b3a04b5af915f18e3eb2a01",
+      "title": "Custom Transfer From CSV",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 186,
+      "n_steps": 920,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2",
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:2ee5be",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/2ee5be/2ee5be.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "bca057b46acdbcdb3d333bbf699cb052ce4a422af154d7e9218600cc35d9ab2e",
+      "title": "PCR/qPCR Prep",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 99,
+      "n_steps": 194,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:30174a",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/30174a/30174a.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "78a172b41af2bfadd3555eaac9bfbebd9d012761b8ff9f31dfc79dd87e503154",
+      "title": "DNA dilution using .csv file",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 0,
+      "n_steps": 2,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:3359a5",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/3359a5/cherrypicking.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "5b4c645c3d51188d8c6f4c546dfedec3552d56c4426071e8eaf924a6a78cc9c3",
+      "title": "Cherrypicking",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 6,
+      "n_steps": 9,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:33y0f3",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/33y0f3/33y0f3.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "2eb8a6691d3feaa1b5a517daaf94f58ccdf685f4e5f23bcf420f30261dc82cb0",
+      "title": "Bacterial Plating and Dilution",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 100,
+      "n_steps": 190,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:37de37",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/37de37/37de37.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "02e4e8bd90cd3fcc2fa10262b5f54a83126cc13b0621ea17ba67a4ac5de85cbf",
+      "title": "Cherrypicking DNA and Pooling with CSV input",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 6,
+      "n_steps": 20,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:384b23-plate-transfer",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/384b23-plate-transfer/384b23-plate-transfer.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "f021a8312f23b436b31c575671c837e6ae296089db674e9c2a8913d64849d772",
+      "title": "Sample Transfer to 96 Well-Plate",
+      "status": "denied",
+      "rule": "no_well_overfill",
+      "n_wells": 192,
+      "n_steps": 288,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:412ec7",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/412ec7/412ec7.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "87da16cc002fa70149ef2536a0b2a2cd0837b6644b167bd45392f3138bd1690f",
+      "title": "Serial Dilution for Eskil",
+      "status": "denied",
+      "rule": "enough_recoverable_volume",
+      "n_wells": 12,
+      "n_steps": 66,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:4175de",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/4175de/4175de.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "ba2148d63c48c57f3e2bf32b1f7350cb64fccb97c420379176fbe2074da54d07",
+      "title": "Cherrypicking PCR/qPCR prep",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 2,
+      "n_steps": 3,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:422b1e",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/422b1e/422b1e.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "ed6a9961f9ef6e9c3c9446882999036aa97c0887730e16e54286a84fa8298a38",
+      "title": "Titration Procedure",
+      "status": "denied",
+      "rule": "enough_recoverable_volume",
+      "n_wells": 8,
+      "n_steps": 26,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p1000_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:470d8c",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/470d8c/470d8c.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "a6c408e15871d6f944458eaf9ee0912e8c9af5023858736c9126ce5d8ab29094",
+      "title": "PCR/qPCR prep",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 73,
+      "n_steps": 80,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2",
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:4883fc",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/4883fc/normalization.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "42d9b819b200852c7513d394a907e969b18fcbae85be7bf81bc7c37ecd107f06",
+      "title": "Normalization",
+      "status": "denied",
+      "rule": "no_tip_cross_contamination",
+      "n_wells": 9,
+      "n_steps": 27,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p50_single"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:49b828",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/49b828/49b828.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "e8b007531638812df3f026fc382aff398f23e800c5917829d8204e6820fe99c4",
+      "title": "CovidNow SARS-CoV-2 Assay rRT-PCR Batch Set Up",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 97,
+      "n_steps": 196,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:4b76c0",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/4b76c0/4b76c0.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "78078aa404ce265ab830935c6302ef2a102016d861609146815c7b519a45715b",
+      "title": "DNA Normalization with Custom Labware",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 4,
+      "n_steps": 5,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p10_single"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:4e4c0c",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/4e4c0c/4e4c0c.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "a25f3a8b6363c5904c4bd85561f6a40c9c7d3a62fdb5f69310716ccfbab501c5",
+      "title": "KingFisher Flex Plate Set Up",
+      "status": "allowed",
+      "rule": "valid",
+      "n_wells": 64,
+      "n_steps": 202,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2",
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:5191b6",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/5191b6/5191b6.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "896c0bf01731f82835669e4add1f8019eec1d97d27dc51e8bfb8fa54e4096a04",
+      "title": "High-Throughput Synthesis",
+      "status": "denied",
+      "rule": "no_well_overfill",
+      "n_wells": 18,
+      "n_steps": 75,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:543bf9",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/543bf9/543bf9.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "512325c79147a4260aa053593146d1d70a88240b97cc119b1911b4d46cbce679",
+      "title": "Standard Curve Dilutions with CSV File",
+      "status": "denied",
+      "rule": "distinct_transfer_wells",
+      "n_wells": 20,
+      "n_steps": 156,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p50_single"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:56b4ec",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/56b4ec/56b4ec.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "34c5241033ace22dcc507a198936f4618a809342fef7b3b20e416bc69b304bbf",
+      "title": "Sample Prep with Custom Labware",
+      "status": "denied",
+      "rule": "no_tip_cross_contamination",
+      "n_wells": 85,
+      "n_steps": 267,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p1000_single",
+        "p50_single"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:60d861-2",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/60d861-2/pcr_prep.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "a25752e22f04c872a37701f004667b39ca2a79f42108e3bc4500297f53afd649",
+      "title": "CYP Induction, Part 2/3",
+      "status": "denied",
+      "rule": "distinct_transfer_wells",
+      "n_wells": 49,
+      "n_steps": 97,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p20_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:6bc986-part-2",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/6bc986-part-2/6bc986-part-2.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "fe8a5abdd2e5fb5022e0553c561559e7bff7431ec124ea3c2d1d435b0ca5c3a8",
+      "title": "Apostle Prot. K",
+      "status": "denied",
+      "rule": "pipette_volume_range",
+      "n_wells": 13,
+      "n_steps": 14,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p50_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:6c27ee",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/6c27ee/6c27ee.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "1febfa237463886bf1a277134c962b1c616e60f04811b91ed5b15d9ca63c09b0",
+      "title": "Custom CSV Transfer",
+      "status": "denied",
+      "rule": "mix_sufficient_well_volume",
+      "n_wells": 2,
+      "n_steps": 4,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:6cb818",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/6cb818/6cb818.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "3061877b7a2db39fe29f47baaec406533f92a79fe29f020acf815ff410b54a59",
+      "title": "Anti-CD154 Labeling of Peptide- and PMA-Stimulated Cells",
+      "status": "denied",
+      "rule": "distinct_transfer_wells",
+      "n_wells": 16,
+      "n_steps": 86,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2",
+        "p300_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:6d901d-2",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/6d901d-2/6d901d-2.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "9e5200051166ee0cc9dd861571f1b58d161f0cf85ac00b9d2addbb03d29bd812",
+      "title": "Cherrypicking with multi-channel pipette substituting for a single channel pipette",
+      "status": "denied",
+      "rule": "pipette_volume_range",
+      "n_wells": 4,
+      "n_steps": 9,
+      "channel_mode": "8_channel_per_nozzle",
+      "pipette_models": [
+        "p300_multi_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:74312c",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/74312c/74312c.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "64edd5c753be3cbc37338e21997c4d464aee0a31adb99d37ef0e2d2552e70db7",
+      "title": "PCB Board Plating",
+      "status": "denied",
+      "rule": "no_well_overfill",
+      "n_wells": 251,
+      "n_steps": 504,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "protocol_library:76c562",
+      "repo": "Opentrons/Protocols",
+      "commit_sha": "2f447c936b49720d68154054e94d58e1d33ccba5",
+      "rel_path": "protoBuilds/76c562/76c562.ot2.apiv2.py.json",
+      "upstream_license": "LicenseRef-Opentrons-Protocol-Library-Public (public library; no root SPDX file)",
+      "file_sha256": "5f4d52566621169ba57a648a769a085cfb69f11e25177267e3eeea103606e149",
+      "title": "Cherrypicking and Normalization",
+      "status": "denied",
+      "rule": "mix_sufficient_well_volume",
+      "n_wells": 7,
+      "n_steps": 21,
+      "channel_mode": "single",
+      "pipette_models": [
+        "p20_single_gen2"
+      ]
+    },
+    {
+      "protocol_id": "opentrons_fixture:3/simple.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/3/simple.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "27f78147354a0ea67587157fad50d345fd8c9e85baeaf78168875962eb1efd9f",
+      "title": "opentrons_fixture:3/simple.json",
+      "status": "unsupported",
+      "unsupported_reason": "residual_disposal_volume_blown_out_to_trash",
+      "unsupported_detail": "Blow-out discarded 0.5 uL of residual disposal volume outside source well"
+    },
+    {
+      "protocol_id": "opentrons_fixture:3/testAllAtomicSingleV3.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/3/testAllAtomicSingleV3.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "ad524f309084e2ddb231377db5bc39755e6eed3bb2c9c669d0d196a6f7711c5a",
+      "title": "opentrons_fixture:3/testAllAtomicSingleV3.json",
+      "status": "unsupported",
+      "unsupported_reason": "residual_disposal_volume_blown_out_to_trash",
+      "unsupported_detail": "Blow-out discarded 50.0 uL of residual disposal volume outside source well"
+    },
+    {
+      "protocol_id": "opentrons_fixture:4/pipetteMultiChannelProtocolV4.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/4/pipetteMultiChannelProtocolV4.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "b64b82eb7d85c80efbc1db7ce0fdc3755fc621b976ded4ac7e5b8cd24857ab39",
+      "title": "opentrons_fixture:4/pipetteMultiChannelProtocolV4.json",
+      "status": "unsupported",
+      "unsupported_reason": "magnetic_module_command",
+      "unsupported_detail": "Engaging Magnetic Module"
+    },
+    {
+      "protocol_id": "opentrons_fixture:4/simpleV4.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/4/simpleV4.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "c4c3f35d6bb905ee91f766f0da200a6616e46e1a55c5ba09942ce6fb9e14d7c8",
+      "title": "opentrons_fixture:4/simpleV4.json",
+      "status": "unsupported",
+      "unsupported_reason": "residual_disposal_volume_blown_out_to_trash",
+      "unsupported_detail": "Blow-out discarded 0.5 uL of residual disposal volume outside source well"
+    },
+    {
+      "protocol_id": "opentrons_fixture:4/testMagneticModuleV4.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/4/testMagneticModuleV4.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "453909902bb502832d7d6b39e33fab0df8bfa3a5aa59dda3ae8f3fb17907135e",
+      "title": "opentrons_fixture:4/testMagneticModuleV4.json",
+      "status": "unsupported",
+      "unsupported_reason": "magnetic_module_command",
+      "unsupported_detail": "Engaging Magnetic Module"
+    },
+    {
+      "protocol_id": "opentrons_fixture:4/testTemperatureModuleV4.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/4/testTemperatureModuleV4.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "94c06f4226a2232c8487dd029a716469d531cf5892e192447f0aff7e013bb210",
+      "title": "opentrons_fixture:4/testTemperatureModuleV4.json",
+      "status": "unsupported",
+      "unsupported_reason": "undispensed_liquid_discarded_with_tip",
+      "unsupported_detail": "Pipette dropped tip while still holding 0.5 uL of aspirated liquid"
+    },
+    {
+      "protocol_id": "opentrons_fixture:4/testThermocyclerModuleV4.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/4/testThermocyclerModuleV4.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "d740daab45e7761ac0690574ca89c02bcceecde30330963854e37fa9cf9a7ffd",
+      "title": "opentrons_fixture:4/testThermocyclerModuleV4.json",
+      "status": "unsupported",
+      "unsupported_reason": "thermocycler_profile_without_pipetted_wells",
+      "unsupported_detail": "Thermocycler profile executed without any tracked wells on the thermocycler plate"
+    },
+    {
+      "protocol_id": "opentrons_fixture:4/transferSettings.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/4/transferSettings.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "58397fd762b93898c5763cf948a11a22cb6e8578f609b6eb941888b2667be29a",
+      "title": "opentrons_fixture:4/transferSettings.json",
+      "status": "unsupported",
+      "unsupported_reason": "mixed_single_and_multichannel_pipettes",
+      "unsupported_detail": "Protocol mixes 1-channel and 8-channel pipettes across shared deck state"
+    },
+    {
+      "protocol_id": "opentrons_fixture:5/multipleTipracks.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/5/multipleTipracks.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "afcc9ddab462c2504513f9e2c35261b9c333dabf6ff4ca805b82788ae4f09d17",
+      "title": "opentrons_fixture:5/multipleTipracks.json",
+      "status": "unsupported",
+      "unsupported_reason": "mixed_single_and_multichannel_pipettes",
+      "unsupported_detail": "Protocol mixes 1-channel and 8-channel pipettes across shared deck state"
+    },
+    {
+      "protocol_id": "opentrons_fixture:5/multipleTipracksWithTC.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/5/multipleTipracksWithTC.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "4c04028df39966efc6d621fc272d54817ee8e373dd20cd023b1a3f82ad7a08ca",
+      "title": "opentrons_fixture:5/multipleTipracksWithTC.json",
+      "status": "unsupported",
+      "unsupported_reason": "mixed_single_and_multichannel_pipettes",
+      "unsupported_detail": "Protocol mixes 1-channel and 8-channel pipettes across shared deck state"
+    },
+    {
+      "protocol_id": "opentrons_fixture:5/simpleV5.json",
+      "repo": "Opentrons/opentrons",
+      "commit_sha": "84a9956efccae8783f1a49ec14873222956f3284",
+      "rel_path": "shared-data/protocol/fixtures/5/simpleV5.json",
+      "upstream_license": "Apache-2.0",
+      "file_sha256": "0bb8d094840737caa161fdaed5e2ea470cffdeb7191bd4a002b7cc9642505090",
+      "title": "opentrons_fixture:5/simpleV5.json",
+      "status": "unsupported",
+      "unsupported_reason": "residual_disposal_volume_blown_out_to_trash",
+      "unsupported_detail": "Blow-out discarded 0.5 uL of residual disposal volume outside source well"
+    }
+  ]
+}

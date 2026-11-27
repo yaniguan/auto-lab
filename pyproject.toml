@@ -18,6 +18,9 @@ dependencies = []
 dev = [
   "pytest>=7.4",
 ]
+real-data = [
+  "opentrons>=8.0",
+]
 
 [project.scripts]
 autolab = "autolab.cli:main"

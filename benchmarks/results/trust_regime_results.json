@@ -1,8 +1,9 @@
 {
-  "generated_at_utc": "2026-11-23T08:44:37Z",
+  "generated_at_utc": "2026-11-27T05:19:37Z",
   "lean_toolchain": "leanprover/lean4:v4.36.0",
   "lean_audit": {
     "lean_files": [
+      "AutoLabLean/AgentMemory.lean",
       "AutoLabLean/Basic.lean",
       "AutoLabLean/Examples.lean",
       "AutoLabLean/L2_L1_L0_Embodied.lean",
@@ -15,9 +16,15 @@
       "AutoLabLean.lean",
       "Main.lean"
     ],
-    "file_count": 11,
-    "theorem_count": 44,
+    "file_count": 12,
+    "theorem_count": 50,
     "theorems": [
+      "unverified_trace_never_consolidated",
+      "packIntoContext_respects_budget",
+      "packIntoContext_all_certified",
+      "stale_skill_requires_trace_and_rehearsal",
+      "epoch_shifted_skill_requires_rehearsal",
+      "novel_task_never_executes_blindly",
       "firstViolation_none_iff",
       "checkLabEars_strips_speech",
       "stepbot_never_underflows_distribute_source",
@@ -63,78 +70,114 @@
       "selectBestCertified_always_valid",
       "selectBestCertified_dominates_all_valid"
     ],
-    "guard_count": 21,
+    "guard_count": 27,
     "zero_sorry_verified": true,
     "violations": []
   },
-  "total_runtime_sec": 35.8,
+  "total_runtime_sec": 93.26,
   "experiments": {
     "exp1_molecular_discovery": {
-      "task": "L6 + L5 Autonomous Molecular Discovery Campaign (ESOL + Retrosynthesis)",
+      "task": "L6 + L5 Molecular Discovery Campaign (Independent Held-Out Delaney ESOL `logS`)",
       "repos": [
         "lab-ask-why",
         "lab-decide",
         "buy-or-make",
         "lab-automation-atlas"
       ],
-      "data_source": "real_esol (1128 compounds)",
+      "data_source": "real_esol (1128 compounds, sha256=8c06a76f0c64, via sibling:lab-decide/data/delaney-processed.csv)",
+      "input_type": "real_esol_solubility_plus_simulated_procurement_flags",
+      "evaluation_note": "prediction_mae, empirical_coverage_pct, and measured_soluble_hit_pct (measured logS >= -2.8) are evaluated strictly against held-out experimental Delaney ESOL solubility with identical raw GBDT ranking across all arms (no artificial OOD optimism bonus). Procurement attributes are simulated random draws, and gate_violation_pct_by_construction (0.0% for lean_trust) is a gate invariant by construction.",
+      "n_total_compounds": 1128,
+      "mean_candidate_pool_per_seed": 290.8,
+      "selected_per_seed": 25,
       "seeds": 5,
-      "lean_kernel_calls": 4680,
+      "lean_kernel_calls": 2908,
+      "real_heldout_pool_diagnostic": {
+        "in_region_mae": 0.558,
+        "abstained_ood_mae": 1.368,
+        "in_region_coverage_90_pct": 92.7,
+        "abstained_ood_coverage_90_pct": 59.4
+      },
       "regimes": {
         "ungated": {
-          "boundary_violation_pct": 72.0,
-          "prediction_mae": 0.978,
-          "empirical_coverage_pct": 76.0,
-          "verified_hit_yield_pct": 28.0
+          "prediction_mae": 1.462,
+          "empirical_coverage_pct": 50.4,
+          "measured_soluble_hit_pct": 50.4,
+          "ood_selected_pct_by_construction": 87.2,
+          "gate_violation_pct_by_construction": 89.6,
+          "boundary_violation_pct": 89.6,
+          "verified_hit_yield_pct": 50.4
         },
         "heuristic": {
-          "boundary_violation_pct": 59.2,
-          "prediction_mae": 0.957,
-          "empirical_coverage_pct": 78.4,
-          "verified_hit_yield_pct": 40.8
+          "prediction_mae": 1.412,
+          "empirical_coverage_pct": 54.4,
+          "measured_soluble_hit_pct": 46.4,
+          "ood_selected_pct_by_construction": 80.8,
+          "gate_violation_pct_by_construction": 84.0,
+          "boundary_violation_pct": 84.0,
+          "verified_hit_yield_pct": 46.4
         },
         "lean_trust": {
+          "prediction_mae": 0.604,
+          "empirical_coverage_pct": 91.2,
+          "measured_soluble_hit_pct": 32.2,
+          "ood_selected_pct_by_construction": 0.0,
+          "gate_violation_pct_by_construction": 0.0,
           "boundary_violation_pct": 0.0,
-          "prediction_mae": 0.393,
-          "empirical_coverage_pct": 97.6,
-          "verified_hit_yield_pct": 100.0
+          "verified_hit_yield_pct": 32.2
         }
       }
     },
     "exp2_protocol_synthesis": {
-      "task": "L4 + L1 Wet-Lab Protocol Synthesis & Counterexample-Guided Repair (200 Tasks x 8 Candidates)",
+      "task": "L4 + L1 Wet-Lab Protocol Synthesis & Repair (Simulated 3-Template Generator + Independent `stepbot` Simulator)",
       "repos": [
         "lab-rehearsal",
         "stepbot",
         "twinstep",
         "labfill"
       ],
+      "input_type": "simulated_protocol_candidates_plus_independent_stepbot_simulator",
+      "evaluation_note": "Candidates come from a deterministic 3-template x 7-fault generator (24% clean base rate). independent_sim_fault_pct is measured by compiling each chosen protocol to Opentrons Python API v2.16 and running stepbot's independent simulator (catches double pick_up_tip and >360 uL well overfill). lean_rule_violation_pct_by_construction (aliased as hardware_fault_pct) additionally counts assay-level rules (unsealed >=80 C, concentration back-entry, 5 uL dead-volume cone, unthawed stock) and is 0.0% by construction for Lean-gated arms. For real public Opentrons protocols, see opentrons_library_rehearsal.json.",
+      "n_tasks": 200,
+      "candidates_per_task": 8,
       "candidates_verified_in_lean": 1626,
-      "lean_throughput_protocols_per_sec": 29952.1,
+      "unique_protocols_checked_in_stepbot_simulator": 21,
+      "lean_throughput_protocols_per_sec": 14798.9,
       "regimes": {
         "ungated_top1": {
           "valid_completion_pct": 22.0,
+          "independent_sim_fault_pct": 18.5,
+          "lean_rule_violation_pct_by_construction": 78.0,
           "hardware_fault_pct": 78.0
         },
         "coarse_bitmask_heuristic": {
-          "valid_completion_pct": 23.5,
-          "hardware_fault_pct": 76.5
+          "valid_completion_pct": 28.0,
+          "independent_sim_fault_pct": 0.0,
+          "lean_rule_violation_pct_by_construction": 72.0,
+          "hardware_fault_pct": 72.0
         },
         "lean_best_of_8": {
           "valid_completion_pct": 87.0,
+          "independent_sim_fault_pct": 0.0,
+          "lean_rule_violation_pct_by_construction": 0.0,
           "hardware_fault_pct": 0.0
         },
         "lean_best_of_8_plus_guided_repair": {
           "valid_completion_pct": 97.5,
+          "independent_sim_fault_pct": 0.0,
+          "lean_rule_violation_pct_by_construction": 0.0,
           "hardware_fault_pct": 0.0
         }
       }
     },
     "exp3_fleet_scheduling": {
-      "task": "L5 Contended 5-Pool Lab Fleet Scheduling (30 Real Benchmark Suites)",
+      "task": "L5 Contended 5-Pool Lab Fleet Scheduling (30 `labshift` Synthetic Benchmark Instances)",
       "repos": [
         "labshift"
       ],
+      "data_source": "sibling:labshift/benchmarks (30 synthetic scheduling JSON instances)",
+      "input_type": "synthetic_benchmark_suite",
+      "evaluation_note": "Compares labshift's greedy, greedy_repair, and OR-Tools CP-SAT (`cpsat`, single-worker deterministic) solvers directly; `cpsat` does not invoke the Lean binary at runtime.",
       "instances": 30,
       "regimes": {
         "ungated_greedy": {
@@ -149,19 +192,22 @@
           "window_violations": 0,
           "mean_makespan_min": 129.2
         },
-        "lean_gated_cpsat": {
+        "cpsat": {
           "feasible_instances": "30/30",
           "feasible_pct": 100.0,
           "window_violations": 0,
-          "mean_makespan_min": 116.9
+          "mean_makespan_min": 116.6
         }
       }
     },
     "exp4_sql_verification": {
-      "task": "L4 Lab-Database SQL Candidate Selection & Adversarial Gate",
+      "task": "L4 Lab-Database SQL Candidate Selection (Adversarial Wrong-First Stress Suite)",
       "repos": [
         "lab-verify"
       ],
+      "data_source": "sibling:lab-verify/demo/candidates*.json (16 pools, 30 hand-authored SQL queries)",
+      "input_type": "hand_authored_adversarial_suite",
+      "evaluation_note": "Candidates are sorted wrong-first as a worst-case stress test (not live LLM samples), and Layer 4 compares execution against the reference query plus perturbation counterexample DBs across 18 wrong candidates.",
       "question_pools": 16,
       "total_candidates_checked_in_lean": 30,
       "wrong_candidates_total": 18,
@@ -181,12 +227,18 @@
       }
     },
     "exp5_rlvr_posttraining": {
-      "task": "L3 RLVR Post-Training Policy Optimization (GRPO, 5 Seeds x 160 Steps)",
+      "task": "6-arm bandit policy simulation (not LLM weight training; GPU RLVR run PENDING)",
       "repos": [
         "labbench-posttrain",
         "twinstep",
         "labfill"
       ],
+      "input_type": "simulation",
+      "simulation_only": true,
+      "gpu_llm_rlvr_status": "PENDING (requires GPU LLM post-training run; this benchmark updates 6 scalar softmax logits)",
+      "n_arms": 6,
+      "seeds": 5,
+      "steps_per_seed": 160,
       "lean_rewards_permille": [
         1000.0,
         950.0,

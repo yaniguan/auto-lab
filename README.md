@@ -117,6 +117,9 @@ Every repository documents **Object**, **Data**, **Model**, **Training**, **Hist
 auto-lab/
 ├── autolab/                      # Zero-dependency hub package & `autolab` CLI
 │   ├── catalog.py                # Typed 7-layer registry & JSON catalog loaders
+│   ├── datasets.py               # Fail-closed SHA-256-verified Delaney ESOL loader (no synthetic fallback)
+│   ├── importers/
+│   │   └── opentrons_runlog.py   # Fail-closed `opentrons.simulate` CPU runlog -> `REHEARSAL` importer
 │   ├── loop_demo.py              # Deterministic L2 -> L6 -> L5 -> L4 -> L1 -> L0 -> L3 trace simulator
 │   ├── trust_regime.py           # Runtime bridge to compiled `autolab-lean --batch-tsv`
 │   ├── memory.py                 # 4-Layer 'Undergrad' Agent Memory + Bottom Reasoning Traces + Dreaming
@@ -129,11 +132,11 @@ auto-lab/
 │   ├── BRAIN_HIERARCHY.md        # Architectural specification of Layers L6 -> L0
 │   ├── POSTTRAIN_FLYWHEEL.md     # Execution-to-RLVR data & post-training flywheel
 │   ├── REPO_MATRIX.md            # Side-by-side 15-repository dossier matrix
-│   ├── TRUST_REGIME_STUDY.md     # Formal Lean 4 Trust Regime & 5-task empirical study
+│   ├── TRUST_REGIME_STUDY.md     # Formal Lean 4 Trust Regime, real Opentrons audit & real-vs-simulated table
 │   ├── NOVEL_DIRECTIONS_FROM_COMMUNITY.md # 4 next-gen directions synthesized from 2025-2026 discourse
 │   ├── AGENT_MEMORY_ARCHITECTURE.md # 4-Layer Undergrad Memory, Bottom Reasoning Traces & Dreaming
 │   └── ISSUES_AUDIT_INDEX.md     # Master index of all filed GitHub Issues across the audited repos
-├── lean/                         # AutoLabLean Hub Kernel: Lean 4.36.0 (50 theorems, 0 sorry; synced to 15 sub-repos)
+├── lean/                         # AutoLabLean Hub Kernel: Lean 4.36.0 (50 theorems, 27 #guard checks, 0 sorry)
 │   ├── AutoLabLean/              # L6 -> L0 specs, bounded autonomy, frontiers & agent memory theorems
 │   ├── Main.lean                 # Native `autolab-lean` showcase & `--batch-tsv` runtime verifier
 │   └── lakefile.toml             # Zero-dependency Lake build configuration
@@ -143,11 +146,12 @@ auto-lab/
 │   ├── generate_figures.py       # Reproducible matplotlib vector PDF generator
 │   └── main.pdf                  # Compiled 9-page preprint PDF (+ lab-attrib monograph in site/assets/)
 ├── benchmarks/
-│   ├── trust_regime_study.py     # Reproducible 5-task empirical study via compiled `autolab-lean`
-│   ├── novel_directions_study.py # Empirical evaluation of the 4 next-gen frontier directions
+│   ├── real_protocol_rehearsal.py # Real public Opentrons Protocol Library rehearsal & 23-deny audit
+│   ├── trust_regime_study.py     # Reproducible 5-task study via compiled `autolab-lean` + `stepbot`/`labshift`
+│   ├── novel_directions_study.py # Evaluation of the 4 next-gen frontier directions
 │   ├── agent_memory_study.py     # Rusty-SOP, novel-assay transfer & 60-session Dreaming memory study
 │   ├── twenty_community_ideas_study.py # Unified harness running all 20 sub-repo `community_extensions/`
-│   └── results/                  # Measured JSON metrics
+│   └── results/                  # Committed JSON metrics verified for zero drift against README in CI
 ├── scripts/
 │   ├── sync_all.py               # Clone, fetch, or check git cleanliness across all 15 repos
 │   └── build_site_data.py        # Compiles catalog/ and audit data into docs/ and site/assets/
@@ -160,18 +164,45 @@ auto-lab/
 │   ├── shared.js                 # Shared theme persistence, data loader & SVG chart primitives
 │   └── styles.css                # Clean daylight-first editorial stylesheet
 └── tests/
-    └── test_autolab.py           # Pytest suite verifying Lean proofs, cross-repo lean-mcp/v1 parity, CLI, and site assets
+    ├── test_autolab.py           # Pytest suite verifying Lean proofs, cross-repo lean-mcp/v1 parity, CLI, and site
+    ├── test_opentrons_runlog.py  # Offline mock-runlog + live CPU `opentrons.simulate` importer tests
+    └── test_benchmark_honesty.py # Enforces fail-closed loaders and zero drift between README & results/*.json
 ```
 
 ## Formal Trust Regime (`AutoLabLean`), Undergraduate Memory & Preprints
 
-Every hard physical, statistical, stoichiometric, temporal, security, privacy, licensing, post-run attribution, and memory-hygiene guardrail across the 15 repositories is formalized centrally in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **50 machine-checked theorems**, **27 `#guard` witnesses**, **0 `sorry`**), mirrored as standalone Lake packages (`<repo>/lean/`) across all 15 sub-repositories (**165+ sub-repo theorems**, including 25 in [`lab-attrib`](https://github.com/yaniguan/lab-attrib)), and documented in two standalone LaTeX monographs ([`paper/main.pdf`](paper/main.pdf) and [`lab-attrib/paper/main.pdf`](https://yaniguan.github.io/auto-lab/assets/lab_attrib_preprint.pdf)):
+Every hard physical, statistical, stoichiometric, temporal, security, privacy, licensing, post-run attribution, and memory-hygiene guardrail across the 15 repositories is formalized centrally in [`lean/`](lean/) (`leanprover/lean4:v4.36.0`, **50 machine-checked theorems**, **27 `#guard` witnesses**, **0 `sorry`**), mirrored as standalone Lake packages (`<repo>/lean/`) across all 15 sub-repositories (**165+ sub-repo theorems**, including 25 in [`lab-attrib`](https://github.com/yaniguan/lab-attrib)), and documented in [`docs/TRUST_REGIME_STUDY.md`](docs/TRUST_REGIME_STUDY.md):
 
-- **Bounded Molecular Discovery (`1,128` real Delaney ESOL compounds)**: Boundary violations drop from `72.0%` to **`0.0%`**, selected-run MAE drops **2.49x** (`0.978 -> 0.393` log mol/L), empirical 90% coverage reaches **`97.6%`**, and verified soluble hit yield climbs from `28.0%` to **`100.0%`**.
-- **Wet-Lab Protocol Synthesis & Counterexample Repair (`200 x 8` candidates @ `30,048` proto/s)**: Catastrophic hardware faults drop from `78.0%` to **`0.0%`**, while valid task completion rises from `22.0%` (ungated) / `23.5%` (coarse heuristic) to **`87.0%`** (Lean Best-of-8) and **`97.5%`** (with Lean counterexample-guided 1-step repair).
-- **Contended Fleet Scheduling (`30` `labshift` suites)**: Suite feasibility improves from `24/30` (`13` incubation window violations) to **`30/30` (`0` violations)** with **`10.2%` shorter mean makespan** (`129.8 -> 116.5 min`).
-- **Lab SQL Verification (`lab-verify`) & Anti-Hack RLVR (`labbench-posttrain`)**: Wrong-SQL false accepts drop from `55.6%` (`L1–L3` syntax/schema only) to **`0.0%`**, and 5-seed `GRPO` true verified accuracy climbs from `0.4%` (`99.6%` exploit collapse under soft rewards) to **`98.4%`** under multiplicative Lean reward gating.
-- **Next-Gen Frontier Directions (`NovelDirections.lean`)**: (1) *Diagnostic Epistemic Attribution* cuts post-execution false discoveries **`8.3% -> 0.0%`** and lifts verified hits **`+29.5%`** (`52.2 -> 67.6`); (2) *Stepped Frontier Calibration (`Chem-RRT`)* unlocks **`30.8–54.4`** novel multi-ring scaffolds (vs `1.2` static) with **`0.0`** uncalibrated leaps; (3) *Proof-Carrying `Lean-MCP` Envelopes* deliver **`5.36x`** higher 72h protocol throughput than per-run human approval (`472` vs `88`) with **`0`** unsafe/replay runs; and (4) *Adversarial Saboteur-Verifier Co-Evolution* drives protocol evasion from **`85.7% -> 0.0%`**.
+- **Real Held-Out Molecular Discovery (`1,128` SHA-256-verified Delaney ESOL compounds, `sibling:lab-decide/data/delaney-processed.csv`)**: With identical raw GBDT ranking across all arms (no OOD optimism bonus), held-out drug-like scaffold MAE drops **`1.462 -> 0.604`** log(mol/L) and empirical 90% split-conformal coverage rises **`50.4% -> 91.2%`**, while raw soluble fraction (`measured logS >= -2.8`) trades off `50.4% -> 32.2%` due to abstaining on heavy extrapolations (`0.0%` simulated procurement + kNN gate violations is **by construction**).
+- **Real Public Opentrons Protocol Library Rehearsal (`85` pinned `.py`/`.json` protocols via `opentrons.simulate`)**: **`58/85` (`68.2%`)** real protocols import into `REHEARSAL` (`27/85` fail closed via `UnsupportedProtocolStepError`, `0` silent drops, `0` Lean-Python mismatches), yielding **`35` allowed** and **`23` denied**; manual code audit of all `23` denies finds **`12` (`52.2%`) true physical/calibration hazards** (e.g., `250 uL` in a `200 uL` well, `200 uL` in a `100 uL` PCR well, `1.0 uL` on a `P300` pipette) and a **`47.8%` (`11/23`) abstraction false-alarm rate** (undeclared pre-2.14 `load_liquid`, same-well pre-wet/`disposal_volume` return, `.top()` air-dispense).
+- **Simulated Wet-Lab Protocol Synthesis (`200 x 8` candidates + independent `stepbot` simulator)**: On the 3-template x 7-fault synthetic generator, independent `stepbot` Opentrons API v2.16 simulator faults drop **`18.5% -> 0.0%`**, while Lean-certified completion rises from `22.0%` (top-1) / `28.0%` (bitmask heuristic) to **`87.0%`** (Best-of-8) and **`97.5%`** (with 1-step repair; `0.0%` Lean assay-rule violations is **by construction**).
+- **Fleet Scheduling (`30` `labshift` synthetic instances)**: Comparing `labshift`'s `ungated_greedy`, `greedy_with_repair`, and OR-Tools `cpsat` solvers (fail-closed if `labshift` is missing), feasibility improves from `24/30` (`13` window violations) to **`30/30` (`0` violations)** with mean makespan **`129.8 -> 116.6 min`** (`-10.2%`; `cpsat` is OR-Tools CP-SAT, not Lean runtime).
+- **Adversarial SQL Suite (`lab-verify`) & 6-Arm Bandit Policy Simulation (`GPU RLVR PENDING`)**: On `30` hand-authored SQL queries sorted wrong-first (`18` wrong), false accepts drop **`55.6% -> 0.0%`** (`L1-L3` vs `L1-L4`). In a **6-arm bandit policy simulation (not LLM weight training; GPU RLVR run `PENDING`)**, verified arm probability mass rises **`0.4% -> 98.4%`** under multiplicative Lean reward gating.
+- **Frontier Directions (`NovelDirections.lean`)**: (1) *Diagnostic Attribution* (`real_esol` + simulated separable fault telemetry) cuts FDR **`8.3% -> 0.0%`** (`52.2 -> 67.6` hits); (2) *Stepped `Chem-RRT` Frontier* (`real_esol`) unlocks **`30.8-54.4`** multi-ring scaffolds (vs `1.2` static; `0.0` uncalibrated leaps **by construction**); (3) *`Lean-MCP` 72h Clock Simulation* completes **`472` vs `88`** runs (`0` replays **by construction**); and (4) *Fixed Fault-Family Mutation Check* (**21 distinct cases**, 3 templates x 7 fault classes cycled to 140 draws; not an adaptive adversary) reduces fault evasion **`85.7% -> 57.1% -> 0.0%`** (**by construction**).
+
+### What Is Real vs. Simulated
+
+Every row below is verified automatically in `pytest` ([`tests/test_benchmark_honesty.py`](tests/test_benchmark_honesty.py)) against `benchmarks/results/*.json`:
+
+| Headline Metric | Reported Value | Script | JSON Key | n | Input / Ground-Truth Basis |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **ESOL Held-Out Lead Prediction MAE** | `1.462 -> 0.604` log(mol/L) | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.ungated.prediction_mae -> trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.lean_trust.prediction_mae` | `1,128` real ESOL (`25`/seed x `5` seeds) | `real_data` (`delaney-processed.csv`, SHA-256 verified; raw GBDT ranking) |
+| **ESOL Empirical 90% Conformal Coverage** | `50.4% -> 91.2%` | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.ungated.empirical_coverage_pct -> trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.lean_trust.empirical_coverage_pct` | `1,128` real ESOL (`25`/seed x `5` seeds) | `real_data` (independent measured `logS`) |
+| **ESOL Measured Soluble Hit Rate (`logS >= -2.8`)** | `50.4% -> 32.2%` | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.ungated.measured_soluble_hit_pct -> trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.lean_trust.measured_soluble_hit_pct` | `1,128` real ESOL (`25`/seed x `5` seeds) | `real_data` (independent measured `logS`, decoupled from gate verdict) |
+| **ESOL Full-Pool In-Region vs OOD MAE** | `0.558 -> 1.368` log(mol/L) | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp1_molecular_discovery.real_heldout_pool_diagnostic.in_region_mae -> trust_regime_results.json:experiments.exp1_molecular_discovery.real_heldout_pool_diagnostic.abstained_ood_mae` | `468` held-out/seed x `5` seeds | `real_data` (zero synthetic flags) |
+| **Exp 1 Procurement + kNN Gate Rejections** | `89.6% -> 0.0%` | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.ungated.gate_violation_pct_by_construction -> trust_regime_results.json:experiments.exp1_molecular_discovery.regimes.lean_trust.gate_violation_pct_by_construction` | `25`/seed x `5` seeds | `simulation` + `by_construction` (random procurement flags; gate invariant) |
+| **Real Opentrons Library Import Coverage** | `58 / 85` (`68.2%`) | `benchmarks/real_protocol_rehearsal.py` | `opentrons_library_rehearsal.json:summary.n_imported -> opentrons_library_rehearsal.json:summary.n_total` | `85` public `.py`/`.json` protocols | `real_data` + `independent_simulator` (`opentrons.simulate` CPU; `27` fail-closed) |
+| **Real Opentrons Allowed vs Denied Protocols** | `35` allowed / `23` denied | `benchmarks/real_protocol_rehearsal.py` | `opentrons_library_rehearsal.json:summary.n_allowed -> opentrons_library_rehearsal.json:summary.n_denied` | `58` imported real protocols | `real_data` (`autolab-lean --batch-tsv`; `0` mirror mismatches) |
+| **Real Opentrons Deny False-Alarm Rate** | `47.8%` (`11` false alarms / `12` true hazards) | `benchmarks/real_protocol_rehearsal.py` | `opentrons_library_rehearsal.json:summary.audited_false_alarm_rate_pct -> opentrons_library_rehearsal.json:summary.audited_true_hazard_count` | `23 / 23` denied real protocols | `real_data` (manual code-grounded audit of all 23 denies) |
+| **Exp 2 Independent `stepbot` Simulator Faults** | `18.5% -> 0.0%` | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp2_protocol_synthesis.regimes.ungated_top1.independent_sim_fault_pct -> trust_regime_results.json:experiments.exp2_protocol_synthesis.regimes.lean_best_of_8_plus_guided_repair.independent_sim_fault_pct` | `200` tasks x `8` cands | `simulation` + `independent_simulator` (`stepbot` Opentrons API v2.16 check) |
+| **Exp 2 Simulated Valid Completion (Bo8 + Repair)** | `22.0% -> 97.5%` | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp2_protocol_synthesis.regimes.ungated_top1.valid_completion_pct -> trust_regime_results.json:experiments.exp2_protocol_synthesis.regimes.lean_best_of_8_plus_guided_repair.valid_completion_pct` | `200` tasks x `8` cands | `simulation` + `by_construction` (`0.0%` Lean rule violations by construction) |
+| **Exp 3 Fleet Scheduling (`greedy` vs `cpsat`)** | `129.8 -> 116.6 min` (`24/30 -> 30/30`) | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp3_fleet_scheduling.regimes.ungated_greedy.mean_makespan_min -> trust_regime_results.json:experiments.exp3_fleet_scheduling.regimes.cpsat.mean_makespan_min` | `30` `labshift` instances | `simulation` (synthetic benchmark suite; OR-Tools `cpsat` solver) |
+| **Exp 4 Lab SQL Wrong-Query False Accepts** | `55.6% -> 0.0%` (`31.2% -> 75.0%` acc) | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp4_sql_verification.regimes.syntax_readonly_schema_only_L1_L3.wrong_sql_false_accept_pct -> trust_regime_results.json:experiments.exp4_sql_verification.regimes.lean_4layer_default_deny_L1_L4.wrong_sql_false_accept_pct` | `16` pools / `30` queries (`18` wrong) | `simulation` (hand-authored wrong-first SQL stress suite) |
+| **Exp 5 6-Arm Bandit Policy Simulation** | `0.4% -> 98.4%` verified arm mass | `benchmarks/trust_regime_study.py` | `trust_regime_results.json:experiments.exp5_rlvr_posttraining.regimes.soft_additive_reward_grpo.true_verified_accuracy_pct -> trust_regime_results.json:experiments.exp5_rlvr_posttraining.regimes.lean_trust_gated_grpo.true_verified_accuracy_pct` | `6` arms x `5` seeds x `160` steps | `simulation` / `PENDING` (6-logit softmax toy; neural GPU RLVR `PENDING`) |
+| **Direction 1 Post-Run Attribution (`ATTRIB`)** | `8.3% -> 0.0%` FDR (`52.2 -> 67.6` hits) | `benchmarks/novel_directions_study.py` | `novel_directions_results.json:directions.d1_epistemic_attribution.comparison.naive_sdl.false_discovery_rate_pct -> novel_directions_results.json:directions.d1_epistemic_attribution.comparison.lean_attribution_sdl.false_discovery_rate_pct` | `1,128` ESOL (`96` assays x `5` seeds) | `real_data` + `simulation` (real ESOL + simulated separable fault telemetry) |
+| **Direction 2 Stepped `Chem-RRT` Frontier** | `1.2 -> 30.8` (`54.4` undirected) scaffolds | `benchmarks/novel_directions_study.py` | `novel_directions_results.json:directions.d2_stepped_frontier.comparison.static_trust_wall_v1.certified_multiring_scaffolds_unlocked -> novel_directions_results.json:directions.d2_stepped_frontier.comparison.goal_directed_chem_rrt_shell.certified_multiring_scaffolds_unlocked` | `1,128` ESOL (`8` rounds x `5` seeds) | `real_data` + `by_construction` (real ESOL; `0.0` uncalibrated leaps by `FRONTIER`) |
+| **Direction 3 `Lean-MCP` 72h Clock Simulation** | `88 -> 472` runs (`28 -> 0` replays) | `benchmarks/novel_directions_study.py` | `novel_directions_results.json:directions.d3_lean_mcp.comparison.per_run_human_approval_mcp.protocols_completed_in_72h -> novel_directions_results.json:directions.d3_lean_mcp.comparison.proof_carrying_lean_mcp.protocols_completed_in_72h` | `500` synthetic MCP calls | `simulation` + `by_construction` (72h discrete-event clock simulation) |
+| **Direction 4 Fixed Fault-Family Mutation Check** | `85.7% -> 57.1% -> 0.0%` evasion | `benchmarks/novel_directions_study.py` | `novel_directions_results.json:directions.d4_adversarial_coevolution.generations.gen0_volume_bounds_only.saboteur_evasion_pct -> novel_directions_results.json:directions.d4_adversarial_coevolution.generations.gen2_autolablean_formal.saboteur_evasion_pct` | `21` distinct cases (`140` draws) | `simulation` + `by_construction` (fixed 3 x 7 fault grid; not adaptive) |
 
 ## Scientific Honesty & Status
 

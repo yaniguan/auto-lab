@@ -257,20 +257,39 @@ def _cmd_trust(args: argparse.Namespace) -> int:
     if study:
         e1 = study["experiments"]["exp1_molecular_discovery"]["regimes"]
         e2 = study["experiments"]["exp2_protocol_synthesis"]["regimes"]
+        e3 = study["experiments"]["exp3_fleet_scheduling"]["regimes"]
         e5 = study["experiments"]["exp5_rlvr_posttraining"]["regimes"]
-        print("\nMeasured Empirical Lift:")
+        cpsat = e3.get("cpsat") or e3.get("lean_gated_cpsat", {})
+        print("\nBenchmark Summary (see README 'What Is Real vs. Simulated' table):")
         print(
-            f"  1. Molecular Discovery (ESOL) : violations {e1['ungated']['boundary_violation_pct']}% -> {e1['lean_trust']['boundary_violation_pct']}%, "
-            f"MAE {e1['ungated']['prediction_mae']} -> {e1['lean_trust']['prediction_mae']}, "
-            f"hit yield {e1['ungated']['verified_hit_yield_pct']}% -> {e1['lean_trust']['verified_hit_yield_pct']}%"
+            f"  1. Real ESOL Held-Out logS    : MAE {e1['ungated']['prediction_mae']} -> {e1['lean_trust']['prediction_mae']}, "
+            f"empirical 90% cov {e1['ungated']['empirical_coverage_pct']}% -> {e1['lean_trust']['empirical_coverage_pct']}% "
+            f"(gate violations {e1['lean_trust']['boundary_violation_pct']}% by construction)"
         )
         print(
-            f"  2. Protocol Synthesis (N=8)   : faults {e2['ungated_top1']['hardware_fault_pct']}% -> {e2['lean_best_of_8_plus_guided_repair']['hardware_fault_pct']}%, "
-            f"valid completion {e2['ungated_top1']['valid_completion_pct']}% -> {e2['lean_best_of_8_plus_guided_repair']['valid_completion_pct']}%"
+            f"  2. Protocol Synthesis (sim)   : independent stepbot sim faults "
+            f"{e2['ungated_top1'].get('independent_sim_fault_pct', 'n/a')}% -> "
+            f"{e2['lean_best_of_8_plus_guided_repair'].get('independent_sim_fault_pct', 0.0)}%, "
+            f"Lean-certified completion {e2['ungated_top1']['valid_completion_pct']}% -> "
+            f"{e2['lean_best_of_8_plus_guided_repair']['valid_completion_pct']}%"
         )
         print(
-            f"  5. RLVR GRPO Post-Training    : true verified acc {e5['soft_additive_reward_grpo']['true_verified_accuracy_pct']}% -> {e5['lean_trust_gated_grpo']['true_verified_accuracy_pct']}% "
-            f"(exploits {e5['soft_additive_reward_grpo']['reward_hack_exploit_pct']}% -> {e5['lean_trust_gated_grpo']['reward_hack_exploit_pct']}%)"
+            f"  3. Fleet Scheduling (labshift): greedy {e3['ungated_greedy']['feasible_instances']} "
+            f"({e3['ungated_greedy']['mean_makespan_min']}m) -> cpsat {cpsat.get('feasible_instances')} "
+            f"({cpsat.get('mean_makespan_min')}m)"
+        )
+        print(
+            f"  5. 6-Arm Bandit Sim (no LLM)  : verified arm mass {e5['soft_additive_reward_grpo']['true_verified_accuracy_pct']}% -> "
+            f"{e5['lean_trust_gated_grpo']['true_verified_accuracy_pct']}% (GPU LLM RLVR: PENDING)"
+        )
+    ot_file = REPO_ROOT / "benchmarks" / "results" / "opentrons_library_rehearsal.json"
+    if ot_file.exists():
+        ot = json.loads(ot_file.read_text(encoding="utf-8"))
+        s = ot.get("summary", {})
+        print(
+            f"  6. Real Opentrons Library     : {s.get('n_imported')}/{s.get('n_total')} imported, "
+            f"{s.get('n_allowed')} allowed, {s.get('n_denied')} denied "
+            f"(false-alarm rate on audited denies: {s.get('audited_false_alarm_rate_pct')}%)"
         )
     return 0 if audit["zero_sorry_verified"] else 1
 
