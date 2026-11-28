@@ -1,9 +1,9 @@
 {
-  "total_issues": 461,
+  "total_issues": 481,
   "round1_issues": 322,
   "round2_issues": 95,
-  "round3_issues": 44,
-  "closed_issues": 458,
+  "round3_issues": 64,
+  "closed_issues": 478,
   "open_issues": 3,
   "open_pending_gpu_issues": [
     "labfill#35",
@@ -12,11 +12,11 @@
   ],
   "repos": {
     "lab-ask-why": {
-      "count": 28,
+      "count": 32,
       "round1_count": 22,
       "round2_count": 6,
-      "round3_count": 0,
-      "closed_count": 28,
+      "round3_count": 4,
+      "closed_count": 32,
       "open_count": 0,
       "items": [
         {
@@ -410,6 +410,66 @@
             "src/lab_ask_why/schema.py#L51-L81",
             "autolab_wire.py#L50-L75"
           ]
+        },
+        {
+          "number": 33,
+          "url": "https://github.com/yaniguan/lab-ask-why/issues/33",
+          "title": "Wire node returns confident SUPPORT for unrelated claims and evidence",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py",
+            "src/lab_ask_why/resources/scifact_wire_calibrator.json",
+            "tests/test_autolab_wire.py"
+          ],
+          "index": 29
+        },
+        {
+          "number": 34,
+          "url": "https://github.com/yaniguan/lab-ask-why/issues/34",
+          "title": "Conflict detection has no negative control; ConflictBank labels are wrong",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "src/lab_ask_why/frontier_verifier.py",
+            "src/lab_ask_why/datasets.py",
+            "scripts/benchmark_open_datasets.py"
+          ],
+          "index": 30
+        },
+        {
+          "number": 35,
+          "url": "https://github.com/yaniguan/lab-ask-why/issues/35",
+          "title": "Add majority and chance baselines and per-class coverage to benchmarks",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "scripts/benchmark_open_datasets.py",
+            "results/open_benchmarks_2026.json",
+            "README.md"
+          ],
+          "index": 31
+        },
+        {
+          "number": 36,
+          "url": "https://github.com/yaniguan/lab-ask-why/issues/36",
+          "title": "numpy-only fit runs out of memory; CI never re-checks real SciFact numbers",
+          "round": 3,
+          "state": "closed",
+          "category": "performance",
+          "severity": "high",
+          "files": [
+            "src/lab_ask_why/frontier_verifier.py",
+            "src/lab_ask_why/neural_verifier.py",
+            ".github/workflows/demo.yml"
+          ],
+          "index": 32
         }
       ]
     },
@@ -872,11 +932,11 @@
       ]
     },
     "buy-or-make": {
-      "count": 28,
+      "count": 32,
       "round1_count": 22,
       "round2_count": 6,
-      "round3_count": 0,
-      "closed_count": 28,
+      "round3_count": 4,
+      "closed_count": 32,
       "open_count": 0,
       "items": [
         {
@@ -1281,6 +1341,66 @@
             "buyormake/stock.py#L120-L129",
             "buyormake/routes.py#L245-L263"
           ]
+        },
+        {
+          "number": 35,
+          "url": "https://github.com/yaniguan/buy-or-make/issues/35",
+          "title": "Benchmark indexes each target's own reference route, inflating solve rates",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "scripts/benchmark_retrosynthesis.py",
+            "buyormake/retro_star.py",
+            "results/retrosynthesis_benchmark.json"
+          ],
+          "index": 29
+        },
+        {
+          "number": 36,
+          "url": "https://github.com/yaniguan/buy-or-make/issues/36",
+          "title": "Offers marked in_stock=false still count as buyable and schedulable now",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "buyormake/cost.py",
+            "buyormake/rank.py",
+            "buyormake/handoff.py"
+          ],
+          "index": 30
+        },
+        {
+          "number": 37,
+          "url": "https://github.com/yaniguan/buy-or-make/issues/37",
+          "title": "Per-gram budget is reused as an absolute cash limit; route cost is labelled USD",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "buyormake/cost.py",
+            "buyormake/rank.py",
+            "autolab_wire.py"
+          ],
+          "index": 31
+        },
+        {
+          "number": 38,
+          "url": "https://github.com/yaniguan/buy-or-make/issues/38",
+          "title": "Lean parity never runs the real budget gate, which lets unpriced candidates pass",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            "buyormake/rank.py",
+            "lean/BuyOrMakeLean.lean",
+            "tests/test_lean_parity.py"
+          ],
+          "index": 32
         }
       ]
     },
@@ -1780,11 +1900,11 @@
       ]
     },
     "lab-automation-atlas": {
-      "count": 28,
+      "count": 32,
       "round1_count": 22,
       "round2_count": 6,
-      "round3_count": 0,
-      "closed_count": 28,
+      "round3_count": 4,
+      "closed_count": 32,
       "open_count": 0,
       "items": [
         {
@@ -2172,6 +2292,66 @@
           "files": [
             "lab_atlas/linkcheck.py"
           ]
+        },
+        {
+          "number": 33,
+          "url": "https://github.com/yaniguan/lab-automation-atlas/issues/33",
+          "title": "Training gate misses eval-only benchmarks reached by equivalent URLs",
+          "round": 3,
+          "state": "closed",
+          "category": "security",
+          "severity": "high",
+          "files": [
+            "lab_atlas/urlmatch.py",
+            "autolab_wire.py",
+            "tests/test_wire.py"
+          ],
+          "index": 29
+        },
+        {
+          "number": 34,
+          "url": "https://github.com/yaniguan/lab-automation-atlas/issues/34",
+          "title": "Validate allowed_purposes and commercial flags against the license class",
+          "round": 3,
+          "state": "closed",
+          "category": "safety",
+          "severity": "high",
+          "files": [
+            "lab_atlas/catalog.py",
+            "lab_atlas/spdx.py",
+            "atlas.json"
+          ],
+          "index": 30
+        },
+        {
+          "number": 35,
+          "url": "https://github.com/yaniguan/lab-automation-atlas/issues/35",
+          "title": "Fix wrong or unsupported license and role records in atlas.json",
+          "round": 3,
+          "state": "closed",
+          "category": "data",
+          "severity": "high",
+          "files": [
+            "atlas.json",
+            "scripts/check_licenses.py",
+            "README.md"
+          ],
+          "index": 31
+        },
+        {
+          "number": 36,
+          "url": "https://github.com/yaniguan/lab-automation-atlas/issues/36",
+          "title": "Test Python and Lean policy parity by compiling generated Lean guards",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            "lean/LabAtlasLean/Parity.lean",
+            "scripts/gen_lean_parity.py",
+            "scripts/verify_lean_parity.py"
+          ],
+          "index": 32
         }
       ]
     },
@@ -3113,11 +3293,11 @@
       ]
     },
     "lab-attrib": {
-      "count": 10,
+      "count": 14,
       "round1_count": 0,
       "round2_count": 10,
-      "round3_count": 0,
-      "closed_count": 10,
+      "round3_count": 4,
+      "closed_count": 14,
       "open_count": 0,
       "items": [
         {
@@ -3263,6 +3443,63 @@
             "src/lab_attrib/attributed_frontier.py#L49-L51",
             "paper/main.tex"
           ]
+        },
+        {
+          "number": 14,
+          "url": "https://github.com/yaniguan/lab-attrib/issues/14",
+          "title": "Wire gate certifies hits for packets with no sensor or readout data",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py",
+            "tests/test_autolab_wire.py"
+          ],
+          "index": 11
+        },
+        {
+          "number": 15,
+          "url": "https://github.com/yaniguan/lab-attrib/issues/15",
+          "title": "Closed-loop benchmark hard-wires 0% FDR and its committed JSON is stale",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "src/lab_attrib/attributed_frontier.py",
+            "benchmarks/results/lab_attrib_benchmark.json"
+          ],
+          "index": 12
+        },
+        {
+          "number": 16,
+          "url": "https://github.com/yaniguan/lab-attrib/issues/16",
+          "title": "Real-spectra table: unequal scoring, self-matched Raman, leaky chimera pool",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "scripts/benchmark_real_spectra.py",
+            "results/real_spectra_benchmark.json"
+          ],
+          "index": 13
+        },
+        {
+          "number": 17,
+          "url": "https://github.com/yaniguan/lab-attrib/issues/17",
+          "title": "A-Lab audit never yields a certified negative; Rwp gate rejects real hits",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            "src/lab_attrib/blame.py",
+            "src/lab_attrib/open_datasets.py",
+            "lean/LabAttribLean.lean"
+          ],
+          "index": 14
         }
       ]
     },
@@ -6657,6 +6894,73 @@
             "demo/distill_quantize.py",
             "schema/benchmark_report.schema.json"
           ]
+        }
+      ]
+    },
+    "assayfold": {
+      "count": 4,
+      "round1_count": 0,
+      "round2_count": 0,
+      "round3_count": 4,
+      "closed_count": 4,
+      "open_count": 0,
+      "items": [
+        {
+          "number": 7,
+          "url": "https://github.com/yaniguan/assayfold/issues/7",
+          "title": "Dedup misses repeated reactions and cross-source duplicates",
+          "round": 3,
+          "state": "closed",
+          "category": "data",
+          "severity": "high",
+          "files": [
+            "assayfold/quality.py",
+            "assayfold/export.py"
+          ],
+          "index": 1
+        },
+        {
+          "number": 8,
+          "url": "https://github.com/yaniguan/assayfold/issues/8",
+          "title": "Keep eval_only benchmark items out of RAG exports and keep canaries",
+          "round": 3,
+          "state": "closed",
+          "category": "safety",
+          "severity": "high",
+          "files": [
+            "assayfold/licenses.py",
+            "assayfold/export.py",
+            "assayfold/cli.py"
+          ],
+          "index": 2
+        },
+        {
+          "number": 9,
+          "url": "https://github.com/yaniguan/assayfold/issues/9",
+          "title": "Fix unit alias collisions: U, mS, mHz and d map to wrong units",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "assayfold/units.py",
+            "tests/test_units.py"
+          ],
+          "index": 3
+        },
+        {
+          "number": 10,
+          "url": "https://github.com/yaniguan/assayfold/issues/10",
+          "title": "Close validation holes: unsealed records, force arrays, element symbols",
+          "round": 3,
+          "state": "closed",
+          "category": "schema",
+          "severity": "high",
+          "files": [
+            "assayfold/quality.py",
+            "assayfold/schema.py"
+          ],
+          "index": 4
         }
       ]
     }

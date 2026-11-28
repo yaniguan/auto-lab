@@ -10,7 +10,7 @@
   let page = 1;
 
   async function fetchFreshSiteData() {
-    const res = await fetch('../assets/autolab-data.json?v=14');
+    const res = await fetch('../assets/autolab-data.json?v=15');
     if (!res.ok) throw new Error(`Failed loading autolab-data.json (${res.status})`);
     return res.json();
   }
@@ -148,7 +148,7 @@
       const sevClass = it.severity === 'critical' ? 'high' : it.severity;
       const rnd = Number(it.round || 1);
       const roundBadge = rnd === 3
-        ? `<span class="pill pass" title="Round 3 · Wave 1–2 Frontier & Wire Hardening (${esc(it.state || 'closed')})">R3</span>`
+        ? `<span class="pill pass" title="Round 3 · Wave 1–3 Frontier, Audit Closure & Wire Hardening (${esc(it.state || 'closed')})">R3</span>`
         : rnd === 2
         ? `<span class="pill pass" title="Round 2 · Lean 4, Wire & Attribution (${esc(it.state || 'closed')})">R2</span>`
         : `<span class="pill" style="background:var(--surface2);color:var(--muted);border:1px solid var(--line);" title="Round 1 · Initial Audit (${esc(it.state || 'closed')})">R1</span>`;
@@ -220,7 +220,7 @@
     if (roundSelect) {
       roundSelect.innerHTML = `
         <option value="ALL">All Rounds (${ALL_ISSUES.length})</option>
-        <option value="3">Round 3 · Wave 1–2 Frontier &amp; Wire (${r3Total})</option>
+        <option value="3">Round 3 · Wave 1–3 Frontier &amp; Wire (${r3Total})</option>
         <option value="2">Round 2 · Lean, Wire &amp; Attribution (${r2Total})</option>
         <option value="1">Round 1 · Initial Audit (${r1Total})</option>
       `;

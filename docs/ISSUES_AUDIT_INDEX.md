@@ -1,17 +1,17 @@
 # Deep Codebase Audit & GitHub Issues Index
 
-Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **461** (**322** Round-1 initial audit + **95** Round-2 Lean 4, `autolab-wire/v1` & attribution audit + **44** Round-3 Wave 1-2 frontier, real-data & wire-hardening audit; **458 closed**, **3 open `PENDING_GPU`**: `labfill#35`, `labbench-posttrain#49`, `labbench-posttrain#18`).
+Total code-grounded audit issues tracked across all 15 Auto-Lab core repositories plus companion `assayfold`: **481** (**322** Round-1 initial audit + **95** Round-2 Lean 4, `autolab-wire/v1` & attribution audit + **64** Round-3 Wave 1-3 frontier, external-audit closure & wire-hardening audit; **478 closed**, **3 open `PENDING_GPU`**: `labfill#35`, `labbench-posttrain#49`, `labbench-posttrain#18`).
 
 | Layer | Repository | Round 1 | Round 2 | Round 3 | Closed | Open (`PENDING_GPU`) | Total | Live Tracker |
 |---|---|---:|---:|---:|---:|---:|---:|---|
-| `L6` | [lab-ask-why](https://github.com/yaniguan/lab-ask-why) | 22 | 6 | 0 | 28 | 0 | **28** | [lab-ask-why/issues](https://github.com/yaniguan/lab-ask-why/issues) |
+| `L6` | [lab-ask-why](https://github.com/yaniguan/lab-ask-why) | 22 | 6 | 4 | 32 | 0 | **32** | [lab-ask-why/issues](https://github.com/yaniguan/lab-ask-why/issues) |
 | `L6` | [lab-decide](https://github.com/yaniguan/lab-decide) | 22 | 6 | 4 | 32 | 0 | **32** | [lab-decide/issues](https://github.com/yaniguan/lab-decide/issues) |
-| `L5` | [buy-or-make](https://github.com/yaniguan/buy-or-make) | 22 | 6 | 0 | 28 | 0 | **28** | [buy-or-make/issues](https://github.com/yaniguan/buy-or-make/issues) |
+| `L5` | [buy-or-make](https://github.com/yaniguan/buy-or-make) | 22 | 6 | 4 | 32 | 0 | **32** | [buy-or-make/issues](https://github.com/yaniguan/buy-or-make/issues) |
 | `L5` | [labshift](https://github.com/yaniguan/labshift) | 24 | 6 | 4 | 34 | 0 | **34** | [labshift/issues](https://github.com/yaniguan/labshift/issues) |
-| `L5` | [lab-automation-atlas](https://github.com/yaniguan/lab-automation-atlas) | 22 | 6 | 0 | 28 | 0 | **28** | [lab-automation-atlas/issues](https://github.com/yaniguan/lab-automation-atlas/issues) |
+| `L5` | [lab-automation-atlas](https://github.com/yaniguan/lab-automation-atlas) | 22 | 6 | 4 | 32 | 0 | **32** | [lab-automation-atlas/issues](https://github.com/yaniguan/lab-automation-atlas/issues) |
 | `L4` | [lab-rehearsal](https://github.com/yaniguan/lab-rehearsal) | 22 | 6 | 4 | 32 | 0 | **32** | [lab-rehearsal/issues](https://github.com/yaniguan/lab-rehearsal/issues) |
 | `L4` | [lab-verify](https://github.com/yaniguan/lab-verify) | 22 | 6 | 4 | 32 | 0 | **32** | [lab-verify/issues](https://github.com/yaniguan/lab-verify/issues) |
-| `L4` | [lab-attrib](https://github.com/yaniguan/lab-attrib) | 0 | 10 | 0 | 10 | 0 | **10** | [lab-attrib/issues](https://github.com/yaniguan/lab-attrib/issues) |
+| `L4` | [lab-attrib](https://github.com/yaniguan/lab-attrib) | 0 | 10 | 4 | 14 | 0 | **14** | [lab-attrib/issues](https://github.com/yaniguan/lab-attrib/issues) |
 | `L3` | [labbench-posttrain](https://github.com/yaniguan/labbench-posttrain) | 22 | 7 | 4 | 31 | 2 | **33** | [labbench-posttrain/issues](https://github.com/yaniguan/labbench-posttrain/issues) |
 | `L3` | [twinstep](https://github.com/yaniguan/twinstep) | 24 | 6 | 4 | 34 | 0 | **34** | [twinstep/issues](https://github.com/yaniguan/twinstep/issues) |
 | `L3` | [labfill](https://github.com/yaniguan/labfill) | 24 | 6 | 4 | 33 | 1 | **34** | [labfill/issues](https://github.com/yaniguan/labfill/issues) |
@@ -19,8 +19,9 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | `L1` | [stepbot](https://github.com/yaniguan/stepbot) | 24 | 6 | 4 | 34 | 0 | **34** | [stepbot/issues](https://github.com/yaniguan/stepbot/issues) |
 | `L1` | [lab-hands](https://github.com/yaniguan/lab-hands) | 24 | 6 | 4 | 34 | 0 | **34** | [lab-hands/issues](https://github.com/yaniguan/lab-hands/issues) |
 | `L0` | [lab-feet](https://github.com/yaniguan/lab-feet) | 24 | 6 | 4 | 34 | 0 | **34** | [lab-feet/issues](https://github.com/yaniguan/lab-feet/issues) |
+| `L2 (Companion)` | [assayfold](https://github.com/yaniguan/assayfold) | 0 | 0 | 4 | 4 | 0 | **4** | [assayfold/issues](https://github.com/yaniguan/assayfold/issues) |
 
-## [lab-ask-why](https://github.com/yaniguan/lab-ask-why/issues) (28 Issues: 22 R1 + 6 R2 + 0 R3 · 28 closed, 0 open)
+## [lab-ask-why](https://github.com/yaniguan/lab-ask-why/issues) (32 Issues: 22 R1 + 6 R2 + 4 R3 · 32 closed, 0 open)
 
 | # | Round | State | Category | Severity | Issue Title | Grounded Files |
 |---:|---|---|---|---|---|---|
@@ -52,6 +53,10 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#27](https://github.com/yaniguan/lab-ask-why/issues/27) | `R2` | `closed` | `formal` | **high** | [Formal] Banker's round() violates Lean 4 permille safety bounds at .5 boundaries and LabAskWhyLean lacks multi-claim consistency | `lean/LabAskWhyLean.lean#L58-L127`, `community_extensions/precursor_ghost_guard.py#L136`, `src/lab_ask_why/retrieval.py#L212-L214`, `github/workflows/demo.yml#L1-L28`, `demo/why_probe.py` |
 | [#28](https://github.com/yaniguan/lab-ask-why/issues/28) | `R2` | `closed` | `interop` | **medium** | [Interop] Close autolab-wire/v1 loop with lab-attrib negative certificates, fix discriminating_question index, and align lab-decide schema | `autolab_wire.py#L233-L239`, `src/lab_ask_why/socratic.py#L186-L190`, `src/lab_ask_why/retrieval.py#L257`, `lean/LabAskWhyLean.lean#L74-L85`, `src/lab_ask_why/schema.py#L84-L121` |
 | [#29](https://github.com/yaniguan/lab-ask-why/issues/29) | `R2` | `closed` | `enhancement` | **low** | [Enhancement] Add hybrid dense/cross-encoder retrieval reranking and structured falsifiable control-well parameter synthesis | `src/lab_ask_why/retrieval.py#L58-L146`, `src/lab_ask_why/schema.py#L51-L81`, `autolab_wire.py#L50-L75` |
+| [#33](https://github.com/yaniguan/lab-ask-why/issues/33) | `R3` | `closed` | `interop` | **high** | Wire node returns confident SUPPORT for unrelated claims and evidence | `autolab_wire.py`, `src/lab_ask_why/resources/scifact_wire_calibrator.json`, `tests/test_autolab_wire.py` |
+| [#34](https://github.com/yaniguan/lab-ask-why/issues/34) | `R3` | `closed` | `benchmark` | **high** | Conflict detection has no negative control; ConflictBank labels are wrong | `src/lab_ask_why/frontier_verifier.py`, `src/lab_ask_why/datasets.py`, `scripts/benchmark_open_datasets.py` |
+| [#35](https://github.com/yaniguan/lab-ask-why/issues/35) | `R3` | `closed` | `benchmark` | **high** | Add majority and chance baselines and per-class coverage to benchmarks | `scripts/benchmark_open_datasets.py`, `results/open_benchmarks_2026.json`, `README.md` |
+| [#36](https://github.com/yaniguan/lab-ask-why/issues/36) | `R3` | `closed` | `performance` | **high** | numpy-only fit runs out of memory; CI never re-checks real SciFact numbers | `src/lab_ask_why/frontier_verifier.py`, `src/lab_ask_why/neural_verifier.py`, `.github/workflows/demo.yml` |
 
 ## [lab-decide](https://github.com/yaniguan/lab-decide/issues) (32 Issues: 22 R1 + 6 R2 + 4 R3 · 32 closed, 0 open)
 
@@ -90,7 +95,7 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#34](https://github.com/yaniguan/lab-decide/issues/34) | `R3` | `closed` | `data` | **high** | kNN gate is inverted on reaction-yield data; add a multi-seed real-data report | `scripts/benchmark_registry.py`, `results/registry_benchmark.json` |
 | [#35](https://github.com/yaniguan/lab-decide/issues/35) | `R3` | `closed` | `data` | **high** | Scaffold split ignores row fractions and falls back to regex groups | `README.md` |
 
-## [buy-or-make](https://github.com/yaniguan/buy-or-make/issues) (28 Issues: 22 R1 + 6 R2 + 0 R3 · 28 closed, 0 open)
+## [buy-or-make](https://github.com/yaniguan/buy-or-make/issues) (32 Issues: 22 R1 + 6 R2 + 4 R3 · 32 closed, 0 open)
 
 | # | Round | State | Category | Severity | Issue Title | Grounded Files |
 |---:|---|---|---|---|---|---|
@@ -122,6 +127,10 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#29](https://github.com/yaniguan/buy-or-make/issues/29) | `R2` | `closed` | `formal` | **high** | [Formal] Extend Lean 4 AtomVec and Python AtomCountVec beyond lumped CNOSHal to prevent cross-halogen swaps and cover B, P, Si, and organometallics | `lean/BuyOrMakeLean.lean#L69-L84`, `community_extensions/pareto_green_triage.py#L20-L45`, `buyormake/routes.py#L55-L62`, `autolab_wire.py#L48` |
 | [#30](https://github.com/yaniguan/buy-or-make/issues/30) | `R2` | `closed` | `interop` | **medium** | [Interop] Propagate leaf vendor lead times, pack-size MOQs, and precursor basis catalogs across AvailabilityRecord and autolab-wire/v1 for labshift and lab-attrib | `autolab_wire.py#L121-L146`, `buyormake/rank.py#L197-L209`, `buyormake/schema.py#L283-L303`, `buyormake/handoff.py#L20-L35` |
 | [#31](https://github.com/yaniguan/buy-or-make/issues/31) | `R2` | `closed` | `performance` | **medium** | [Performance] Configure SQLite WAL mode, busy_timeout, thread-safe connections, and read-only URI openers across ResponseCache, LocalStockBackend, and ReactionLookupBackend | `buyormake/cache.py#L42-L60`, `buyormake/stock.py#L120-L129`, `buyormake/routes.py#L245-L263` |
+| [#35](https://github.com/yaniguan/buy-or-make/issues/35) | `R3` | `closed` | `benchmark` | **high** | Benchmark indexes each target's own reference route, inflating solve rates | `scripts/benchmark_retrosynthesis.py`, `buyormake/retro_star.py`, `results/retrosynthesis_benchmark.json` |
+| [#36](https://github.com/yaniguan/buy-or-make/issues/36) | `R3` | `closed` | `bug` | **high** | Offers marked in_stock=false still count as buyable and schedulable now | `buyormake/cost.py`, `buyormake/rank.py`, `buyormake/handoff.py` |
+| [#37](https://github.com/yaniguan/buy-or-make/issues/37) | `R3` | `closed` | `bug` | **high** | Per-gram budget is reused as an absolute cash limit; route cost is labelled USD | `buyormake/cost.py`, `buyormake/rank.py`, `autolab_wire.py` |
+| [#38](https://github.com/yaniguan/buy-or-make/issues/38) | `R3` | `closed` | `formal` | **high** | Lean parity never runs the real budget gate, which lets unpriced candidates pass | `buyormake/rank.py`, `lean/BuyOrMakeLean.lean`, `tests/test_lean_parity.py` |
 
 ## [labshift](https://github.com/yaniguan/labshift/issues) (34 Issues: 24 R1 + 6 R2 + 4 R3 · 34 closed, 0 open)
 
@@ -162,7 +171,7 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#37](https://github.com/yaniguan/labshift/issues/37) | `R3` | `closed` | `benchmark` | **high** | Add a planted-schedule tier: greedy_repair solves every built-in preset | `README.md` |
 | [#38](https://github.com/yaniguan/labshift/issues/38) | `R3` | `closed` | `interop` | **high** | Make the stepbot bridge import stepbot's own example protocols | `examples/dilution_series.yaml`, `plate_fill.yaml`, `reservoir_mix.yaml` |
 
-## [lab-automation-atlas](https://github.com/yaniguan/lab-automation-atlas/issues) (28 Issues: 22 R1 + 6 R2 + 0 R3 · 28 closed, 0 open)
+## [lab-automation-atlas](https://github.com/yaniguan/lab-automation-atlas/issues) (32 Issues: 22 R1 + 6 R2 + 4 R3 · 32 closed, 0 open)
 
 | # | Round | State | Category | Severity | Issue Title | Grounded Files |
 |---:|---|---|---|---|---|---|
@@ -194,6 +203,10 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#27](https://github.com/yaniguan/lab-automation-atlas/issues/27) | `R2` | `closed` | `interop` | **medium** | [Interop] Dynamically resolve platform grounding metadata per target_platform from atlas.json in autolab_wire.py instead of static OT-2 defaults | `autolab_wire.py`, `tests/test_autolab_wire.py`, `docs/ARCHITECTURE_AND_HISTORY.md` |
 | [#28](https://github.com/yaniguan/lab-automation-atlas/issues/28) | `R2` | `closed` | `schema` | **medium** | [Schema] Add typed hardware capability envelopes and analytical characterization modalities to atlas.schema.json for stepbot and lab-attrib | `schema/atlas.schema.json`, `lab_atlas/resources/atlas.schema.json`, `lab_atlas/catalog.py`, `atlas.json`, `community_extensions/mcp_capability_cards.py` |
 | [#29](https://github.com/yaniguan/lab-automation-atlas/issues/29) | `R2` | `closed` | `bug` | **high** | [Bug] Fix WAF 403 cross-domain redirect bypass, HTTP 416 Range fallback failure, and unbracketed `](` link false positives in linkcheck.py | `lab_atlas/linkcheck.py` |
+| [#33](https://github.com/yaniguan/lab-automation-atlas/issues/33) | `R3` | `closed` | `security` | **high** | Training gate misses eval-only benchmarks reached by equivalent URLs | `lab_atlas/urlmatch.py`, `autolab_wire.py`, `tests/test_wire.py` |
+| [#34](https://github.com/yaniguan/lab-automation-atlas/issues/34) | `R3` | `closed` | `safety` | **high** | Validate allowed_purposes and commercial flags against the license class | `lab_atlas/catalog.py`, `lab_atlas/spdx.py`, `atlas.json` |
+| [#35](https://github.com/yaniguan/lab-automation-atlas/issues/35) | `R3` | `closed` | `data` | **high** | Fix wrong or unsupported license and role records in atlas.json | `atlas.json`, `scripts/check_licenses.py`, `README.md` |
+| [#36](https://github.com/yaniguan/lab-automation-atlas/issues/36) | `R3` | `closed` | `formal` | **high** | Test Python and Lean policy parity by compiling generated Lean guards | `lean/LabAtlasLean/Parity.lean`, `scripts/gen_lean_parity.py`, `scripts/verify_lean_parity.py` |
 
 ## [lab-rehearsal](https://github.com/yaniguan/lab-rehearsal/issues) (32 Issues: 22 R1 + 6 R2 + 4 R3 · 32 closed, 0 open)
 
@@ -269,7 +282,7 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#34](https://github.com/yaniguan/lab-verify/issues/34) | `R3` | `closed` | `security` | **high** | Make lean-mcp/v1 verify and the wire node fail closed by default | `autolab_wire.py` |
 | [#35](https://github.com/yaniguan/lab-verify/issues/35) | `R3` | `closed` | `bug` | **high** | Demo labels q4/q12 are not NULL/date safe; counterexample DBs miss them | `docs/ARCHITECTURE_AND_HISTORY.md` |
 
-## [lab-attrib](https://github.com/yaniguan/lab-attrib/issues) (10 Issues: 0 R1 + 10 R2 + 0 R3 · 10 closed, 0 open)
+## [lab-attrib](https://github.com/yaniguan/lab-attrib/issues) (14 Issues: 0 R1 + 10 R2 + 4 R3 · 14 closed, 0 open)
 
 | # | Round | State | Category | Severity | Issue Title | Grounded Files |
 |---:|---|---|---|---|---|---|
@@ -283,6 +296,10 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#8](https://github.com/yaniguan/lab-attrib/issues/8) | `R2` | `closed` | `formal` | **high** | [Formal] Add compiled --batch-tsv CLI executable in LabAttribLean.lean and full telemetry commitment in computeAbstractEntryHash for runtime parity testing | `lean/lakefile.toml#L1-L6`, `lean/LabAttribLean.lean#L495-L510`, `src/lab_attrib/ledger.py`, `tests/test_blame_and_lean_parity.py#L60-L142` |
 | [#9](https://github.com/yaniguan/lab-attrib/issues/9) | `R2` | `closed` | `interop` | **medium** | [Interop] autolab-wire/v1 two-turn orthogonal resolution loop deadlocks on L4_ATTRIB_QUARANTINE and drops deconvolved snr_tenths | `autolab_wire.py#L88-L89` |
 | [#10](https://github.com/yaniguan/lab-attrib/issues/10) | `R2` | `closed` | `calibration` | **high** | [Calibration] Isotropic global tau jump from single-direction stepping-stones and non-exchangeable UCB conformal quantile fallback in attributed_frontier.py | `src/lab_attrib/attributed_frontier.py#L49-L51`, `paper/main.tex` |
+| [#14](https://github.com/yaniguan/lab-attrib/issues/14) | `R3` | `closed` | `interop` | **high** | Wire gate certifies hits for packets with no sensor or readout data | `autolab_wire.py`, `tests/test_autolab_wire.py` |
+| [#15](https://github.com/yaniguan/lab-attrib/issues/15) | `R3` | `closed` | `benchmark` | **high** | Closed-loop benchmark hard-wires 0% FDR and its committed JSON is stale | `src/lab_attrib/attributed_frontier.py`, `benchmarks/results/lab_attrib_benchmark.json` |
+| [#16](https://github.com/yaniguan/lab-attrib/issues/16) | `R3` | `closed` | `benchmark` | **high** | Real-spectra table: unequal scoring, self-matched Raman, leaky chimera pool | `scripts/benchmark_real_spectra.py`, `results/real_spectra_benchmark.json` |
+| [#17](https://github.com/yaniguan/lab-attrib/issues/17) | `R3` | `closed` | `formal` | **high** | A-Lab audit never yields a certified negative; Rwp gate rejects real hits | `src/lab_attrib/blame.py`, `src/lab_attrib/open_datasets.py`, `lean/LabAttribLean.lean` |
 
 ## [labbench-posttrain](https://github.com/yaniguan/labbench-posttrain/issues) (33 Issues: 22 R1 + 7 R2 + 4 R3 · 31 closed, 2 open)
 
@@ -555,3 +572,12 @@ Total code-grounded audit issues tracked across all 15 Auto-Lab repositories: **
 | [#35](https://github.com/yaniguan/lab-feet/issues/35) | `R3` | `closed` | `interop` | **high** | Wire node passes hot-loaded checkpoints it cannot check (fail-open) | `autolab_wire.py`, `tests/test_autolab_wire.py` |
 | [#36](https://github.com/yaniguan/lab-feet/issues/36) | `R3` | `closed` | `benchmark` | **high** | Test SAFE_HOLD on real gas-sensor drift against MSP and energy baselines | `community_extensions/drift_abstaining_int4.py` |
 | [#37](https://github.com/yaniguan/lab-feet/issues/37) | `R3` | `closed` | `benchmark` | **high** | Compare KL+CE distillation with a same-trainer CE control over 10 seeds | `demo/distill_quantize.py`, `schema/benchmark_report.schema.json` |
+
+## [assayfold](https://github.com/yaniguan/assayfold/issues) (4 Issues: 0 R1 + 0 R2 + 4 R3 · 4 closed, 0 open)
+
+| # | Round | State | Category | Severity | Issue Title | Grounded Files |
+|---:|---|---|---|---|---|---|
+| [#7](https://github.com/yaniguan/assayfold/issues/7) | `R3` | `closed` | `data` | **high** | Dedup misses repeated reactions and cross-source duplicates | `assayfold/quality.py`, `assayfold/export.py` |
+| [#8](https://github.com/yaniguan/assayfold/issues/8) | `R3` | `closed` | `safety` | **high** | Keep eval_only benchmark items out of RAG exports and keep canaries | `assayfold/licenses.py`, `assayfold/export.py`, `assayfold/cli.py` |
+| [#9](https://github.com/yaniguan/assayfold/issues/9) | `R3` | `closed` | `bug` | **high** | Fix unit alias collisions: U, mS, mHz and d map to wrong units | `assayfold/units.py`, `tests/test_units.py` |
+| [#10](https://github.com/yaniguan/assayfold/issues/10) | `R3` | `closed` | `schema` | **high** | Close validation holes: unsealed records, force arrays, element symbols | `assayfold/quality.py`, `assayfold/schema.py` |
