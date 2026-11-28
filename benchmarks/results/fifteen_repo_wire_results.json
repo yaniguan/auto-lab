@@ -1,6 +1,6 @@
 {
   "schema_version": "autolab-wire/v1",
-  "generated_at_utc": "2026-11-27T07:58:35Z",
+  "generated_at_utc": "2026-11-28T00:00:02Z",
   "repo_count": 15,
   "repos": [
     "lab-ears",
@@ -21,7 +21,7 @@
   ],
   "scenario_count": 6,
   "all_passed": true,
-  "runtime_sec": 8.063,
+  "runtime_sec": 5.992,
   "scenarios": {
     "1_full_happy_path_and_round2_recalibration": {
       "passed": true,
@@ -35,16 +35,18 @@
       "packed_total_real_tokens": 668,
       "gated_reward": 1.0,
       "admitted_to_sft_rlvr": true,
-      "round1_effective_n_calib": 226,
-      "round1_effective_threshold": 0.758,
-      "round2_effective_n_calib": 227,
-      "round2_effective_threshold": 0.778
+      "distance_source": "fitted_esol_model",
+      "round1_effective_n_calib": 169,
+      "round1_effective_threshold": 0.675015,
+      "round2_effective_n_calib": 170,
+      "round2_effective_threshold": 0.682118
     },
     "2_l6_ood_abstention": {
       "passed": true,
       "halted": true,
       "halt_reason": "L6_ABSTAIN",
-      "knn_distance": 1.38,
+      "distance_source": "fitted_esol_model",
+      "knn_distance": 11.362025,
       "stepbot_executed": false,
       "trace_repos": [
         "lab-ears",
@@ -62,6 +64,7 @@
       "violations": [
         "no_tip_reuse"
       ],
+      "over_capacity_volume_rejected": true,
       "stepbot_executed": false,
       "gated_reward": 0.0,
       "admitted_to_sft_rlvr": false
@@ -70,6 +73,8 @@
       "passed": true,
       "halted": true,
       "halt_reason": "L1_MCP_BLOCK:mcp_epoch_freshness",
+      "dev_secret_rejected": true,
+      "role_separated_cosign_verified": true,
       "forced_token_epoch": 99,
       "executor_deck_epoch": 1,
       "stepbot_executed": false,
@@ -88,13 +93,14 @@
       "admit_to_memory": false,
       "gated_reward": 0.0,
       "admitted_to_sft_rlvr": false,
-      "round2_effective_n_calib": 226
+      "round2_effective_n_calib": 169
     },
     "6_l3_splitguard_canary_block": {
       "passed": true,
       "halted": true,
       "halt_reason": "L3_SPLITGUARD_CANARY_BLOCK",
       "split_guard_clean": false,
+      "strict_allowlist_enforced": true,
       "gated_reward": 0.0,
       "admitted_to_sft_rlvr": false
     }

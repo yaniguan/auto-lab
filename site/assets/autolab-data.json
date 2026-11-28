@@ -63,17 +63,17 @@
       "url": "https://github.com/yaniguan/lab-ask-why",
       "layer": "L6",
       "layer_name": "Metacognitive & Epistemic Brain",
-      "tagline": "Socratic co-scientist that surfaces supporting and contradicting rationale sentences, hidden assumptions, and mind-changing experiments instead of picking a winner",
+      "tagline": "Socratic co-scientist combining two-stage hybrid RRF + 26-feature cross-feature reranking, 90% split-conformal 3-way stance verification, and structured control-well synthesis across 8 real corpora.",
       "object": "Epistemic disagreement and rationale-probing module (`L6`) for the Auto-Lab brain: rather than collapsing scientific uncertainty into a binary verdict, it retrieves verbatim evidence sentences on each side of a claim, surfaces necessary assumptions, and frames the discriminating experimental result that would resolve the disagreement.",
-      "data": "Evaluates on the SciFact dev split (Wadden et al., EMNLP 2020; CC BY-NC 2.0, fetched on demand to gitignored `data/` with zero redistribution: 5,183 corpus abstracts, 300 dev claims, and 209 evidence-bearing `(claim, doc_id)` pairs across 138 `SUPPORT` and 71 `CONTRADICT`) and integrates a 14-dataset `OpenDatasetSpec` registry (`src/lab_ask_why/datasets.py`, 11 from 2024-2026: `LABBench2` 2026, `PeerQA-XT` 2026, `SciVer` 2025, `CLAIMCHECK` 2025, `ChemBench` 2025, `LitQA2` 2024, `LAB-Bench ProtocolQA` 2024, `ConflictBank` 2024, `FaithEval-inconsistent` 2024, `SciRIFF` 2024, `BioASQ` 2024, plus `SciFact-Open`, `SciFact`, and `PubMedQA`) with `eval_only` canary/training blocks and `NormalizedClaimRecord` adapters.",
-      "model": "Zero-parameter Okapi BM25 lexical sentence ranker (`k1 = 1.2`, `b = 0.75`) over lowercased `[a-z0-9]+` tokens (29 stopwords removed) using corpus-wide sentence IDF and average sentence length (`avgdl`), benchmarked against a 20-seed uniform random permutation baseline and paired with a deterministic 3-question epistemic probe generator (`why_questions`).",
-      "training": "Zero parametric training or LLM API calls (`numpy` + Python standard library on CPU in < 1s). Achieves 0.493 Hit@1 (`recall@1`) and 0.789 Hit@3 (`recall@3`) on 209 SciFact dev claim-abstract pairs vs. 0.197 +- 0.024 and 0.528 +- 0.029 for 20-seed random ranking, with near-symmetric performance on `SUPPORT` (0.507 / 0.797) and `CONTRADICT` (0.465 / 0.775).",
-      "history": "Initialized in `6236123` (2026-11-18) with `demo/why_probe.py`, reference capture `demo/output.txt`, and curated scientific debate/RAG catalog (`bbef3b6`), followed by Phase-2 Lean 4 & `autolab-wire/v1` audit (`40af81d`) and the 14-dataset 2024-2026 open claim/conflict registry on `main` (`b8a9d51`, PR #31).",
+      "data": "Evaluates on SHA-256-verified SciFact (`809` train claims split `607` fit / `202` cal, `300` held-out dev claims with `0` claim-ID overlap, `209` evidence pairs across `5,183` abstracts; CC BY-NC 2.0, gitignored `data/`), an 8-corpus real downloaded benchmark (`results/open_benchmarks_2026.json`: `SciFact`, `PubMedQA`, `ConflictBank`, `FaithEval-Inconsistent`, `CLAIMCHECK`, `SciVer`, `ChemBench`, `LitQA2`), and a 14-dataset `OpenDatasetSpec` registry (`src/lab_ask_why/datasets.py`) with strict `eval_only` canary/training guards.",
+      "model": "Zero-parameter biomedical Okapi `BM25` baseline plus a 2-stage `FrontierHybridVerifier` (`Reciprocal Rank Fusion` of `BM25` + 96-dim subword TF-IDF Truncated-SVD `LSA` + `EntityNumericNegationIndex`, followed by a 26-feature `CrossFeatureReranker` and `SplitConformalStanceClassifier` over `{SUPPORT, CONTRADICT, NEI}`), paired with Socratic `why_questions` and falsifiable `synthesize_control_wells`.",
+      "training": "Trained strictly on `SciFact` `train_fit` (`607` claims) and calibrated on `train_calib` (`202` claims) with eval-abstract IDF exclusion (`93` dev docs excluded). Lifts held-out `SciFact` dev oracle rationale `hit@3` from `0.818` (`BM25`) and `0.528` (20-seed random) to `0.909` (`rationale_set_recall@3 = 0.876`, `hit@1 = 0.660`), achieves `0.907` empirical 90% split-conformal stance coverage, and reaches `100.0%` conflict detection on `ConflictBank` (`96.7%` on `FaithEval-Inconsistent`).",
+      "history": "Initialized in `6236123` (2026-11-18: SciFact `BM25` probe) -> `40af81d` (Phase-2 Lean 4 & `autolab-wire/v1`) -> `b8a9d51` (PR #31: 14-dataset 2024-2026 registry) -> `6f4887a` (PR #32: 2-stage hybrid reranker, split-conformal stance verifier, 8-corpus real benchmark, control-well synthesis, and Lean 4.36.0 parity CI).",
       "unique_properties": [
-        "Stance-neutral Socratic design that retrieves both `SUPPORT` (0.797 top-3) and `CONTRADICT` (0.775 top-3) rationales with near-equal fidelity instead of forcing premature verdict collapse",
-        "Fast, deterministic, zero-API-cost CPU attribution baseline (`numpy` only) establishing an interpretable lexical floor before neural reranking or multi-agent debate",
-        "Strict non-commercial (`CC BY-NC 2.0`) data isolation via on-demand gitignored `data/` retrieval while keeping repository code MIT-licensed",
-        "Complements `lab-decide` at Layer `L6` by pairing hypothesis-discriminating test generation with conformal applicability-domain gating"
+        "Two-stage Hybrid RRF + 26-feature `CrossFeatureReranker` lifting held-out SciFact dev `hit@3` to `0.909` (`0.876` full rationale-set recall@3) with zero LLM API calls.",
+        "Split-conformal 3-way stance sets (`{SUPPORT, CONTRADICT, NEI}`, `90.7%` empirical dev coverage at `alpha = 0.10`) detecting `100.0%` of conflicting `ConflictBank` contexts vs `0.0%` forced-binary collapse.",
+        "Fail-closed `autolab_wire.py` (`L6_MALFORMED_NEGATIVE_CERTIFICATE`) ingesting 64-hex SHA-256 `CERTIFIED_NEGATIVE` certificates from `lab-attrib` and synthesizing vehicle/precursor control wells.",
+        "Lean 4.36.0 `LabAskWhyLean` formal floor-permille & multi-claim consistency proofs verified in CI alongside strict `data_source` (`real_downloaded` vs opt-in `synthetic_fixture`) provenance."
       ],
       "io_contract": {
         "inputs": "Scientific claims (`claims_dev.jsonl`) and sentence-segmented literature abstracts (`corpus.jsonl`)",
@@ -81,51 +81,51 @@
       },
       "key_metrics": [
         {
-          "label": "BM25 Rationale Hit@3 (`recall@3`)",
-          "value": "0.789",
-          "note": "vs. 0.528 +- 0.029 for 20-seed random sentence ranking across 209 SciFact dev pairs"
+          "label": "Held-Out SciFact Dev Rationale Ranking",
+          "value": "0.909 hit@3 | 0.876 set recall@3 (hybrid)",
+          "note": "vs 0.818 hit@3 (BM25) and 0.528 (20-seed random) across 209 dev pairs (0 train/dev overlap)"
         },
         {
-          "label": "BM25 Rationale Hit@1 (`recall@1`)",
-          "value": "0.493",
-          "note": "vs. 0.197 +- 0.024 for 20-seed random sentence ranking"
+          "label": "Split-Conformal 3-Way Stance & Conflict Detection",
+          "value": "90.7% SciFact cov | 100.0% ConflictBank",
+          "note": "96.7% multi-answer conflict detection on FaithEval-Inconsistent (vs 17.7% BM25 polarity)"
         },
         {
-          "label": "Polarity Symmetry (`SUPPORT` / `CONTRADICT`)",
-          "value": "0.797 / 0.775 Hit@3",
-          "note": "n = 138 SUPPORT pairs (Hit@1 0.507) and n = 71 CONTRADICT pairs (Hit@1 0.465)"
+          "label": "Verified Real Open-Corpus Suite",
+          "value": "8 SHA-256 corpora run | 14 registered",
+          "note": "SciFact, PubMedQA, ConflictBank, FaithEval, CLAIMCHECK, SciVer, ChemBench & LitQA2"
         }
       ],
-      "commit_head": "b8a9d51",
+      "commit_head": "6f4887a",
       "issue_count": 28,
       "concise": {
-        "hook": "Does not pick a winner—surfaces the evidence on each side and names the test that settles it.",
+        "hook": "Does not pick a winner—surfaces opposing evidence, conformal stance sets, and mind-changing tests.",
         "flow": [
-          "Claim + abstracts",
-          "BM25 rationale ranker",
-          "Opposing reasons + 'why' test"
+          "Claim + 5,183 abstracts",
+          "Hybrid RRF + 26-feat reranker",
+          "Conformal stance + control wells"
         ],
         "kpis": [
           [
-            "0.789",
-            "SciFact recall@3"
+            "0.909",
+            "SciFact hit@3 (reranker)"
           ],
           [
-            "14",
-            "open QA corpora"
+            "8 / 14",
+            "real / indexed corpora"
           ],
           [
-            "0",
-            "LLM calls in baseline"
+            "90.7%",
+            "conformal stance cov"
           ]
         ],
         "short": {
-          "object": "Surface supporting/contradicting sentences and ask what experiment changes minds.",
-          "data": "SciFact dev (209 pairs) + 14-corpus 2019-2026 registry (LABBench2, PeerQA-XT, SciVer, ConflictBank, ChemBench).",
-          "model": "Pure-NumPy BM25 sentence ranker + 3 structured Socratic question templates.",
-          "training": "Zero-training lexical baseline (0.789 recall@3 vs 0.528 random).",
-          "history": "6236123 SciFact probe -> 40af81d Lean/wire audit -> b8a9d51 14-dataset 2026 registry.",
-          "property": "Treats SUPPORT (0.80) and CONTRADICT (0.78) symmetrically; blocks eval_only training."
+          "object": "Surface supporting/contradicting rationales, conformal stance sets, and falsifiable control wells.",
+          "data": "SciFact (0 train/dev overlap) + 8 real SHA-256 benchmarks (ConflictBank, FaithEval, SciVer, LitQA2) & 14-corpus registry.",
+          "model": "2-stage Hybrid RRF (BM25 + 96d LSA + entity/negation) + 26-feature CrossFeatureReranker & SplitConformalStanceClassifier.",
+          "training": "SciFact train-only fit (607 fit / 202 cal): lifts dev hit@3 0.818 -> 0.909 (set recall@3 0.876) & ConflictBank 100%.",
+          "history": "6236123 SciFact BM25 -> b8a9d51 14-dataset registry -> 6f4887a hybrid reranker, conformal verifier & Lean 4 CI.",
+          "property": "90.7% 3-way conformal stance coverage, 100% ConflictBank detection, and fail-closed CERTIFIED_NEGATIVE wire ingest."
         }
       }
     },
@@ -134,17 +134,17 @@
       "url": "https://github.com/yaniguan/lab-decide",
       "layer": "L6",
       "layer_name": "Metacognitive & Epistemic Brain",
-      "tagline": "Uncertainty-aware experiment advisor combining split conformal prediction intervals, kNN trust-region abstention, and active boundary expansion",
+      "tagline": "Calibrated conformal decision gate & sequential BO campaign advisor with balanced group-packing splits, HTE Morgan+Mahalanobis CQR-r gating, and an ESOL-fitted autolab_wire node.",
       "object": "Epistemic decision and applicability-domain layer (`L6`) under the Auto-Lab brain: delivers distribution-free calibrated prediction intervals inside its trusted chemical/experimental manifold, emits explicit 'I don't know' abstentions outside it, and recalibrates as new laboratory measurements expand the boundary.",
-      "data": "Evaluates on ESOL aqueous solubility (`delaney-processed.csv`, Delaney 2004; 1,128 organic compounds fetched on demand to gitignored `data/`, split 676 train / 226 calibration / 226 test at `SEED = 0` while excluding pre-fitted `ESOL predicted`) and integrates an 11-dataset `OpenCalibrationDataset` registry (`src/lab_decide/datasets.py`: `ESOL`, `AqSolDB` 9,982, `BigSolDB v2.2` 125,752 Sept 2026, `CALiSol-23` 13,825, `FreeSolv` 642, `AstraZeneca Lipophilicity` 4,200, `Biogen ADME` 3,521, `Buchwald-Hartwig Doyle` 4,599, `Suzuki-Miyaura Perera` 5,760, `Direct Arylation Shields` 1,728, and `BH-HTE-OOD 2026` 27,497) with deterministic `leakage_excluded_columns` filtering and SHA-256-verified fetching.",
-      "model": "Scikit-learn `GradientBoostingRegressor(random_state=0)` paired with finite-sample Split Conformal Prediction (`alpha = 0.10`, quantile level `min(1, ceil((n_cal+1)*(1-alpha))/n_cal)` with `method='higher'`) and a standardized 6D Euclidean `NearestNeighbors(n_neighbors=5)` applicability-domain gate (`StandardScaler` + 80th-percentile calibration distance threshold `thr = 0.758`).",
-      "training": "CPU-only surrogate fitting, split conformal calibration, and 3-round simulated boundary acquisition (< 1s on CPU; `numpy`, `pandas`, `scikit-learn`). Achieves 0.912 marginal test coverage (`q = 1.522` log units, width `3.044`, MAE `0.704`), stratifying into `0.656` MAE / `0.922` coverage inside the trust region (`n = 180`, 79.6% answered) vs. `0.892` MAE / `0.870` coverage outside (`n = 46`, 20.4% abstained). Locally adaptive intervals (CQR), separate pool/test splits, and `BoTorch` loops remain roadmapped.",
-      "history": "Initialized in `41dae77` (2026-11-18) with `demo/conformal_trust.py`, reference capture `demo/output.txt`, and BO/conformal catalog (`6b03cfc`), followed by Phase-2 Lean 4 & `autolab-wire/v1` audit (`6957f12`) and the 11-dataset 2024-2026 conformal calibration registry on `main` (`e37de97`, PR #31).",
+      "data": "Evaluates on SHA-256-pinned Delaney ESOL (`1,123` deduplicated compounds split `561` train / `224` pool / `169` cal / `169` test, excluding pre-fitted `ESOL predicted`) and commits `results/registry_benchmark.json` across all 11 real CSV datasets (`ESOL`, `AqSolDB` 9,982, `BigSolDB v2.2` 125,752, `CALiSol-23` 13,825, `FreeSolv` 642, `AstraZeneca Lipophilicity` 4,200, `Biogen ADME` 3,521, `Buchwald-Hartwig Doyle`, `Suzuki-Miyaura Perera`, `Direct Arylation Shields`, and `BH-HTE-OOD 2026`) with explicit `group_keys` and zero regex fallbacks.",
+      "model": "Huber `GradientBoostingRegressor` / `LightGBM` surrogates paired with finite-sample Mondrian Split Conformal and locally scaled `cqr_r` (`LabDecideLean.conformalRank`, 23 Lean 4.36.0 theorems with `#print axioms` CI), `onehot_morgan` HTE encodings + train-only sub-bagged `ensemble_mahalanobis` kNN gating, deterministic balanced group-packing splits (`<= 0.67` pp error), and multi-round sequential BO (`tr_conformal_ucb`, `lightgbm_cqr_tr_ucb`).",
+      "training": "Across 20 ESOL seeds, selective Mondrian conformal achieves `0.924 +- 0.028` inside coverage (`MAE_in 0.581 +- 0.040` vs `MAE_out 1.002 +- 0.161`; `seed=0` `0.936` inside cov, `MAE_in 0.640` vs `1.217`). Across all 11 real datasets, `11/11` achieve `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`). In 10-seed x 6-round BO campaigns (`results/campaign_benchmark.json`), trust-region conformal policies maintain `0.000` OOD picks and reach `0.10` simple regret on Doyle Buchwald-Hartwig (`0.00` on Shields Direct Arylation).",
+      "history": "Initialized in `41dae77` (2026-11-18: ESOL conformal demo) -> `6957f12` (Phase-2 Lean 4 & wire) -> `e37de97` (PR #31: 11-dataset registry) -> `f72af29` (PR #36: balanced group-packing splits, HTE `onehot_morgan` + `ensemble_mahalanobis` + `cqr_r` across 11 real CSVs, 10-seed sequential BO campaigns, frozen ESOL `autolab_wire`, and 23-theorem Lean CI).",
       "unique_properties": [
-        "Decouples distribution-free finite-sample interval calibration (`q = 1.522`) from kNN applicability-domain abstention (`d_5NN <= 0.758`), isolating low-error in-domain answers (`MAE 0.656`) from OOD queries (`MAE 0.892`)",
-        "Excludes Delaney's pre-fitted `ESOL predicted` column to prevent target leakage into descriptor-based surrogate calibration",
-        "Explicitly documents pool-shrinking survivor bias (`180 -> 176` answered test points across active boundary rounds) rather than overclaiming OOD generalization",
-        "Pairs with `lab-ask-why` (`L6`), `labbench-posttrain` (`L3`), and `lab-rehearsal`/`lab-verify` (`L4`) to gate closed-loop wet-lab experiment proposals"
+        "Achieves `11/11` `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`) across all 11 real solubility, solvation, ADME, and HTE reaction benchmarks via `onehot_morgan` + `ensemble_mahalanobis` + `cqr_r`.",
+        "10-seed x 6-round sequential BO campaigns (`results/campaign_benchmark.json`) achieving `0.000` OOD picks and lowest Doyle B-H simple regret (`0.10 +- 0.16` vs `0.21` greedy & `3.29` GP-EI).",
+        "Deterministic balanced group-packing (`scaffold` & `group`) within `0.67` percentage points of target `50/20/15/15` split fractions across 20 ESOL seeds, plus `no-rdkit` & 23-theorem Lean `#print axioms` CI.",
+        "Frozen SHA-pinned ESOL `ConformalTrustModel` in `autolab_wire.py` (`n_calib = 169`, `thr = 0.6750`), scoring RDKit SMILES directly and expanding `tau` strictly on low-residual `(descriptors, measured_y)` ledger entries."
       ],
       "io_contract": {
         "inputs": "6D molecular/experimental descriptor vectors (`Minimum Degree`, `Molecular Weight`, `H-Bond Donors`, `Rings`, `Rotatable Bonds`, `Polar Surface Area`) and measured log solubility targets (`delaney-processed.csv`)",
@@ -152,51 +152,51 @@
       },
       "key_metrics": [
         {
-          "label": "Split Conformal Test Coverage",
-          "value": "0.912 (target 0.900)",
-          "note": "Half-width q = 1.522 log units (interval width 3.044) across n = 226 ESOL test compounds"
+          "label": "20-Seed ESOL Selective Conformal Gate",
+          "value": "0.924 +- 0.028 cov_in | 0.581 vs 1.002 MAE",
+          "note": "Seed-0 4-way split (561/224/169/169): 0.936 inside coverage, MAE_in 0.640 vs MAE_out 1.217"
         },
         {
-          "label": "Inside vs. Outside Trust-Region MAE",
-          "value": "0.656 vs. 0.892 log units",
-          "note": "5-NN threshold = 0.758 (80th cal pct): answers 79.6% (n=180, cov 0.922), abstains 20.4% (n=46, cov 0.870)"
+          "label": "11-Dataset Real-CSV Registry Benchmark",
+          "value": "11 / 11 gate_informative (5/5 seeds MAE_in < MAE_out)",
+          "note": "Includes Doyle B-H (Spearman +0.323), Perera Suzuki (+0.258), Shields (+0.636), and BH-HTE-OOD (+0.409)"
         },
         {
-          "label": "Active Boundary Acquisition",
-          "value": "3 rounds (+50 points)",
-          "note": "Moves 20, 20, 10 nearest outside points into training (676 -> 726 train rows)"
+          "label": "Sequential 6-Round BO Campaigns (10 Seeds)",
+          "value": "0.000 OOD picks | 0.10 Doyle B-H regret",
+          "note": "lightgbm_cqr_tr_ucb & tr_conformal_ucb reach 0.004 regret on ESOL and 0.00 on Shields Direct Arylation"
         }
       ],
-      "commit_head": "e37de97",
-      "issue_count": 28,
+      "commit_head": "f72af29",
+      "issue_count": 32,
       "concise": {
-        "hook": "Answers only inside its calibrated zone, says 'I don't know' outside, and grows with new data.",
+        "hook": "Answers inside its calibrated chemical manifold, abstains outside, and expands safely across BO rounds.",
         "flow": [
-          "6 RDKit descriptors",
-          "GBDT + kNN trust gate",
-          "90% interval or ABSTAIN"
+          "RDKit / HTE encodings",
+          "GBDT/LGBM + CQR-r + Mahalanobis",
+          "90% interval or L6_ABSTAIN"
         ],
         "kpis": [
           [
-            "92.2%",
-            "in-trust coverage"
+            "92.4%",
+            "20-seed ESOL cov_in"
           ],
           [
-            "0.656",
-            "in-trust MAE"
+            "11 / 11",
+            "informative real gates"
           ],
           [
-            "11",
-            "calibration corpora"
+            "0.000",
+            "campaign OOD picks"
           ]
         ],
         "short": {
-          "object": "Gate experiment proposals by conformal uncertainty and distance to training data.",
-          "data": "Delaney ESOL (1,128) + 10 open calibration corpora (BigSolDB v2.2, AqSolDB, CALiSol-23, ADME, BH-HTE-OOD 2026).",
-          "model": "Gradient boosting + split conformal (90%) + 5-NN 80th-pct trust boundary.",
-          "training": "Supervised GBDT fit + 3 active boundary-expansion rounds.",
-          "history": "41dae77 ESOL conformal demo -> 6957f12 Lean/wire audit -> e37de97 11-dataset 2026 registry.",
-          "property": "Lower error inside trust zone (0.66 vs 0.89 MAE) with strict leakage-column exclusion."
+          "object": "Gate experiment proposals and sequential BO campaigns by Mondrian conformal intervals and kNN distance.",
+          "data": "SHA-pinned ESOL (561/224/169/169) + 11 real-CSV corpora (BigSolDB v2.2, CALiSol-23, FreeSolv, Doyle/Perera/Shields HTE).",
+          "model": "Huber GBDT/LightGBM + Mondrian CQR-r + ensemble-Mahalanobis kNN + balanced group-packing splits (<=0.67 pp err).",
+          "training": "11/11 real datasets gate_informative=True (5/5 seeds MAE_in < MAE_out) + 10-seed x 6-round BO campaigns.",
+          "history": "41dae77 ESOL demo -> e37de97 11-dataset registry -> f72af29 balanced splits, HTE CQR, BO campaigns & ESOL wire.",
+          "property": "0.000 OOD picks in 6-round BO (0.10 Doyle regret) and residual-gated ESOL ConformalTrustModel on autolab_wire."
         }
       }
     },
@@ -205,17 +205,17 @@
       "url": "https://github.com/yaniguan/buy-or-make",
       "layer": "L5",
       "layer_name": "Executive Planning, Procurement & Scheduling",
-      "tagline": "Cost-aware chemical vendor availability and N-step retrosynthetic reachability triage with conservative listed-price lower bounds, strict null/unknown honesty, and assayfold-aligned schemas.",
+      "tagline": "Cost-aware vendor availability and Retro* multi-step retrosynthesis planner with strict listed-price lower bounds, PaRoutes/USPTO-50K benchmarks, and Lean 4.36.0 stoichiometry proofs.",
       "object": "Verifies whether candidate molecules proposed by L6/L5 scientific planners (lab-ask-why, lab-decide) are directly purchasable from chemical vendors or makeable in N steps from purchasable building blocks, computing conservative leaf-only stoichiometric cost lower bounds strictly from real listed catalog prices while keeping missing prices null and unverified molecules unknown.",
-      "data": "Nineteen license-audited external data and model sources in `buyormake/sources.py` and `buyormake/open_corpora.py` (expanding PubChem PUG-REST/PUG-View, ZINC, Enamine, eMolecules, Mcule, AiZynthFinder, USPTO Lowe CC0-1.0, ORD CC-BY-SA-4.0, RDKit SA_Score, Coley SCScore, and RAscore with 7 checksummed 2024-2026 open corpora: `PaRoutes 2.0`, `ChEMBL 37` May 2026, `SureChEMBL` Nov 2026, `COCONUT 2.0` ~700k natural products, `ORDerly` 2024, `Syntheseus USPTO-50K & Retro*` 2024-2026, and `SynPlanner` 2024-2025; non-redistributable caches isolated in gitignored `data/`), 5 strict JSON Schemas (`extra='forbid'`), and a 20-molecule CPU benchmark.",
-      "model": "RDKit canonical isomeric SMILES and InChIKey normalization, multi-format LocalStockBackend (.tsv, .csv, .jsonl, .smi, .sqlite, .hdf5) + rate-limited SQLite-cached PubChemVendorBackend, 3-tier retrosynthesis search (optional AiZynthFinder MCTS, local USPTO/ORD SQLite product lookup, and a 14-template RDKit SMARTS 2-step disconnection engine), mass-normalized USD/g stoichiometric leaf cost estimator, and SAscore + pure-NumPy 5-layer Morgan-FP SCScore inference.",
-      "training": "Zero in-repository model training; combines deterministic RDKit cheminformatics, live/local catalog lookup, and stoichiometric cost algebra with RDKit's fragment-based SAscore heuristic and frozen pretrained Reaxys SCScore weights (6.18 MB NumPy JSON.gz, optional CC-BY-4.0 AiZynthFinder USPTO ONNX policy networks).",
-      "history": "Initial release `76991c8` on `main` (2026-11-18: `buyormake` package, 5 JSON Schemas, 8 fetch scripts, 20-molecule CPU demo, docs `ff8e530`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`5fd1afb`, PR #32) and 19-source 2024-2026 open synthesis/compound corpus adapters on `main` (`3be1f4a`, PR #33).",
+      "data": "19 SPDX-audited external sources (`buyormake/sources.py` + `buyormake/open_corpora.py`: PubChem, ZINC, Enamine, eMolecules, Mcule, `PaRoutes 2.0` `n1`/`n5`, `SynPlanner`, `Syntheseus USPTO-50K` with `0` test leakage, `ChEMBL 37`, `SureChEMBL`, `COCONUT 2.0`, `ORDerly`, `ORD`), SHA-256-verified `results/retrosynthesis_benchmark.json` (240 multi-step + 500 single-step targets), and 5 strict JSON Schemas (`extra='forbid'`).",
+      "model": "RDKit canonical/InChIKey + desalting normalizer, throttled SQLite-cached `PubChemVendorBackend` + multi-format `LocalStockBackend`, `Retro*` best-first AND-OR multi-step search (`buyormake/retro_star.py`: 44 atom-balanced acyclic & unimolecular FGI SMARTS templates + train/val `USPTO-50K` lookup), unit-aware `USD/g` leaf-cost & MOQ estimator, and `BuyOrMakeLean` Lean 4.36.0 stoichiometry/budget proofs.",
+      "training": "Zero in-repo neural training; combines `Retro*` cost-guided search with frozen MIT Reaxys `SCScore` weights (`6.18 MB`). On the 240-target multi-step benchmark (`PaRoutes n1`, `PaRoutes n5`, `SynPlanner`), `Retro*` (`max_steps=5`) lifts solve rate from `2.1%` (`5/240`, 2-step baseline) to `69.2%` (`166/240`, `10/10` convergent `PaRoutes`), and lifts 500-target held-out `USPTO-50K` top-10 accuracy from `16.6%` to `43.0%`.",
+      "history": "Initial release `76991c8` (2026-11-18: `buyormake` CLI, 5 JSON Schemas, 20-molecule demo) -> `5fd1afb` (PR #32: `BuyOrMakeLean` & `autolab-wire/v1`) -> `3be1f4a` (PR #33: 19-source 2024-2026 corpora) -> `ec33997` (PR #34: `Retro*` multi-step AND-OR planner, 44 atom-balanced templates, PaRoutes/SynPlanner/USPTO-50K benchmarks, and Lean 4.36.0 CI).",
       "unique_properties": [
-        "Strict epistemic honesty on prices and reachability: never fabricates missing catalog prices (price=null, price_basis='unknown') and never conflates bounded search failure ('unknown') with synthetic impossibility.",
-        "Completeness-tracked leaf-only route cost lower bounds (sum of cheapest USD/g * count * MW_leaf / MW_target per 1 g target) distinguishing complete leaf coverage from partial lower bounds.",
-        "Zero-redistribution license gate recording explicit commercial_use_ok, redistribution_ok, and license_quote metadata across 12 sources while keeping fetched vendor data gitignored.",
-        "Timestamp-invariant SHA-256 sealed AvailabilityRecord contracts sharing Source, Quantity, Uncertainty, Provenance, and Molecule types with assayfold (L0)."
+        "`Retro*` best-first AND-OR planner solving `69.2%` (`166/240`) of `PaRoutes n1/n5` & `SynPlanner` multi-step targets (`10/10` convergent routes) vs `2.1%` for 2-step lookup/SMARTS.",
+        "Strict `null`/`unknown` price honesty and `data_source` provenance (`synthetic_reference_catalog` vs real stock), never inventing unlisted vendor prices or leaking `USPTO-50K` test reactions.",
+        "Machine-checked `BuyOrMakeLean` Lean 4.36.0 theorems (`unpriced_never_passes_budget`, `routeStoichiometryOK`) compiled and audited in CI across every retrosynthetic template.",
+        "Exports `labshift` release-time / MOQ pack constraints (`to_procurement_constraint`) and `lab-attrib` precursor stoichiometry bases (`build_precursor_attribution_basis`)."
       ],
       "io_contract": {
         "inputs": "Candidate SMILES strings or .smi files, optional local stock catalogs (.tsv/.csv/.jsonl/.smi/.sqlite/.hdf5), optional USPTO/ORD reactions.sqlite and SCScore/AiZynthFinder weights, max_steps bound, and optional proposal budget.",
@@ -223,56 +223,51 @@
       },
       "key_metrics": [
         {
-          "label": "20-Molecule CPU Demo Triage Breakdown",
-          "value": "14 buyable, 3 makeable, 1 unknown, 2 invalid",
-          "note": "77.8% buyable and 16.7% makeable (<=2 steps) among 18 valid candidates using live PubChem + template fallback (note: Analog-6 lactam cleavage issue tracked in audit)"
+          "label": "Multi-Step Retrosynthesis (PaRoutes n1/n5 + SynPlanner)",
+          "value": "69.2% solved (166/240) | 10/10 convergent",
+          "note": "Retro* (max_steps=5, 178.7 ms median) vs 2.1% (5/240) for 2-step lookup+SMARTS baseline"
         },
         {
-          "label": "Cold vs. Warm SQLite Cache CPU Latency",
-          "value": "24.970 s cold -> 0.099 s cached (~252x)",
-          "note": "1.249 s/molecule live PubChem (rate-limited <=5 req/s) vs 0.005 s/molecule offline cache on Intel Xeon CPU"
+          "label": "Held-Out USPTO-50K Single-Step Benchmark (500 Targets)",
+          "value": "18.2% top-1 | 43.0% top-10 (0 test leakage)",
+          "note": "Up from 11.4% top-1 / 16.6% top-10 with 17 SMARTS; indexed strictly on train+val"
         },
         {
-          "label": "License-Audited External Sources",
-          "value": "12 sources (3 integrated, 8 fetch_only, 1 not_used)",
-          "note": "Every source audited on 2026-11-18 with license_evidence URLs and verbatim license_quote fields"
-        },
-        {
-          "label": "Exported Strict JSON Schemas",
-          "value": "5 schemas (additionalProperties: false)",
-          "note": "Source, Offer, Route, AvailabilityRecord, and RankResult aligned with assayfold hub primitives"
+          "label": "SPDX-Audited Sources & Cache Speedup",
+          "value": "19 sources | 24.97 s cold -> 0.099 s cached",
+          "note": "5 ms/molecule offline SQLite cache with 5 strict JSON Schemas and Lean 4.36.0 CI"
         }
       ],
-      "commit_head": "3be1f4a",
+      "commit_head": "ec33997",
       "issue_count": 28,
       "concise": {
-        "hook": "Buy it now or make it in N steps? Strict catalog lower bounds, never invented prices.",
+        "hook": "Buy from catalog or synthesize via Retro*? Strict listed-price lower bounds, never invented costs.",
         "flow": [
           "Candidate SMILES",
-          "PubChem + 2-step SMARTS",
+          "PubChem + Retro* 44-SMARTS",
           "buyable | makeable | unknown"
         ],
         "kpis": [
           [
-            "5 ms",
-            "cached / mol"
+            "69.2%",
+            "Retro* 5-step solve"
+          ],
+          [
+            "43.0%",
+            "USPTO-50K top-10"
           ],
           [
             "19",
             "SPDX-gated corpora"
-          ],
-          [
-            "null",
-            "when unlisted"
           ]
         ],
         "short": {
-          "object": "Classify molecules as buyable, makeable in <= N steps, or unknown with cost bounds.",
-          "data": "PubChem + 19 SPDX-gated sources incl. PaRoutes 2.0, ChEMBL 37, SureChEMBL, COCONUT 2.0, ORDerly, Syntheseus & SynPlanner.",
-          "model": "Vendor lookup + 14 RDKit SMARTS disconnections (or AiZynthFinder) + SA/SCScore.",
-          "training": "Deterministic search + pretrained MIT SCScore weights (no training in repo).",
-          "history": "76991c8 v0.1 release -> 5fd1afb Lean/wire audit -> 3be1f4a 19-source 2026 corpora.",
-          "property": "Missing prices stay null; mixed currencies are never silently compared."
+          "object": "Triage buyable vs multi-step makeable molecules with conservative listed-catalog USD/g lower bounds.",
+          "data": "19 SPDX-gated sources incl. PaRoutes n1/n5, SynPlanner, Syntheseus USPTO-50K (0 test leak), ChEMBL 37 & COCONUT 2.0.",
+          "model": "Vendor lookup + Retro* best-first AND-OR search (44 atom-balanced SMARTS + USPTO train/val) + SA/SCScore.",
+          "training": "Deterministic search + frozen MIT SCScore weights: lifts 240-target multi-step solve 2.1% -> 69.2% (10/10 convergent).",
+          "history": "76991c8 v0.1 release -> 3be1f4a 19-source corpora -> ec33997 Retro* planner, PaRoutes/USPTO-50K bench & Lean 4 CI.",
+          "property": "Missing prices stay null, stoichiometry is Lean-checked, and labshift/lab-attrib handoffs carry MOQ & precursor bases."
         }
       }
     },
@@ -320,7 +315,7 @@
         }
       ],
       "commit_head": "fc5bba5",
-      "issue_count": 30,
+      "issue_count": 34,
       "concise": {
         "hook": "Schedule multi-step wet-lab jobs across shared instruments without breaking wait windows.",
         "flow": [
@@ -357,17 +352,17 @@
       "url": "https://github.com/yaniguan/lab-automation-atlas",
       "layer": "L5",
       "layer_name": "Executive Planning, Procurement & Scheduling",
-      "tagline": "Curated, zero-copy ecosystem map of automated-lab hardware, cloud foundries, open-source protocol/scheduling software, and protocol benchmarks with automated link verification.",
+      "tagline": "Machine-readable 84-entry semantic map of lab hardware, cloud foundries, protocol DSLs, frontier solvers, and open datasets with Lean 4.36.0 compound SPDX + DNS-pinned SSRF verification.",
       "object": "Provides a neutral, license-aware semantic world map and pointer registry grounding hardware platform selection, protocol intermediate representation (IR) targeting, combinatorial solver choice, and open protocol dataset discovery across the Auto-Lab stack without copying external data or ranking commercial vendors.",
-      "data": "Machine-readable `atlas.json` cataloging 70 ecosystem entries across 5 categories (byte-for-byte synced with `README.md` via `scripts/sync_catalog.py`), including liquid-handling robots, cloud foundries, open-source protocol/orchestration stacks, and 17 license-audited open datasets (adding 11 verified 2024-2026 benchmarks/corpora—`FineBio`, `ChemBench`, `BixBench`, `MassSpecGym`, `MSD`, `AqSolDB`, `CALiSol-23`, `COD/ROD`, `OMAT24`, `DCASE Task 2 2024-2026`, and `DROID`—with explicit `eval_only`, canary, and non-commercial guards across 160 live-checked HTTPS URLs).",
-      "model": "Five-faceted lab-automation ontology paired with a Python standard-library Markdown hyperlink extractor and HTTP status auditor (scripts/check_links.py). Explicitly trains and runs no neural network or statistical model inside this pointer-atlas repository.",
-      "training": "Zero parametric training and zero third-party Python dependencies; maintained via manual primary-source verification (2026-11-18) and weekly scheduled GitHub Actions link-rot sweeps (.github/workflows/links.yml, Mondays 12:00 UTC).",
-      "history": "Initial commit `f2e2e83` on `main` (2026-11-18: curated 5-section lab-automation pointer map, `scripts/check_links.py`, weekly `links.yml` CI, docs `7c65b97`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`cab4852`, PR #30) and the 70-entry 2024-2026 open-dataset expansion on `main` (`3b7d259`, PR #31).",
+      "data": "Machine-readable `atlas.json` (`additionalProperties: false` in `schema/atlas.schema.json`) cataloging `84` typed entries across `7` categories (liquid-handling hardware profiles, cloud foundries, protocol SDKs/IRs, combinatorial & embodied solvers `PyJobShop` / `LeRobot`, chemical procurement, `L4` bridges, and 2024-2026 open wet-lab, spectra, crystallography, SQL & Lean benchmarks), byte-for-byte synced with `README.md`.",
+      "model": "Typed hardware capability & protocol-IR compatibility resolver (`lab_atlas/catalog.py`), recursive compound SPDX expression (`AND`/`OR`/`WITH`) + parent-lineage taint evaluator (`lab_atlas/spdx.py` in 1-to-1 parity with `LabAtlasLean.checkAtlasResource`), and concurrent DNS-pinned HTTPS SSRF link auditor (`lab_atlas/linkcheck.py`).",
+      "training": "Zero parametric training and zero third-party runtime dependencies; continuously verified via Lean 4.36.0 `#print axioms` + 335-case `#eval` parity checks, offline `pytest` schema/SSRF suites, and weekly GitHub Actions link audits.",
+      "history": "Initial commit `f2e2e83` (2026-11-18: pointer map & link checker) -> `cab4852` (PR #30: `LabAtlasLean` & wire) -> `3b7d259` (PR #31: 70-entry 2026 dataset expansion) -> `b6455d9` (PR #32: 84 frontier entries across 7 categories, compound SPDX + URL-lineage `autolab_wire` hardening, and Lean 4.36.0 `#print axioms` + 335-case parity CI).",
       "unique_properties": [
-        "Strict zero-copy, vendor-neutral pointer posture: copies zero external datasets, ranks zero hardware vendors, and flags upstream non-commercial or per-record license terms.",
-        "Unified vertical taxonomy connecting physical liquid handlers (Opentrons, Hamilton, Tecan), cloud foundries, protocol IRs/SDKs (PyLabRobot, Autoprotocol, LabOP, XDL, SiLA 2), orchestration/solvers (WEI, Bluesky, Atlas, OR-Tools), and benchmarks (WLP, BioPlanner, BioProBench, LAB-Bench).",
-        "Zero-dependency standard-library URL reachability checker paired with scheduled weekly GitHub Actions cron monitoring.",
-        "Direct cross-linking to Auto-Lab execution, scheduling, and data-hub siblings (stepbot, labshift, twinstep, assayfold, buy-or-make)."
+        "84-entry zero-copy registry across 7 categories resolving physical hardware profiles (`opentrons_ot2`, `opentrons_flex`, `hamilton_star`, `tecan_fluent`, `emerald_cloud_lab`, `chemputer`) dynamically from `atlas.json`.",
+        "Compound SPDX (`AND`, `OR`, `WITH`) + `parent_licenses` lineage taint + catalog URL cross-matching verified across 335 `#eval` test vectors against `LabAtlasLean` (`0 sorry`, no custom axioms).",
+        "Canonical HTTPS-only public-host SSRF guard rejecting non-canonical IPv4/IPv6 transition literals, private/link-local ranges, and DNS rebinding.",
+        "Byte-for-byte `atlas.json` <-> `README.md` synchronization with `eval_only` benchmark contamination blocks across `LAB-Bench`, `BixBench`, `ChemBench`, `EHRSQL-2024`, and `PutnamBench`."
       ],
       "io_contract": {
         "inputs": "Curated Markdown ecosystem tables and external HTTPS documentation, repository, API, and dataset URLs in README.md.",
@@ -375,43 +370,38 @@
       },
       "key_metrics": [
         {
-          "label": "Cataloged Ecosystem Entities",
-          "value": "30 entries across 5 categories",
-          "note": "3 Auto-Lab tools, 5 liquid handlers, 4 cloud labs/foundries, 12 OSS automation stacks, and 6 protocol corpora"
+          "label": "Typed Ecosystem & Dataset Registry",
+          "value": "84 entries across 7 categories",
+          "note": "Synced byte-for-byte between atlas.json and README.md with strict JSON Schema validation"
         },
         {
-          "label": "Verified External Hyperlinks",
-          "value": "41 unique HTTPS URLs",
-          "note": "39 initial platform/software/paper/dataset URLs checked live on 2026-11-18 plus 2 Auto-Lab ecosystem links"
-        },
-        {
-          "label": "Automated Link-Rot Monitoring Cadence",
-          "value": "Weekly cron (0 12 * * 1) + push",
-          "note": "Runs Python 3.12 standard-library urllib link auditor on ubuntu-latest"
+          "label": "Formal SPDX & SSRF Parity (LabAtlasLean)",
+          "value": "335 / 335 #eval parity | 0 custom axioms",
+          "note": "Lean 4.36.0 checkAtlasResource + compound SPDX AND/OR/WITH & parent-lineage taint"
         },
         {
           "label": "Redistributed Third-Party Data Footprint",
-          "value": "0 bytes (pointer-only)",
-          "note": "Delegates license-gated dataset fetching and conversion to assayfold and buy-or-make"
+          "value": "0 bytes (pointer-only MIT index)",
+          "note": "Scheduled weekly + PR link-rot & SSRF checks across all external HTTPS URLs"
         }
       ],
-      "commit_head": "3b7d259",
+      "commit_head": "b6455d9",
       "issue_count": 28,
       "concise": {
-        "hook": "A checked, zero-hype map of lab robots, cloud foundries, protocol DSLs, and open datasets.",
+        "hook": "A checked, zero-hype map of lab robots, cloud foundries, protocol DSLs, solvers, and open datasets.",
         "flow": [
-          "Ecosystem URLs",
-          "Weekly HTTP link check",
-          "70-entry JSON & MD atlas"
+          "84 typed entries",
+          "DNS-pinned SSRF + Lean SPDX",
+          "Synced JSON & MD atlas"
         ],
         "kpis": [
           [
-            "70",
-            "checked entries"
+            "84",
+            "typed entries (7 cats)"
           ],
           [
-            "17",
-            "open datasets"
+            "335",
+            "Lean #eval parity"
           ],
           [
             "0",
@@ -419,12 +409,12 @@
           ]
         ],
         "short": {
-          "object": "Index liquid handlers, cloud labs, open automation software, and protocol corpora.",
-          "data": "70-entry pointer atlas (17 open datasets incl. FineBio, ChemBench, BixBench, MassSpecGym, OMAT24, COD/ROD, DROID).",
-          "model": "Human-curated ontology + automated URL health script (no ML model).",
-          "training": "None (reference atlas; grounds tool & dataset selection across Auto-Lab).",
-          "history": "f2e2e83 link-checked release -> cab4852 Lean/wire audit -> 3b7d259 70-entry 2026 atlas.",
-          "property": "Pointer-only MIT index: copies zero external data and ranks zero vendors."
+          "object": "Ground platform capabilities, protocol IRs, compound SPDX expressions, and dataset governance.",
+          "data": "84-entry atlas.json across 7 categories (robots, cloud labs, IRs, solvers PyJobShop/LeRobot, procurement & datasets).",
+          "model": "Typed hardware/IR capability resolver + compound SPDX evaluator + DNS-pinned SSRF link auditor.",
+          "training": "Zero parametric training; verified by Lean 4.36.0 #print axioms, 335-case parity, and weekly link CI.",
+          "history": "f2e2e83 pointer map -> 3b7d259 70-entry 2026 atlas -> b6455d9 84 frontier entries, wire hardening & Lean 4 CI.",
+          "property": "Default-deny SPDX AND/OR/WITH + parent-lineage taint and canonical HTTPS SSRF guards."
         }
       }
     },
@@ -433,17 +423,17 @@
       "url": "https://github.com/yaniguan/lab-rehearsal",
       "layer": "L4",
       "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
-      "tagline": "Pre-execution liquid-handling digital-twin rehearsal loop: content-addressed episodic recall, deck simulation, default-deny verification gate, mock dispatch, and JSONL memory write-back.",
+      "tagline": "Pre-execution 96-well digital-twin rehearsal loop with episodic skeleton recall, non-capping volume & compiled stepbot round-trip parity gates, Opentrons fixture converters, and Lean 4.36.0 CI.",
       "object": "Prevents unsafe or malformed liquid-handling protocols from reaching physical benchtop robots by running every candidate protocol through a closed five-stage safety loop (recall -> rehearse -> verify -> run -> write_back) between L5 protocol planners/compilers (lab-decide, labshift, stepbot) and L1/L2 hardware executors (lab-hands, Opentrons, PyLabRobot).",
-      "data": "Five deterministic JSON liquid-handling protocols in `demo/protocols/` (43-step 8-well 1:2 serial dilution + 4 seeded fault fixtures), a 10-run episodic ledger (`demo/memory/runs.jsonl`), and an expanded 14-dataset, 18-repository `catalog/simulators.json` + twin converter suite (`src/lab_rehearsal/open_datasets.py`) integrating 10 verified 2024-2026 wet-lab protocol & embodied corpora (`Opentrons shared-data v6/v7/v8`, `Opentrons/Protocols`, `FineBio`, `BioPlanner`, `BioProBench` ICML 2026, `LAB-Bench ProtocolQA`, `SciKnowEval`, `EmbodiedLab`, `Matterix`, and `WETOP-Bench`) behind default-deny `eval_only` and `commercial_use_ok` ingestion gates.",
-      "model": "Zero-dependency deterministic discrete-event deck simulator (96-well plate capped at 300 uL/well, 12-column reservoir capped at 15,000 uL/col, 96-tip rack, 20-300 uL single-channel pipette) paired with a 7-check default-deny rule gate (known_step, volume_in_range, no_overfill, enough_liquid, tip_present, no_tip_reuse, all_tips_dropped). No neural network is trained inside this repository.",
-      "training": "Zero parametric training; cross-session adaptation operates strictly via non-parametric episodic memory write-back (append-only JSONL keyed by 12-hex SHA-256 canonical JSON protocol hashes), enabling Pass 2 recall warnings before rehearsal executes.",
-      "history": "Initial commit `8219695` on `main` (2026-11-18: 5-stage rehearsal loop `demo/rehearse.py`, 5 JSON fixtures, `runs.jsonl`, docs `5e47a8f`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`9f64121`, PR #30) and 2024-2026 open protocol twin converters on `main` (`4013323`, PR #31).",
+      "data": "6 deterministic JSON liquid-handling protocols in `demo/protocols/` (`1` valid 43-step 8-well serial dilution + `5` failure fixtures including dirty-tip mix contamination), a 12-run two-pass episodic ledger (`demo/memory/runs.jsonl`), and a 14-dataset, 18-simulator SPDX-governed catalog (`catalog/simulators.json`, `src/lab_rehearsal/open_datasets.py`) with multi-labware / multi-tiprack Opentrons JSON v6-v8 & Python converters.",
+      "model": "Deterministic 1- and 8-channel discrete-event deck twin (96-well plate, 12-column reservoir, dead-volume reserves, `incubate`/`seal`/`thaw` evaporation) paired with 10 default-deny verification rules, `from_stepbot` compiled-IR round-trip re-rehearsal (`_verify_compiled_wire_roundtrip`), and the compiled Lean 4.36.0 `lab-rehearsal-check` oracle.",
+      "training": "Zero parametric training; adapts across sessions via content-addressed and structural skeleton-hashed episodic memory (`runs.jsonl`, isolated in temp dirs during wire calls) plus `lab-attrib` `EXECUTION_ARTIFACT` retry reconciliation.",
+      "history": "Initial commit `8219695` (2026-11-18: 5-stage rehearsal loop) -> `9f64121` (PR #30: Lean 4 & `autolab-wire/v1`) -> `4013323` (PR #31: 14-dataset 2024-2026 twin converters) -> `a889b23` (PR #36: non-capping wire volume validation, compiled `stepbot` round-trip equivalence gate, multi-labware Opentrons fixture merging, and live Lean 4.36.0 differential CI).",
       "unique_properties": [
-        "Five-stage closed safety loop (Recall -> Rehearse -> Verify -> Run -> Write-Back) blocking hardware dispatch unless every step is known and every volumetric/hygiene rule passes.",
-        "Non-short-circuiting trajectory simulation using bounded physical volume clamping so all cascading step violations are surfaced in a single pass.",
-        "Content-addressed SHA-256 episodic memory that flags previously failed protocols and violated rule names prior to re-simulation.",
-        "Zero-dependency standard-library reference semantics aligned with stepbot (Opentrons v2 compiler), twinstep (protocol error twins), and YLM/lean (LabLean formal checker)."
+        "Rejects unrehearsable or over-capacity single-well volumes (`requested_volume_not_rehearsable`) on `autolab_wire` instead of silently capping transfers at `200 uL`, splitting multi-stroke `200..300 uL` transfers cleanly.",
+        "Round-trip `from_stepbot(protocol_yaml_dict)` re-rehearsal gate blocking approval whenever compiled `stepbot` IR drifts in well volume (`> 0.1 uL`), tip count, or safety invariants.",
+        "Multi-labware and multi-tiprack Opentrons fixture importer preserving distinct deck slots and tip capacities without slot-merging collisions.",
+        "Live Lean 4.36.0 `lab-rehearsal-check` executable compiled in CI and differentially verified against the Python tenth-microliter digital twin (`0` mismatches)."
       ],
       "io_contract": {
         "inputs": "JSON protocol step lists (pick_up_tip, drop_tip, aspirate, dispense, mix with plate:A1..H12 / res:1..12 locations and microliter volumes) plus prior episodic history in demo/memory/runs.jsonl.",
@@ -451,39 +441,34 @@
       },
       "key_metrics": [
         {
-          "label": "Default-Deny Gate Accuracy on Bundled Fixtures",
-          "value": "5/5 protocols (100.0%)",
-          "note": "Blocks 4/4 broken protocols across 6 rule violations and approves 1/1 43-step 8-well serial dilution; reproduced locally"
+          "label": "Bundled Default-Deny Fixture Suite",
+          "value": "6 / 6 protocols (1 valid, 5 fault classes blocked)",
+          "note": "12-run two-pass episodic recall surfaces prior run IDs and violated rules before simulation"
         },
         {
-          "label": "Two-Pass Episodic Recall Coverage",
-          "value": "10 runs (2 passed, 8 failed)",
-          "note": "Pass 2 surfaces prior failure run IDs and violated rule names on 4/4 broken protocols before simulation"
+          "label": "Compiled Wire Round-Trip & Lean 4 Parity",
+          "value": "0 mismatches (Python twin <-> lab-rehearsal-check)",
+          "note": "Verifies exact <= 0.1 uL well-volume and tip-count parity across compiled stepbot IR"
         },
         {
-          "label": "Approved Serial Dilution Final State",
-          "value": "8/8 wells at 100 uL (2 tips, 43 commands)",
-          "note": "A1..H1 uniform 100 uL final volumes after 16 aspirates, 16 dispenses, 7 mixes, 2 tip pickups, and 2 tip drops"
-        },
-        {
-          "label": "Curated External Simulation Ecosystem",
-          "value": "4 datasets, 10 OSS repos, 10 papers",
-          "note": "Covers Genesis, LeRobot, MuJoCo, IsaacLab, ManiSkill, PyLabRobot, Opentrons, LabUtopia, AutoBio, MATTERIX, and PRISM"
+          "label": "Open Simulation & Protocol Ecosystem",
+          "value": "14 datasets | 18 simulators (SPDX-gated)",
+          "note": "Opentrons shared-data v6-v8, Opentrons/Protocols, FineBio, BioPlanner, BioProBench & Matterix"
         }
       ],
-      "commit_head": "4013323",
-      "issue_count": 28,
+      "commit_head": "a889b23",
+      "issue_count": 32,
       "concise": {
-        "hook": "Recall past crashes, dry-run on a virtual 96-well deck, block bad runs, write outcomes back.",
+        "hook": "Recall past crashes, dry-run on a virtual 96-well deck, verify compiled round-trip parity, write back.",
         "flow": [
-          "JSON step list",
-          "Recall + 96-well twin",
-          "PASS to robot or BLOCK + log"
+          "Steps / Opentrons JSON",
+          "Recall + 96w twin + round-trip",
+          "PASS to stepbot or BLOCK"
         ],
         "kpis": [
           [
-            "4 / 4",
-            "fault classes caught"
+            "5 / 5",
+            "fault fixtures blocked"
           ],
           [
             "14",
@@ -491,16 +476,16 @@
           ],
           [
             "100%",
-            "recall warning"
+            "round-trip parity"
           ]
         ],
         "short": {
-          "object": "Catch volume, empty-well, overfill, and tip-reuse errors before touching hardware.",
-          "data": "5 bundled JSON protocols + runs.jsonl + 14-dataset catalog (Opentrons v6-v8, FineBio, BioPlanner, BioProBench, Matterix).",
-          "model": "Stateful 96-well + 12-reservoir + 20-300 uL pipette bookkeeping twin.",
-          "training": "Episodic memory write-back (runs.jsonl flags repeat failures before rehearsal).",
-          "history": "8219695 5-stage rehearsal loop -> 9f64121 Lean/wire audit -> 4013323 14-dataset 2026 twin converters.",
-          "property": "Default-deny gate: zero commands reach the executor if any rule fails."
+          "object": "Catch volume, empty-well, overfill, tip-reuse, evaporation, and compile-drift bugs pre-execution.",
+          "data": "6 bundled JSON protocols + 12-run runs.jsonl + 14-dataset 2024-2026 simulator catalog (Opentrons v6-v8, FineBio).",
+          "model": "Stateful 1-/8-ch 96-well + evaporation twin with from_stepbot round-trip verifier & Lean 4 lab-rehearsal-check.",
+          "training": "Content- and skeleton-hashed episodic write-back + lab-attrib transient retry reconciliation.",
+          "history": "8219695 5-stage loop -> 4013323 14-dataset converters -> a889b23 non-capping wire, round-trip gate & Lean 4 CI.",
+          "property": "Never silently caps over-capacity volumes and re-rehearses compiled stepbot IR before minting."
         }
       }
     },
@@ -509,17 +494,17 @@
       "url": "https://github.com/yaniguan/lab-verify",
       "layer": "L4",
       "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
-      "tagline": "Strict mechanical default-deny verification gate across SQL lab queries (4-layer AST + execution filter), Lean 4 formal proofs (linked to YLM/lean), and bench protocols.",
+      "tagline": "Default-deny verification gate across SQL lab/clinical queries (tie-aware 4-layer gate on real EHRSQL-2024), compiled Lean 4.36.0 `#print axioms` proofs, and fail-closed Ed25519/HMAC `lean-mcp/v1` envelopes.",
       "object": "Enforces zero-trust mechanical verification on LLM-generated structured artifacts—stopping malformed syntax, write/DDL injection, hallucinated schema columns, and silent semantic query errors before results touch laboratory databases (assayfold) or closed-loop experiment planners (lab-decide, lab-ask-why).",
-      "data": "Deterministic 30-row synthetic in-memory SQLite lab database (12 questions, 22 labeled candidate queries in `demo/candidates.json`), plus `catalog/sources.json` `v1.1.0` (16 datasets, 11 from 2024-2026, and 15 verification repositories) and read-only SQLite / Lean 4 benchmark adapters (`src/lab_verify/open_benchmarks.py`) covering `Spider 2.0`, `Spider 2.0-Lite`, `BIRD Mini-Dev`, `EHRSQL-2024` (clinical unanswerable abstention), `BIRD-CRITIC`, `LiveSQLBench`, `Lean-Workbook`, `PutnamBench`, `ProofNet-Lean4`, `MiniF2F-Lean4`, `FormalMATH-Lite`, and `NuminaMath-LEAN`.",
-      "model": "Four-layer fail-fast SQL verification gate (demo/sql_gate.py): Layer 1 SQLite dialect syntax parse via sqlglot, Layer 2 single-statement AST Select/SetOperation check backed by SQLite PRAGMA query_only = ON, Layer 3 static table/alias/column schema checker, and Layer 4 float-rounded execution multiset equivalence against gold queries; linked without code duplication to the sound-and-complete Lean 4 LabLean protocol verifier in YLM/lean.",
-      "training": "Zero parametric training; purely symbolic AST and execution-grounded checker providing runtime safety gating and deterministic layer-attributed reward/rejection diagnostics for L3 RLVR and property-guided repair pipelines (labbench-posttrain, twinstep).",
-      "history": "Initial commit `3255ec7` on `main` (2026-11-18: 4-layer SQLite gate `demo/sql_gate.py`, 22-candidate suite, `YLM/lean` linkage, docs `775c3e9`), followed by Phase-2 `lean-mcp/v1` & `autolab-wire/v1` merge (`a5f9aec`, PR #30) and 2024-2026 open SQL & Lean 4 benchmark gate adapters on `main` (`0c29ffc`, PR #31).",
+      "data": "Deterministic 30-row synthetic SQLite lab DB (`12` questions, `22` candidates in `demo/candidates.json` + `3` counterexample mutant DBs verifying NULL/date safety), real clinical **EHRSQL-2024** over **MIMIC-IV Demo v2.2** (`17` tables, `317,875` rows in `results/ehrsql_2024_real.json`), and `catalog/sources.json` `v1.1.0` covering `16` SQL & Lean 4 benchmarks (`Spider 2.0-Lite`, `BIRD Mini-Dev`, `PutnamBench`, `ProofNet-Lean4`, `MiniF2F`).",
+      "model": "Four-layer SQLite gate (`sqlglot` parse -> AST + `PRAGMA query_only` + authorizer read-only -> schema & join-graph check -> Hopcroft-Karp `math.isclose` multiset + tie-aware `ORDER BY`/`LIMIT` equivalence), live Lean 4.36.0 kernel compilation + `#print axioms` auditor (`lean_gate.py`), and fail-closed Ed25519/HMAC `LeanMcpGate` (`mcp_gate.py`).",
+      "training": "Zero parametric training; deterministic symbolic/execution verifier achieving `22/22` lab-suite agreement (`8/15` semantic bugs caught at Layer 4) and `931/931` answerable gold-vs-gold + `232/232` unanswerable clinical abstentions on real MIMIC-IV v2.2 `EHRSQL-2024`.",
+      "history": "Initial commit `3255ec7` (2026-11-18: 4-layer SQL gate) -> `a5f9aec` (PR #30: `lean-mcp/v1` & wire) -> `0c29ffc` (PR #31: 16-benchmark 2026 adapters) -> `a286050` (PR #36: live Lean 4 `#print axioms` gate, tie-aware SQL + real 317k-row MIMIC-IV `EHRSQL-2024` evaluation, NULL/date-safe counterexample DBs, and fail-closed wire/MCP keys).",
       "unique_properties": [
-        "Defense-in-depth read-only isolation enforcing single-statement SELECT rules at the sqlglot AST layer and PRAGMA query_only = ON at the SQLite engine layer.",
-        "Empirical quantification of static vs. semantic verification gaps: proves 7/14 (50%) of wrong LLM SQL queries pass syntax, read-only, and schema gates and require Layer 4 execution checking.",
-        "Zero-duplication formal verification architecture delegating Lean 4 bio-protocol soundness/completeness proofs (check s l = true <-> ValidProtocol s l) to YLM (lean/LabLean).",
-        "Fine-grained first-failed-layer attribution (parse, read-only, schema, execution) tailored for property-guided iterative repair."
+        "Compiles candidate Lean 4 proofs in the real Lean 4.36.0 kernel and audits `#print axioms` (`{propext, Classical.choice, Quot.sound}` only), blocking `sorry`, `axiom`, and metaprogramming bypasses.",
+        "Evaluated on real 17-table, 317,875-row MIMIC-IV Demo v2.2 `EHRSQL-2024` (`931/931` answerable + `232/232` unanswerable abstentions) with Hopcroft-Karp float matching and `LIMIT`-cut tie detection.",
+        "Fail-closed `lean-mcp/v1` & `autolab_wire.py` rejecting `lean-mcp-dev-secret-v1` by default, binding exact `protocol_sha256`, and requiring role-separated cryptographic supervisor co-signatures.",
+        "Dual AST + SQLite authorizer/`query_only` isolation plus 3 counterexample perturbation DBs catching NULL and ISO-8601 date-ordering edge cases."
       ],
       "io_contract": {
         "inputs": "Candidate SQL strings paired with relational schema definitions (SCHEMA), read-only SQLite database connections, and gold reference queries or benchmark suites (demo/candidates.json).",
@@ -527,56 +512,51 @@
       },
       "key_metrics": [
         {
-          "label": "Full 4-Layer Gate Label Agreement",
-          "value": "22/22 candidates (100.0%)",
-          "note": "Approves 8/8 equivalent valid SQL queries and blocks 14/14 wrong or destructive candidates (0 false accepts)"
+          "label": "Real Clinical EHRSQL-2024 (MIMIC-IV Demo v2.2)",
+          "value": "931 / 931 answerable | 232 / 232 abstentions",
+          "note": "Evaluated across 17 relational tables and 317,875 clinical rows with configurable VM/row bounds"
         },
         {
-          "label": "Wrong Queries Passing Static Layers 1-3 Only",
-          "value": "7/14 (50.0%)",
-          "note": "Demonstrates parser + read-only + schema checks miss half of semantic SQL errors (missing filters, COUNT vs DISTINCT, wrong joins/sorts)"
+          "label": "Lab SQL Suite & Counterexample Mutants",
+          "value": "22 / 22 agreement (0 false passes)",
+          "note": "Catches 8/15 semantic bugs missed by static layers 1-3; verified across 3 NULL/date mutant DBs"
         },
         {
-          "label": "Layer-by-Layer Rejection Breakdown",
-          "value": "L1: 1, L2: 3, L3: 3, L4: 7",
-          "note": "Stops 1 syntax error, 3 DELETE/UPDATE/stacked-DROP attacks, 3 hallucinated columns/tables, and 7 semantic execution mismatches"
-        },
-        {
-          "label": "Synthetic Evaluation Database Footprint",
-          "value": "30 rows across 3 tables",
-          "note": "12 experiments, 14 samples, and 4 instruments evaluated entirely in-memory on CPU"
+          "label": "Lean 4.36.0 Kernel & Axiom Gate",
+          "value": "0 custom axioms | 0 sorry",
+          "note": "Enforces standard Lean axioms only plus fail-closed Ed25519/HMAC lean-mcp/v1 capability tokens"
         }
       ],
-      "commit_head": "0c29ffc",
-      "issue_count": 28,
+      "commit_head": "a286050",
+      "issue_count": 32,
       "concise": {
-        "hook": "Trust nothing a model emits until a mechanical checker says yes: SQL, Lean, and protocols.",
+        "hook": "Trust nothing a model emits until a mechanical checker says yes: SQL, Lean 4 axioms, and Lean-MCP.",
         "flow": [
-          "Candidate SQL / spec",
-          "Parse -> ReadOnly -> Schema -> Exec",
-          "PASS or first failed layer"
+          "SQL / Lean / MCP token",
+          "4-layer SQL + #print axioms",
+          "PASS or fail-closed BLOCK"
         ],
         "kpis": [
           [
             "22 / 22",
-            "gate agreement"
+            "lab SQL agreement"
           ],
           [
-            "16",
-            "SQL/Lean benchmarks"
+            "931 + 232",
+            "real EHRSQL-2024"
           ],
           [
             "0",
-            "false passes"
+            "custom axioms"
           ]
         ],
         "short": {
-          "object": "Filter LLM-generated SQL, Lean proofs, and protocols behind a strict default-deny gate.",
-          "data": "30-row lab SQLite suite (22 queries) + 16 open SQL/Lean benchmarks (Spider 2.0-Lite, BIRD, EHRSQL-2024, PutnamBench, ProofNet).",
-          "model": "4-layer gate: sqlglot parse -> read-only AST -> schema check -> execution match + lean-mcp/v1.",
-          "training": "Deterministic verifier (serves as exact binary reward gate for RLVR).",
-          "history": "3255ec7 4-layer SQL gate -> a5f9aec Lean-MCP audit -> 0c29ffc 16-benchmark 2026 adapters.",
-          "property": "Proves syntax/schema alone miss 50% of wrong queries; execution checks catch all 7."
+          "object": "Enforce default-deny verification over lab/clinical SQL, compiled Lean 4 proofs, and lean-mcp/v1 dispatch.",
+          "data": "30-row lab DB (22 queries + 3 mutant DBs) + real MIMIC-IV v2.2 EHRSQL-2024 (317,875 rows) + 16 open benchmarks.",
+          "model": "4-layer SQL gate (Hopcroft-Karp float multiset + tie-aware ORDER BY), live Lean #print axioms & Ed25519/HMAC MCP.",
+          "training": "Symbolic/execution verifier rejecting insecure dev keys and requiring role-separated supervisor co-signatures.",
+          "history": "3255ec7 SQL gate -> 0c29ffc 16-benchmark adapters -> a286050 Lean axiom gate, real EHRSQL-2024 & fail-closed MCP.",
+          "property": "931/931 answerable + 232/232 unanswerable on real EHRSQL-2024 and zero false passes across all 4 SQL layers."
         }
       }
     },
@@ -585,66 +565,84 @@
       "url": "https://github.com/yaniguan/lab-attrib",
       "layer": "L4",
       "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
-      "tagline": "Post-execution causal blame calculus, NNLS precursor ghost-peak deconvolution, EVOI orthogonal assay routing, and SHA-256 proof-carrying negative result ledgers in Python + Lean 4.",
+      "tagline": "Post-execution 30-theorem Lean 4 blame calculus, shift-tolerant Pseudo-Voigt L1-NNLS XRD/Raman deconvolver, MS/MS spectral entropy & chimera gate, EVOI assay router, and SHA-256 negative ledger.",
       "object": "Closes the post-execution epistemic blind spot of self-driving laboratories by separating robotic/timing execution artifacts and unreacted precursor diffraction overlap (A-Lab failure mode) from Proof-Carrying Positive and Negative Results before updating scientific memory or recalibrating Chem-RRT frontier shells.",
-      "data": "Evaluates NNLS precursor deconvolution across multi-phase powder diffraction suites, 9-round x 5-seed closed-loop active molecular discovery on 1,128-compound Delaney ESOL, a bundled 11-phase Cu K-alpha XRD + paired Raman mineral/oxide reference panel (`Calcite`, `Quartz`, `Li2MgCl4`, `BaTiO3`, `ZrO2`), and a 9-dataset `OpenCharacterizationDataset` registry (`src/lab_attrib/open_datasets.py`: `RRUFF Powder XRD`, `RRUFF/WURM Raman`, `COD`, `MP-20`, Ceder Group `A-Lab GPSS` `.xrdml` scans, `MassSpecGym` 231k MS/MS, `NMRShiftDB2`, `BMRB NMR`, and `AqSolDB` 9,982).",
-      "model": "Exact 4-way causal blame classifier (LabAttribLean: 25 Lean 4.36.0 theorems, 0 sorry) paired with dual-backend projected-coordinate-descent NNLS spectral deconvolution, Bayesian EVOI secondary modality router (Raman / LC-MS / 1H-NMR / TEM), and SHA-256 hash-chained ledger.",
-      "training": "Zero parametric black-box drift in the core blame gate; exports contamination-free certified positive and negative pairs for downstream Bayesian surrogates and RLVR post-training.",
-      "history": "Created as the 15th Core Auto-Lab repository (`8737ac9` -> `6b7f467` on `main`), followed by Phase-2 wire & Lean audit (`0118a9c`, PR #11) and the 9-dataset XRD/Raman/MS/NMR open characterization registry (`b8df8ef`, PR #12), with 25 machine-checked Lean 4 theorems, 75 unit tests, Ubuntu Python + Lean CI, and a 5-page LaTeX monograph (`paper/main.pdf`).",
+      "data": "Benchmarks **51 SHA-256-pinned real experimental spectra & CIF assets** (`results/real_spectra_benchmark.json`: Ceder Group `A-Lab GPSS` `.xrdml` scans, `RRUFF/DARA` powder XRD `.dif`/`.xrdml`, `RRUFF/ROD` `.rod` & JCAMP-DX Raman, and `MassSpecGym` MS/MS spectra), 9-round x 5-seed Delaney ESOL closed-loop discovery, an 11-phase XRD+Raman reference panel, and a 9-dataset `OpenCharacterizationDataset` registry.",
+      "model": "Exact 4-way causal blame calculus (`LabAttribLean`: **30 Lean 4.36.0 theorems**, 16 `#guard` checks, `#print axioms` audited, `0 sorry`), coarse-grid + Golden-Section `2-theta` shift (`+-0.35 deg`) & Pseudo-Voigt `elastic_nnls` (`L1/L2-NNLS` with `< 1e-8` NumPy/stdlib parity), Li et al. MS/MS Spectral Entropy + 2-component chimera detector, EVOI orthogonal modality router, and SHA-256 `CertifiedLedger`.",
+      "training": "Deterministic formal & physical deconvolution gate (`--offline` fails closed unless SHA-verified cache is present). Cuts real `A-Lab GPSS` XRD false discovery rate from `50.0%` (naive) to `0.0%` while lifting true target recall from `0.0%` (unshifted NNLS) to `75.0%` (`R_wp` `641.2 -> 258.0` permille), achieves `0.0%` FDR & `100.0%` recall on `RRUFF/ROD` Raman, and reaches `82.4%` Top-1 (`12.6%` vs `35.2%` FDR) on `MassSpecGym` MS/MS.",
+      "history": "Created as the 15th Core Auto-Lab repository (`6b7f467` on `main` with 5-page LaTeX monograph `paper/main.pdf`) -> `0118a9c` (PR #11: wire & Lean audit) -> `b8df8ef` (PR #12: 9-dataset registry) -> `9a4b119` (PR #13: shift-tolerant Pseudo-Voigt `L1-NNLS`, MS/MS spectral entropy + chimera gate, 51-asset real spectra benchmark, fail-closed `L4_ATTRIB_SCHEMA_REJECT` wire, and 30-theorem `#print axioms` CI).",
       "unique_properties": [
-        "Machine-checked 25-theorem Lean 4.36.0 blame calculus (0 sorry) proving corrupted_run_never_poisons_memory and unidentifiable_spectrum_never_certified.",
-        "Dual-backend NNLS precursor peak-overlap solver eliminating 100% of precursor ghost-phase false discoveries (FDR 40.2% / 66.7% -> 0.0%).",
-        "Couples post-run causal attribution with micro-scale annular Chem-RRT stepping-stones (31.0 verified multi-ring hits, 96.4% conformal coverage, 0 poisoned ledger entries)."
+        "30 machine-checked Lean 4.36.0 theorems (`0 sorry`, zero custom axioms verified via `lean/CheckAxioms.lean`) proving `corrupted_run_never_poisons_memory` and `unidentifiable_spectrum_never_certified`.",
+        "Shift-tolerant Golden-Section (`+-0.35 deg`) + Pseudo-Voigt `L1-NNLS` deconvolver cutting real `A-Lab GPSS` `.xrdml` FDR `50.0% -> 0.0%` while recovering `75.0%` of strained/shifted target phases (`0.0%` naive NNLS).",
+        "Weighted MS/MS Spectral Entropy + convex 2-component chimera gate lifting real `MassSpecGym` Top-1 identification `69.2% -> 82.4%` and cutting chimera FDR `35.2% -> 12.6%`.",
+        "Fail-closed `autolab_wire.py` (`L4_ATTRIB_SCHEMA_REJECT`) rejecting non-boolean, non-integer, negative, or `NaN`/`Inf` telemetry before ledger commitment."
       ],
-      "commit_head": "b8df8ef",
+      "commit_head": "9a4b119",
       "issue_count": 10,
       "concise": {
-        "hook": "Separate robot glitches and precursor ghost peaks from proof-carrying negative truth after every run.",
+        "hook": "Separate robot glitches and shifted precursor peaks from proof-carrying negative truth after every run.",
         "flow": [
-          "Post-run telemetry + XRD",
-          "Lean 4 blame + NNLS",
+          "Telemetry + XRD/Raman/MS",
+          "30-thm Lean + Pseudo-Voigt NNLS",
           "SHA-256 certified ledger"
         ],
         "kpis": [
           [
-            "25",
+            "30",
             "Lean 4 theorems"
           ],
           [
-            "0.0%",
-            "false discovery rate"
+            "51",
+            "pinned real spectra"
           ],
           [
-            "9",
-            "open spectra corpora"
+            "0.0%",
+            "A-Lab & Raman FDR"
           ]
         ],
         "short": {
-          "object": "Prevent post-run hardware glitches and precursor peak overlap from poisoning scientific memory.",
-          "data": "1,128-compound ESOL campaigns + 11-phase XRD/Raman panel + 9 open corpora (RRUFF, COD, MP-20, A-Lab GPSS, MassSpecGym, NMR).",
-          "model": "4-way Lean 4 blame calculus + NNLS precursor deconvolver + EVOI orthogonal assay router.",
-          "training": "Deterministic formal gate exporting verified positive/negative pairs for BO & RLVR.",
-          "history": "6b7f467 15th Core Repo & monograph -> 0118a9c wire audit -> b8df8ef 9-dataset spectra registry.",
-          "property": "0.0% FDR and 0 poisoned ledger entries while unlocking 31.0 multi-ring hits."
+          "object": "Block corrupted runs and precursor ghost peaks from poisoning scientific memory or Chem-RRT calibration.",
+          "data": "51 SHA-256-pinned real spectra (A-Lab GPSS .xrdml, RRUFF/DARA XRD, ROD Raman, MassSpecGym) + ESOL + 9 corpora.",
+          "model": "30-theorem Lean 4 blame calculus + shift-tolerant Pseudo-Voigt L1-NNLS + MS/MS spectral entropy & EVOI router.",
+          "training": "Deterministic formal gate failing closed (L4_ATTRIB_SCHEMA_REJECT) on malformed telemetry.",
+          "history": "6b7f467 15th Repo & monograph -> b8df8ef 9-dataset registry -> 9a4b119 shift-Voigt L1-NNLS, 51 real spectra & 30 thms.",
+          "property": "0.0% FDR (75% recall) on real A-Lab GPSS XRD, 82.4% MassSpecGym Top-1, and #print axioms audited in CI."
         }
-      }
+      },
+      "key_metrics": [
+        {
+          "label": "Real A-Lab GPSS & RRUFF/ROD Deconvolution",
+          "value": "0.0% A-Lab FDR (75.0% recall) | 0.0% Raman FDR",
+          "note": "51 SHA-256-pinned experimental files; RRUFF/DARA XRD FDR drops 48.3% -> 6.25% (100% recall)"
+        },
+        {
+          "label": "Real MassSpecGym MS/MS Entropy & Chimera Gate",
+          "value": "82.4% Top-1 | 12.6% FDR (vs 35.2% naive)",
+          "note": "206 real MS/MS evaluation cases with dynamic entropy weighting and 2-component chimera quarantine"
+        },
+        {
+          "label": "Formal Verification (LabAttribLean)",
+          "value": "30 Lean 4.36.0 theorems (0 sorry, 0 custom axioms)",
+          "note": "Audited via #print axioms + --batch-tsv parity CI and 5-page monograph (paper/main.pdf)"
+        }
+      ]
     },
     {
       "repo": "labbench-posttrain",
       "url": "https://github.com/yaniguan/labbench-posttrain",
       "layer": "L3",
       "layer_name": "Post-Training RLVR, Error Twins & GPU Packing",
-      "tagline": "End-to-end SFT-to-RLVR post-training SDK, CLI, and anti-hack verifiable reward suite for wet-lab science, protocol reasoning, and robot execution",
+      "tagline": "End-to-end SFT-to-RLVR post-training SDK (`labrl`), pinned NeMo-RL launch contract, sequence-exact Reverse-KL anchor, and fail-closed verifiable reward & wire stack.",
       "object": "Unified post-training, benchmark evaluation, and reward-hacking audit stack (`labrl` v0.2.0) bridging multimodal scientific reasoning (Scientist track), robotic/liquid-handler execution (Operator track), biological protocol QA/repair (LAB-Bench & BioProBench), and experimental electrolyte design (CALiSol-23) across CPU/1xGPU PyTorch (`TorchLocalEngine`) and multi-node Ray/vLLM/Megatron (`NeMoRLEngine`).",
-      "data": "49,139 provenance-separated Lab v0 records from 20 sources (40,790 train / 4,189 val / 4,160 test, 0 group overlap) + 20,517 Open-X robot frames; 13,228 clean CALiSol-23 electrolyte conductivity measurements (27 DOIs, CC-BY-4.0); BioProBench (CC BY-NC 4.0); eval-only LAB-Bench (CC-BY-SA-4.0); a 205-entry catalog; and the 9-dataset 2024-2026 `open_science_2026` registry (`src/labrl/data/open_datasets_2026.py`: trainable `MassSpecGym`, `SMolInstruct`, `Mol-Instructions`, `AqSolDB`, and Union-Find DOI+scaffold `ORD 2026` under `SplitGuard`, plus `eval_only` canary-guarded `ChemBench`, `SuperGPQA`, `ether0-benchmark`, and `BixBench`).",
-      "model": "Byte-level tiny GPT-2 models for zero-download CPU smoke verification plus Qwen3-1.7B/8B, Qwen2.5-7B/VL-7B, Llama-3.1-8B, and OLMo-2-7B configs with PEFT LoRA and causal PPO value heads; Scientist MolEncoder/SpectrumEncoder/ImageEncoder/TextEncoder + soft-token projector; Operator MLP behavior cloning + residual state-delta world model; and code-checked symbolic verifiers (`bioenvs` + 8 `VerifiedRewardTemplate` classes).",
-      "training": "Completion-masked SFT warm start -> offline DPO, ORPO, hybrid MPO (DPO + BCO with EMA reward_shift + SFT), logit KD, and online multi-teacher TROPD -> online PPO (VAPO length-adaptive lambda + positive NLL) and GRPO (GDPO per-channel normalization, DAPO clip-higher & dynamic resampling, GSPO sequence ratios, CISPO, TIS/ICE-POP), all anchored by default to the frozen SFT checkpoint. 15/15 CPU smoke trainers pass locally; all single-GPU A100 Colab and multi-GPU NeMo-RL runs remain PENDING.",
-      "history": "Evolved across 11 main-branch milestones (`63697fb` -> `94f0cf5`, docs `a879d9d`), followed by Phase-2 Lean 4 & `autolab-wire/v1` merge (`2e015d6`, PR #50) and the 9-dataset 2024-2026 Open Science RLVR & eval-only registry on `main` (`fbdd731`, PR #51; 177 pytest tests passing).",
+      "data": "49,139 provenance-separated Lab v0 records from 20 sources (`40,491` train / `4,321` val / `4,327` test after PubChem CID resolution: `0` `cid|` fallback keys, `0` empty `scaffold|` keys, `0` cross-split canonical scaffold/tautomer/counterion groups) + 20,517 Open-X robot frames; 13,228 clean CALiSol-23 measurements (27 DOIs); BioProBench; eval-only canary-guarded LAB-Bench; and the 9-dataset 2024-2026 `open_science_2026` registry.",
+      "model": "Offline byte-level tiny GPT-2 smoke backbones plus Qwen3-1.7B/8B, Qwen2.5-7B/VL-7B, Llama-3.1-8B, and OLMo-2-7B PEFT LoRA & causal PPO heads; multimodal Scientist & embodied Operator modules; 8 `VerifiedRewardTemplate` classes; pinned `yaniguan/RL` `NeMoRLEngine` launcher; and Lean 4.36.0 `LabPostTrainLean` GDPO/KL/reward verifiers.",
+      "training": "Completion-masked `SFT` -> offline `DPO`/`ORPO`/hybrid `MPO`/`KD` & online `TROPD` -> online `PPO` (`VAPO`) and `GRPO` (`GDPO`, `DAPO`, `GSPO`, `CISPO`, `ICE-POP`) with both unbiased per-token `k3` Reverse-KL and exact multi-step suffix `sequence_reverse_kl_reward_to_go` (`kl_mode='sequence_exact'`) anchored to frozen `SFT`. 15/15 CPU smoke jobs + pinned `yaniguan/RL` contract + Lean 4.36.0 CI pass; physical A100/H100 GPU runs remain `PENDING` (`#49`, `#18`).",
+      "history": "Evolved across 11 main-branch milestones (`63697fb` -> `94f0cf5`) -> `2e015d6` (PR #50: `LabPostTrainLean` & wire) -> `fbdd731` (PR #51: 9-dataset 2026 Open Science registry) -> `8dd44de` (PR #57: PubChem CID scaffold resolution with `0` `cid|` fallbacks, pinned `yaniguan/RL` CPU launch contract, `sequence_exact` Reverse-KL suffix estimator, fail-closed `L3_WIRE_SCHEMA_REJECT` wire allowlist, and Lean 4.36.0 CI).",
       "unique_properties": [
-        "Unbiased score-function Reverse-KL surrogate (`reverse_kl_loss_term`) restoring exact on-policy KL(pi || pi_SFT) gradients on Schulman's k3 estimator",
-        "Multi-channel GDPO group standardization + conservative experimental-atlas kernel support gating to prevent format dominance and OOD chemical reward hacking",
-        "Cryptographic SplitGuard holdout signatures, LAB-Bench canary scanners, and Shao et al. spurious-reward control ladders (random, format, incorrect-label)",
-        "8 canonical anti-hack VerifiedRewardTemplates with dimensional unit conversion, pure-Python/RDKit SMILES stoichiometry checks, and dual TorchLocal/NeMo-RL execution"
+        "Both per-token unbiased score-function `k3` Reverse-KL and exact multi-step trajectory `sequence_reverse_kl_reward_to_go` (`kl_mode='sequence_exact'`) verified by finite-difference multi-step gradient tests.",
+        "Zero `cid|` fallback keys and zero cross-split scaffold/tautomer/counterion overlap across all 49,139 Lab v0 records, enforced alongside NFKC/Base64/hex-hardened `SplitGuard` LAB-Bench canary scanning.",
+        "Fail-closed `autolab_wire.py` (`L3_WIRE_SCHEMA_REJECT`) enforcing strict boolean/integer types, 64-hex `ledger_entry_sha256`, and separating `CERTIFIED_POSITIVE` SFT from `CERTIFIED_NEGATIVE` DPO/MPO disproofs.",
+        "Live Lean 4.36.0 `LabPostTrainLean` CI auditing GDPO Pareto weights (`check_gdpo_pareto_weights`) and frozen SFT KL-anchor drift (`check_kl_anchor`) directly inside trainers."
       ],
       "io_contract": {
         "inputs": "Provenance-tagged parquets/JSONL (`data/v0`, `data/bioprobench`, `data/calisol`, `data/labbench`) and 4-axis recipe YAMLs (`algo x domain x model x hardware`)",
@@ -652,56 +650,51 @@
       },
       "key_metrics": [
         {
-          "label": "Lab v0 Provenance Corpus",
-          "value": "49,139 records (20 sources)",
-          "note": "40,790 train / 4,189 val / 4,160 test; 0 cross-split leakage groups; 20,517 robot frames"
+          "label": "Lab v0 Provenance & Split Hygiene",
+          "value": "49,139 records | 0 cid| fallbacks | 0 group leak",
+          "note": "40,491 train / 4,321 val / 4,327 test across 20 sources + 20,517 Open-X robot frames"
         },
         {
-          "label": "CALiSol-23 Clean Atlas",
-          "value": "13,228 measurements (27 DOIs)",
-          "note": "9,526 train / 1,804 val / 1,898 test with zero publication-DOI overlap"
+          "label": "CALiSol-23 & 2026 Open Science Registry",
+          "value": "13,228 CALiSol rows | 9 open 2026 corpora",
+          "note": "5 SplitGuard-isolated trainable corpora + 4 eval_only canary-guarded benchmarks"
         },
         {
-          "label": "LAB-Bench Core Protocol Eval",
-          "value": "0.70 / 0.65 / 0.38 macro acc",
-          "note": "Completed OpenRouter eval (Haiku 5.5 / GPT 6 Luna / GLM 5.3 flash at 12k cap across 741 core items)"
-        },
-        {
-          "label": "CPU Smoke Verification",
-          "value": "15 / 15 jobs pass (63.96s)",
-          "note": "Tiny local byte-GPT-2 pipeline check; A100 Colab & NeMo-RL GPU runs PENDING"
+          "label": "CPU Smoke, RL Fork Contract & Lean 4 CI",
+          "value": "15 / 15 smoke jobs | Lean 4.36.0 0 sorry",
+          "note": "Verified on CPU; single-A100 (#18) and 8xA100 Qwen3-8B (#49) runs explicitly PENDING"
         }
       ],
-      "commit_head": "fbdd731",
-      "issue_count": 28,
+      "commit_head": "8dd44de",
+      "issue_count": 33,
       "concise": {
-        "hook": "Post-training stack turning raw models into verified Scientist and Operator policies.",
+        "hook": "Post-training stack turning raw models into verified Scientist and Operator policies without leakage.",
         "flow": [
-          "49k records + verifiers",
+          "49k records + SplitGuard",
           "SFT -> MPO/TROPD -> GDPO/DAPO",
-          "Checked policy adapters"
+          "Sequence-exact KL + RLVR"
         ],
         "kpis": [
           [
             "49,139",
-            "leak-free records"
+            "0-leakage records"
           ],
           [
             "9",
             "2026 science corpora"
           ],
           [
-            "0",
-            "cross-split groups"
+            "15 / 15",
+            "CPU smoke jobs"
           ]
         ],
         "short": {
-          "object": "Train and score Scientist & Operator models against code-checked lab & physics rewards.",
-          "data": "49,139 Lab v0 records, CALiSol-23, BioProBench, LAB-Bench + 9-corpus 2024-2026 registry (MassSpecGym, SMolInstruct, ORD, BixBench).",
-          "model": "labrl SDK: TorchLocalEngine (CPU/1xGPU) + NeMoRLEngine (8xA100 recipes).",
-          "training": "SFT -> DPO/MPO/TROPD -> PPO/GRPO/GDPO+DAPO (CPU smoke run; full GPU PENDING).",
-          "history": "101933a BioProBench -> 94f0cf5 rewards -> 2e015d6 Lean/wire audit -> fbdd731 2026 open science registry.",
-          "property": "SplitGuard blocks group leakage & LAB-Bench/BixBench canaries; rewards gate bonuses on truth."
+          "object": "Train and score Scientist & Operator policies against code-checked lab, electrolyte & protocol rewards.",
+          "data": "49,139 Lab v0 records (0 cid| fallbacks, 0 group leak), CALiSol-23, BioProBench, LAB-Bench & 9-corpus 2026 registry.",
+          "model": "labrl v0.2 SDK: TorchLocalEngine + pinned yaniguan/RL NeMoRLEngine + 8 VerifiedRewardTemplates + LabPostTrainLean.",
+          "training": "SFT -> DPO/MPO/TROPD -> PPO/GDPO+DAPO with per-token & sequence_exact Reverse-KL (full A100/H100 PENDING).",
+          "history": "94f0cf5 rewards -> fbdd731 2026 registry -> 8dd44de PubChem CIDs, RL fork contract, sequence KL, wire & Lean CI.",
+          "property": "Fail-closed L3_WIRE_SCHEMA_REJECT separates CERTIFIED_POSITIVE SFT from CERTIFIED_NEGATIVE DPO/MPO disproofs."
         }
       }
     },
@@ -749,7 +742,7 @@
         }
       ],
       "commit_head": "a781fc0",
-      "issue_count": 30,
+      "issue_count": 34,
       "concise": {
         "hook": "Deterministic error twins for protocol steps—teaching models to spot mistakes and order DAGs.",
         "flow": [
@@ -825,7 +818,7 @@
         }
       ],
       "commit_head": "38f23ee",
-      "issue_count": 30,
+      "issue_count": 34,
       "concise": {
         "hook": "Fill the plate, fill the GPU—batch thousands of protocol checks and pack short sequences.",
         "flow": [
@@ -862,17 +855,17 @@
       "url": "https://github.com/yaniguan/lab-ears",
       "layer": "L2",
       "layer_name": "Multimodal Sensory & Protocol Cortex",
-      "tagline": "Sensory ingestion layer turning written wet-lab protocols into checkable quantitative spans and monitoring benchtop instrument audio for unsupervised acoustic anomalies.",
+      "tagline": "Multimodal L2 sensory cortex pairing a zero-leakage 17-state PA-II BIOES protocol span tagger with window-matched streaming acoustic anomaly detection, harmonic-speech rejection, and fail-closed wire privacy.",
       "object": "Provides the L2 sensory cortex of Auto-Lab across two complementary channels: (1) extracting structured quantitative parameters (Amount, Temperature, Time, Speed) from free-form wet-lab protocol prose on main so downstream planners and compilers do not rely on ungrounded free-text numbers, and (2) learning a one-class acoustic baseline of normal machine operation per instrument on origin/acoustic-anomaly, scoring live 16 kHz clips while stripping human speech frequencies (300-3400 Hz) and emitting step-indexed run-ledger events.",
-      "data": "Evaluates protocol span extraction on the MIT Wet Lab Protocols (WLP) test split (125 BRAT-annotated protocols: 1,011 Amount, 810 Time, 509 Temperature, 155 Speed spans) and unsupervised machine sound monitoring on CC-BY-4.0 DCASE 2023 Task 2 (fan, valve, bearing: 1,000 normal 10 s 16 kHz train + 200 test clips/machine), plus a 12-dataset `OpenSensoryDataset` registry (`acoustic/open_datasets.py`: `DCASE 2024/2025/2026 Task 2`, `IMAD-DS 2024`, `MIMII`, `MIMII DG`, `ToyADMOS2` machine audio, and `LAB-Bench ProtocolQA`, `ChemBench`, `BioProBench`, `BioPlanner`, `ProtoAct` protocol text) with `[300, 3400] Hz` speech-band excision and fail-closed `commercial_use_ok` guards.",
-      "model": "Zero-dependency regular-expression span recognizer with shared range grammar NUM and Speed-over-Amount exact-span disambiguation (demo/parse_protocol.py) on main; on origin/acoustic-anomaly, a numpy/scipy 64-bin HTK log-mel frontend (16 kHz, 1024-pt Hanning FFT, 512 hop, optional 300-3400 Hz speech-band excision) feeding three normal-only detectors: Ledoit-Wolf shrinkage Mahalanobis GaussianDetector, standardized 5-nearest-neighbor KNNDetector, and 5-frame stacked 128-128-8-128-128 MLP AutoencoderDetector.",
-      "training": "Protocol span extractor on main is strictly rule-based (zero learned weights), achieving 0.748-0.907 exact F1 on WLP test. On origin/acoustic-anomaly, detectors fit exclusively on normal clips (zero anomalies seen in training; up to 60,000 subsampled 5-frame windows over 30 Adam epochs for the autoencoder), reaching 0.5548 (autoencoder), 0.5482 (gaussian), and 0.5023 (knn) harmonic mean AUC/pAUC fullband—and 0.5228 (gaussian), 0.4962 (autoencoder), 0.4868 (knn) when the 300-3400 Hz speech band is dropped.",
-      "history": "Initial baseline `ba743be` on `main` (2026-11-18: WLP regex parser, docs `082f2e1`), followed by acoustic-anomaly + Phase-2 Lean/`autolab-wire/v1` merge (`d3ba222`, PR #34) and the 12-dataset 2024-2026 open sensory & protocol registry on `main` (`079b9bb`, PR #35).",
+      "data": "Evaluates on pinned MIT Wet Lab Protocols (`WLP` `1f51ae6`: `374` train / `123` dev / `125` test BRAT protocols, with SHA-256 duplicate auditing isolating `121` strictly unseen test protocols), CC-BY-4.0 `DCASE 2023 Task 2` (fan, valve, bearing 16 kHz WAVs), and a 12-dataset `OpenSensoryDataset` registry (`DCASE 2024-2026`, `IMAD-DS 2024`, `MIMII`, `ToyADMOS2`, `LAB-Bench ProtocolQA`, `ChemBench`, `BioProBench`, `BioPlanner`, `ProtoAct`).",
+      "model": "Offset-preserving 17-state `BIOES` Viterbi `LinearChainSpanTagger` (`protocol/learned_tagger.py`, `273,555` lexical/orthographic/numeric features trained via cost-augmented `PA-II`) alongside the zero-dep regex parser (`demo/parse_protocol.py`), plus a 64-bin HTK log-mel frontend (`[0, 255]` & `[3464, 8000]` Hz retained after Hann-skirt `[300, 3400]` Hz excision) feeding window-matched streaming `Gaussian`/`kNN`/`Autoencoder` detectors and harmonic-speech-aware `CrossModalInterlockDetector`.",
+      "training": "Fit strictly on `WLP/train` (`374` protocols) and tuned exclusively on `WLP/dev` (`123` protocols), `LinearChainSpanTagger` reaches `0.876` exact / `0.897` overlap micro-F1 on `WLP/test` (`0.875` / `0.897` on `121` SHA-deduplicated unseen test protocols, vs `0.850` / `0.880` regex baseline), while window-matched 2 s chunk calibration eliminates streaming threshold mismatch and harmonic-comb rejection suppresses human-speech false halts.",
+      "history": "Initial baseline `ba743be` (2026-11-18: WLP regex parser) -> `d3ba222` (PR #34: acoustic anomaly & `LabEarsLean`) -> `079b9bb` (PR #35: 12-dataset 2026 registry) -> `eab305f` (PR #40: zero-leakage `PA-II` `BIOES` tagger, window-matched 2 s streaming calibration, harmonic speech rejection in cavitation interlocks, and fail-closed `L2_SPEECH_PRIVACY_BLOCK` wire gate).",
       "unique_properties": [
-        "Zero external dependencies on main (Python standard library only) and lightweight numpy/scipy/scikit-learn acoustic stack on origin/acoustic-anomaly without FFmpeg, librosa, or PyTorch bloat.",
-        "Hard privacy invariant in AudioEvent.validate(): discards raw waveforms by default, supports 300-3400 Hz mel-bin excision, and raises ValueError if raw_audio_kept=True is combined with speech_band_dropped=True.",
-        "Sub-20 ms single-thread CPU scoring latency per 10 s 16 kHz WAV clip (2.8-5.7 ms median including disk read, STFT, mel projection, and detector scoring—over 1,700x faster than real time).",
-        "Step-indexed lab-ears/audio-event/v1 JSONL records bind instrument anomaly scores directly to (protocol_id, step, instrument_id) for lab-rehearsal run ledgers and lab-verify safety gates."
+        "Zero-leakage `LinearChainSpanTagger` (`PA-II` + 17-state `BIOES` Viterbi, safe `.json.gz` weights) achieving `0.876` exact / `0.897` overlap micro-F1 on WLP test (`0.875` on SHA-unseen test) without test-split rule tuning.",
+        "Window-matched streaming acoustic calibration (`2 s` chunk stats matched to `2 s` inference windows) plus fundamental/harmonic speech rejection preventing voice harmonics above `3.4 kHz` from triggering false cavitation halts.",
+        "Fail-closed `autolab_wire.py` (`L2_SPEECH_PRIVACY_BLOCK`) rejecting any attached `AudioEvent` or `InterlockDecision` missing `speech_band_dropped: True`, `raw_audio_saved: False`, or `retained_bands_hz`.",
+        "Emits `WARN` + `defaults_only: True` on quantity-free prose while preserving `< 20 ms` single-thread CPU clip scoring latency and Lean 4.36.0 `LabEarsLean` privacy invariants."
       ],
       "io_contract": {
         "inputs": "Plain-text wet-lab protocols (*.txt) with optional BRAT standoff annotations (*.ann) on main; 16 kHz mono/stereo WAV clips and step metadata (protocol_id, step, instrument_id) on origin/acoustic-anomaly.",
@@ -880,48 +873,38 @@
       },
       "key_metrics": [
         {
-          "label": "WLP Time / Amount Exact F1",
-          "value": "0.907 (Time) | 0.789 (Amount)",
-          "note": "Rule-based regex baseline across 125 WLP test protocols (P_overlap: 0.940 Time, 0.773 Amount)"
+          "label": "Zero-Leakage WLP Test Span Extraction (BIOES PA-II)",
+          "value": "0.876 exact | 0.897 overlap micro-F1",
+          "note": "0.875 exact / 0.897 overlap on 121 SHA-unseen test protocols (vs 0.850 / 0.880 regex)"
         },
         {
-          "label": "WLP Temperature / Speed Exact F1",
-          "value": "0.774 (Temperature) | 0.748 (Speed)",
-          "note": "509 gold Temperature and 155 gold Speed spans (P_overlap: 0.839 Temperature, 0.747 Speed)"
+          "label": "Streaming Calibration & Harmonic Speech Interlock",
+          "value": "Window-matched 2 s cal | 0 speech false halts",
+          "note": "Retains [0, 255] & [3464, 8000] Hz bands while rejecting multi-harmonic human speech"
         },
         {
-          "label": "DCASE 2023 Harmonic Mean (Fullband)",
-          "value": "0.5548 (AE) | 0.5482 (Gauss) | 0.5023 (kNN)",
-          "note": "Harmonic mean of AUC_source, AUC_target, and pAUC@0.1 across fan, valve, and bearing (origin/acoustic-anomaly)"
-        },
-        {
-          "label": "DCASE 2023 Harmonic Mean (Speech Band Dropped)",
-          "value": "0.5228 (Gauss) | 0.4962 (AE) | 0.4868 (kNN)",
-          "note": "Privacy mode removing mel bins centered in 300-3400 Hz"
-        },
-        {
-          "label": "Single-Thread CPU Clip Latency",
-          "value": "2.8-5.7 ms median (3.0-17.9 ms p95)",
-          "note": "Full WAV read + 64-bin log-mel + anomaly score per 10 s 16 kHz clip on 1 Xeon core"
+          "label": "DCASE 2023 Latency & Open Sensory Registry",
+          "value": "2.8-5.7 ms/clip | 12 open corpora",
+          "note": "Fail-closed L2_SPEECH_PRIVACY_BLOCK wire enforcement + Lean 4.36.0 LabEarsLean proofs"
         }
       ],
-      "commit_head": "079b9bb",
-      "issue_count": 30,
+      "commit_head": "eab305f",
+      "issue_count": 34,
       "concise": {
-        "hook": "Listen to protocol text and bench machines—pull clean parameters and flag strange sounds.",
+        "hook": "Extract wet-lab quantities via zero-leakage BIOES tagging and monitor machine sound without recording speech.",
         "flow": [
           "Protocol text · 16 kHz WAV",
-          "Regex parser · Log-mel AE",
-          "Checked slots · Audio alert"
+          "PA-II BIOES · Streaming mel",
+          "0.876 F1 · Privacy-gated alert"
         ],
         "kpis": [
           [
-            "0.75-0.91",
-            "WLP slot F1"
+            "0.876",
+            "WLP BIOES micro-F1"
           ],
           [
-            "< 20 ms",
-            "per 10 s clip"
+            "2 s / 10 s",
+            "matched stream cal"
           ],
           [
             "300-3400 Hz",
@@ -929,12 +912,12 @@
           ]
         ],
         "short": {
-          "object": "Extract Amount/Temp/Time/Speed from text and detect abnormal instrument sounds.",
-          "data": "WLP (125 test protocols) + DCASE 2023-2026, IMAD-DS 2024, MIMII, ChemBench, BioProBench & ProtoAct (14 corpora on main).",
-          "model": "Regex span extractor + 64-bin log-mel Gaussian, kNN & Autoencoder on main.",
-          "training": "Rule-based text parser; normal-only unsupervised acoustic detectors (~19 s CPU).",
-          "history": "ba743be WLP baseline -> d3ba222 acoustic-anomaly & wire merge -> 079b9bb 12-dataset 2026 registry.",
-          "property": "Privacy-first audio: drops 300-3400 Hz speech band and never stores raw WAVs."
+          "object": "Extract Amount/Temp/Time/Speed spans cleanly and detect cavitation/bearing faults under speech privacy.",
+          "data": "WLP train/dev/test (SHA-deduped) + DCASE 2023-2026, IMAD-DS, MIMII, ChemBench, BioProBench & ProtoAct (12 corpora).",
+          "model": "Zero-leakage 17-state PA-II BIOES tagger + regex baseline + window-matched streaming Gaussian/kNN/AE & interlock.",
+          "training": "WLP train-only PA-II fit (0.876 exact / 0.897 overlap test micro-F1; 0.875 unseen-SHA) + normal-only acoustic fit.",
+          "history": "ba743be WLP regex -> 079b9bb 12-dataset registry -> eab305f BIOES tagger, streaming cal, harmonic speech & wire privacy.",
+          "property": "Rejects harmonic speech false halts and fails closed (L2_SPEECH_PRIVACY_BLOCK) if privacy fields are missing."
         }
       }
     },
@@ -977,7 +960,7 @@
         }
       ],
       "commit_head": "ffd1347",
-      "issue_count": 30,
+      "issue_count": 34,
       "concise": {
         "hook": "Compile tiny YAML/JSON step files into deterministic Opentrons Python protocols and simulate.",
         "flow": [
@@ -1053,7 +1036,7 @@
         }
       ],
       "commit_head": "e296fb5",
-      "issue_count": 30,
+      "issue_count": 34,
       "concise": {
         "hook": "6/7-DoF cobot planning, ZVD/EI slosh control, and active tactile search where clear glass fools cameras.",
         "flow": [
@@ -1129,7 +1112,7 @@
         }
       ],
       "commit_head": "e6e0600",
-      "issue_count": 30,
+      "issue_count": 34,
       "concise": {
         "hook": "Distill teachers into W8A8/W4A8 students, export ONNX/C99, and adapt to multi-year sensor drift.",
         "flow": [
@@ -1193,7 +1176,7 @@
       "page": "",
       "layer": "L2",
       "organ": "License-Gated Open Science Data Schema & Ingestion",
-      "summary": "Normalizes 21 open lab datasets (protocols, reactions, QM9/DFT, LabPics, CALiSol-23, BigSolDB 2.0, MassSpecGym, opXRD, ROD, Raman, ChemBench, DCASE 2025, FineBio) into one SHA-256-sealed, UCUM-unit, SPDX-gated schema."
+      "summary": "Normalizes 27 open lab sources (protocols, atomic operations, reactions, QM9/DFT, FreeSolv, Lipophilicity, CALiSol-23, BigSolDB 2.0, MassSpecGym, opXRD, ROD, Raman, FT-IR, LabPics, DCASE 2025, FineBio, EHRSQL) into one SHA-256-sealed, UCUM-unit, SPDX-gated schema."
     }
   ],
   "scenarios": {
@@ -4217,14 +4200,25 @@
     }
   },
   "issues": {
-    "total_issues": 416,
+    "total_issues": 461,
     "round1_issues": 322,
-    "round2_issues": 94,
+    "round2_issues": 95,
+    "round3_issues": 44,
+    "closed_issues": 458,
+    "open_issues": 3,
+    "open_pending_gpu_issues": [
+      "labfill#35",
+      "labbench-posttrain#49",
+      "labbench-posttrain#18"
+    ],
     "repos": {
       "lab-ask-why": {
         "count": 28,
         "round1_count": 22,
         "round2_count": 6,
+        "round3_count": 0,
+        "closed_count": 28,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -4532,7 +4526,7 @@
             "url": "https://github.com/yaniguan/lab-ask-why/issues/24",
             "title": "[Bug] Polarity classifier and biomedical tokenizer misclassify scoped negations, 'cannot', NEUTRAL rationales, and '-' alleles",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -4547,7 +4541,7 @@
             "url": "https://github.com/yaniguan/lab-ask-why/issues/25",
             "title": "[Bug] Unnormalized BM25 abstention/confidence scaling causes small-corpus false abstention and open-corpus IDF leakage",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -4561,7 +4555,7 @@
             "url": "https://github.com/yaniguan/lab-ask-why/issues/26",
             "title": "[Bug] crux_tournament selects negative-net-EVSI experiments while precursor_ghost_guard fails under reference intensity scaling",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -4575,7 +4569,7 @@
             "url": "https://github.com/yaniguan/lab-ask-why/issues/27",
             "title": "[Formal] Banker's round() violates Lean 4 permille safety bounds at .5 boundaries and LabAskWhyLean lacks multi-claim consistency",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -4592,7 +4586,7 @@
             "url": "https://github.com/yaniguan/lab-ask-why/issues/28",
             "title": "[Interop] Close autolab-wire/v1 loop with lab-attrib negative certificates, fix discriminating_question index, and align lab-decide schema",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -4609,7 +4603,7 @@
             "url": "https://github.com/yaniguan/lab-ask-why/issues/29",
             "title": "[Enhancement] Add hybrid dense/cross-encoder retrieval reranking and structured falsifiable control-well parameter synthesis",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "enhancement",
             "severity": "low",
             "files": [
@@ -4621,9 +4615,12 @@
         ]
       },
       "lab-decide": {
-        "count": 28,
+        "count": 32,
         "round1_count": 22,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 32,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -4936,7 +4933,7 @@
             "url": "https://github.com/yaniguan/lab-decide/issues/24",
             "title": "[Statistical] Unweighted calibration updates on active boundary picks break exchangeability and weighted_conformal_quantile fails IEEE-754 boundary ranks",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "statistical",
             "severity": "high",
             "files": [
@@ -4951,7 +4948,7 @@
             "url": "https://github.com/yaniguan/lab-decide/issues/25",
             "title": "[Bug] Mondrian bin starvation: abstained phys_bounds intervals ratchet ScaffoldMondrianACI alpha_t upward and low-n trust_pct splits starve q_in",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -4965,7 +4962,7 @@
             "url": "https://github.com/yaniguan/lab-decide/issues/26",
             "title": "[Bug] Zero-variance training descriptor scaling sets feature_weights=0 and blinds kNN applicability gating to unseen OOD chemotypes, salts, and solvents",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -4979,7 +4976,7 @@
             "url": "https://github.com/yaniguan/lab-decide/issues/27",
             "title": "[Formal] Lean 4 LabDecideLean vs Python runtime gaps: IEEE-754 conformalRank ceiling divergence and Chem-RRT annular shell / unassayed support chaining",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -4996,7 +4993,7 @@
             "url": "https://github.com/yaniguan/lab-decide/issues/28",
             "title": "[Interop] autolab-wire/v1 lacks ledger_entry_sha256 deduplication and 64-hex digest validation across multi-round campaigns",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -5009,7 +5006,7 @@
             "url": "https://github.com/yaniguan/lab-decide/issues/29",
             "title": "[Enhancement] Locally scaled Conformalized Quantile Regression (CQR-r) on real descriptors and guard against negative-width CQR interval crossing (lo > hi)",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "enhancement",
             "severity": "low",
             "files": [
@@ -5018,6 +5015,60 @@
               "src/lab_decide/calisol.py#L189-L231",
               "src/lab_decide/acquisition.py#L246"
             ]
+          },
+          {
+            "index": 29,
+            "number": 32,
+            "url": "https://github.com/yaniguan/lab-decide/issues/32",
+            "title": "autolab_wire: score candidates with the fitted model, not packet defaults",
+            "round": 3,
+            "state": "closed",
+            "category": "interop",
+            "severity": "high",
+            "files": [
+              "autolab_wire.py",
+              "fifteen_repo_wire_check.py"
+            ]
+          },
+          {
+            "index": 30,
+            "number": 33,
+            "url": "https://github.com/yaniguan/lab-decide/issues/33",
+            "title": "Benchmark TrustRegionAdvisor as a sequential campaign; it never beats greedy",
+            "round": 3,
+            "state": "closed",
+            "category": "benchmark",
+            "severity": "high",
+            "files": [
+              "scripts/benchmark_campaign.py"
+            ]
+          },
+          {
+            "index": 31,
+            "number": 34,
+            "url": "https://github.com/yaniguan/lab-decide/issues/34",
+            "title": "kNN gate is inverted on reaction-yield data; add a multi-seed real-data report",
+            "round": 3,
+            "state": "closed",
+            "category": "data",
+            "severity": "high",
+            "files": [
+              "scripts/benchmark_registry.py",
+              "results/registry_benchmark.json"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 35,
+            "url": "https://github.com/yaniguan/lab-decide/issues/35",
+            "title": "Scaffold split ignores row fractions and falls back to regex groups",
+            "round": 3,
+            "state": "closed",
+            "category": "data",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
           }
         ]
       },
@@ -5025,6 +5076,9 @@
         "count": 28,
         "round1_count": 22,
         "round2_count": 6,
+        "round3_count": 0,
+        "closed_count": 28,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -5343,7 +5397,7 @@
             "url": "https://github.com/yaniguan/buy-or-make/issues/26",
             "title": "[Bug] Fix asymmetric salt-form matching, bare quaternary cation desalting, and silent stereoisomer InChIKey misses",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -5359,7 +5413,7 @@
             "url": "https://github.com/yaniguan/buy-or-make/issues/27",
             "title": "[Chemistry] Guard RETRO_TEMPLATES against tertiary SN2 eliminations, unprotected competing nucleophiles, and AB-monomer Suzuki homopolymerization",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "chemistry",
             "severity": "high",
             "files": [
@@ -5373,7 +5427,7 @@
             "url": "https://github.com/yaniguan/buy-or-make/issues/28",
             "title": "[Bug] Compound step-depth reaction yields and enforce discrete pack-size MOQ bounds in route cost estimation and budget filtering",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -5388,7 +5442,7 @@
             "url": "https://github.com/yaniguan/buy-or-make/issues/29",
             "title": "[Formal] Extend Lean 4 AtomVec and Python AtomCountVec beyond lumped CNOSHal to prevent cross-halogen swaps and cover B, P, Si, and organometallics",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -5404,7 +5458,7 @@
             "url": "https://github.com/yaniguan/buy-or-make/issues/30",
             "title": "[Interop] Propagate leaf vendor lead times, pack-size MOQs, and precursor basis catalogs across AvailabilityRecord and autolab-wire/v1 for labshift and lab-attrib",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -5420,7 +5474,7 @@
             "url": "https://github.com/yaniguan/buy-or-make/issues/31",
             "title": "[Performance] Configure SQLite WAL mode, busy_timeout, thread-safe connections, and read-only URI openers across ResponseCache, LocalStockBackend, and ReactionLookupBackend",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "performance",
             "severity": "medium",
             "files": [
@@ -5432,9 +5486,12 @@
         ]
       },
       "labshift": {
-        "count": 30,
+        "count": 34,
         "round1_count": 24,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 34,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -5777,7 +5834,7 @@
             "url": "https://github.com/yaniguan/labshift/issues/28",
             "title": "[Bug] solve_greedy_repair pins intermediate coupled steps to earliest start and deadlocks on multi-step max_wait chains",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -5790,7 +5847,7 @@
             "url": "https://github.com/yaniguan/labshift/issues/29",
             "title": "[Bug] robot_arm transfer_time frees source station before arm pickup when wait > transfer_time and lacks pool-pair transit matrix",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -5807,7 +5864,7 @@
             "url": "https://github.com/yaniguan/labshift/issues/30",
             "title": "[Optimization] Support sequence-dependent setup, decontamination, and thermal-equilibration times between incompatible assays",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "optimization",
             "severity": "medium",
             "files": [
@@ -5823,7 +5880,7 @@
             "url": "https://github.com/yaniguan/labshift/issues/31",
             "title": "[Formal] Prove sweep-line vs discrete-time pool capacity equivalence, lane-coloring bridge, and opId uniqueness in LabShiftLean",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -5839,7 +5896,7 @@
             "url": "https://github.com/yaniguan/labshift/issues/32",
             "title": "[Interop] Support dynamic autolab-wire/v1 rolling-horizon rescheduling when lab-attrib triggers urgent RUN_ORTHOGONAL_ASSAY (Raman / LC-MS) mid-campaign",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -5855,12 +5912,70 @@
             "url": "https://github.com/yaniguan/labshift/issues/33",
             "title": "[Scale] Eliminate CP-SAT warm-start cliff, 2*sum_work horizon blowup, and O(J*H^2) flow-scale inflation on >100-job overnight batches",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "scale",
             "severity": "medium",
             "files": [
               "src/labshift/cpsat.py",
               "src/labshift/greedy.py"
+            ]
+          },
+          {
+            "index": 31,
+            "number": 35,
+            "url": "https://github.com/yaniguan/labshift/issues/35",
+            "title": "Reject unknown time units in protocol import instead of reading them as minutes",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "src/labshift/protocol.py",
+              "protocol.py",
+              "tests/test_protocol.py"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 36,
+            "url": "https://github.com/yaniguan/labshift/issues/36",
+            "title": "Add stdlib makespan lower bounds and report a gap for every solver",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "src/labshift/bounds.py",
+              "benchmarks/medium_00.json",
+              "benchmarks/large_05.json"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 37,
+            "url": "https://github.com/yaniguan/labshift/issues/37",
+            "title": "Add a planted-schedule tier: greedy_repair solves every built-in preset",
+            "round": 3,
+            "state": "closed",
+            "category": "benchmark",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
+          },
+          {
+            "index": 34,
+            "number": 38,
+            "url": "https://github.com/yaniguan/labshift/issues/38",
+            "title": "Make the stepbot bridge import stepbot's own example protocols",
+            "round": 3,
+            "state": "closed",
+            "category": "interop",
+            "severity": "high",
+            "files": [
+              "examples/dilution_series.yaml",
+              "plate_fill.yaml",
+              "reservoir_mix.yaml"
             ]
           }
         ]
@@ -5869,6 +5984,9 @@
         "count": 28,
         "round1_count": 22,
         "round2_count": 6,
+        "round3_count": 0,
+        "closed_count": 28,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -6170,7 +6288,7 @@
             "url": "https://github.com/yaniguan/lab-automation-atlas/issues/24",
             "title": "[Security] Harden SSRF URL canonicalization, DNS-rebinding socket pinning, and MCP endpoint validation parity",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "security",
             "severity": "high",
             "files": [
@@ -6185,7 +6303,7 @@
             "url": "https://github.com/yaniguan/lab-automation-atlas/issues/25",
             "title": "[Bug] Parse compound SPDX license expressions and replace default-allow training license denylist with default-deny policy",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -6201,7 +6319,7 @@
             "url": "https://github.com/yaniguan/lab-automation-atlas/issues/26",
             "title": "[Formal] Extend LabAtlasLean with a bounded license join-semilattice, transitive derivation taint propagation, and Python parity checks",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -6217,7 +6335,7 @@
             "url": "https://github.com/yaniguan/lab-automation-atlas/issues/27",
             "title": "[Interop] Dynamically resolve platform grounding metadata per target_platform from atlas.json in autolab_wire.py instead of static OT-2 defaults",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -6232,7 +6350,7 @@
             "url": "https://github.com/yaniguan/lab-automation-atlas/issues/28",
             "title": "[Schema] Add typed hardware capability envelopes and analytical characterization modalities to atlas.schema.json for stepbot and lab-attrib",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "schema",
             "severity": "medium",
             "files": [
@@ -6249,7 +6367,7 @@
             "url": "https://github.com/yaniguan/lab-automation-atlas/issues/29",
             "title": "[Bug] Fix WAF 403 cross-domain redirect bypass, HTTP 416 Range fallback failure, and unbracketed `](` link false positives in linkcheck.py",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -6259,9 +6377,12 @@
         ]
       },
       "lab-rehearsal": {
-        "count": 28,
+        "count": 32,
         "round1_count": 22,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 32,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -6586,7 +6707,7 @@
             "url": "https://github.com/yaniguan/lab-rehearsal/issues/24",
             "title": "[Physics] Model volatile-solvent evaporation loss, solute up-concentration, and incubate/seal/thaw state transitions in rehearse() and IR adapters",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "physics",
             "severity": "high",
             "files": [
@@ -6602,7 +6723,7 @@
             "url": "https://github.com/yaniguan/lab-rehearsal/issues/25",
             "title": "[Bug] Track 8-channel manifold (p20_multi / p300_multi) column tip consumption, 8x shared-trough drawdown, and A..H row state",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -6617,7 +6738,7 @@
             "url": "https://github.com/yaniguan/lab-rehearsal/issues/26",
             "title": "[Formal] Eliminate float-to-tenth-uL quantization drift and align multi-dispense and concentration rules between Python and LabRehearsalLean",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -6633,7 +6754,7 @@
             "url": "https://github.com/yaniguan/lab-rehearsal/issues/27",
             "title": "[Interop] Compile rehearsed multi-step trajectories into autolab-wire/v1 protocol_yaml_dict instead of emitting a hardcoded single-transfer stub",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -6647,7 +6768,7 @@
             "url": "https://github.com/yaniguan/lab-rehearsal/issues/28",
             "title": "[Interop] Persist wire episodic memory and reconcile fast_deny_known_failures with lab-attrib EXECUTION_ARTIFACT retry routing",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -6664,7 +6785,7 @@
             "url": "https://github.com/yaniguan/lab-rehearsal/issues/29",
             "title": "[Memory] Persist and index BottomReasoningTrace and structural step skeletons in runs.jsonl for sub-linear protocol similarity recall",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "memory",
             "severity": "medium",
             "files": [
@@ -6674,13 +6795,72 @@
               "schema/run_record.schema.json#L7-L52",
               "demo/memory/runs.jsonl"
             ]
+          },
+          {
+            "index": 29,
+            "number": 32,
+            "url": "https://github.com/yaniguan/lab-rehearsal/issues/32",
+            "title": "Stop the wire node from silently capping requested volumes at 200 uL",
+            "round": 3,
+            "state": "closed",
+            "category": "interop",
+            "severity": "high",
+            "files": [
+              "autolab_wire.py"
+            ]
+          },
+          {
+            "index": 30,
+            "number": 33,
+            "url": "https://github.com/yaniguan/lab-rehearsal/issues/33",
+            "title": "Block approval when the compiled wire protocol differs from the rehearsed one",
+            "round": 3,
+            "state": "closed",
+            "category": "interop",
+            "severity": "high",
+            "files": [
+              "demo/protocols/good_serial_dilution.json"
+            ]
+          },
+          {
+            "index": 31,
+            "number": 34,
+            "url": "https://github.com/yaniguan/lab-rehearsal/issues/34",
+            "title": "Fix labware and tip-rack merging so real Opentrons fixtures rehearse correctly",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "transferSettings.json",
+              "multipleTipracks.json",
+              "scripts/fetch_opentrons_fixtures.py"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 35,
+            "url": "https://github.com/yaniguan/lab-rehearsal/issues/35",
+            "title": "Run the real Lean checker in CI and diff its verdicts against the Python twin",
+            "round": 3,
+            "state": "closed",
+            "category": "formal",
+            "severity": "high",
+            "files": [
+              ".github/workflows/demo.yml",
+              "lean/Main.lean",
+              "autolab_wire.py"
+            ]
           }
         ]
       },
       "lab-verify": {
-        "count": 28,
+        "count": 32,
         "round1_count": 22,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 32,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -6998,7 +7178,7 @@
             "url": "https://github.com/yaniguan/lab-verify/issues/24",
             "title": "[Security] Replace shared symmetric HMAC secret with asymmetric Ed25519 role-separated keys in `lean-mcp/v1`",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "security",
             "severity": "high",
             "files": [
@@ -7014,7 +7194,7 @@
             "url": "https://github.com/yaniguan/lab-verify/issues/25",
             "title": "[Security] Persist `current_deck_epoch` and `consumed_nonces` with atomic file locking across CLI `mcp-verify` invocations",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "security",
             "severity": "high",
             "files": [
@@ -7029,7 +7209,7 @@
             "url": "https://github.com/yaniguan/lab-verify/issues/26",
             "title": "[Bug] Prevent recursive CTE string-expansion memory bombs and base-less `WITH RECURSIVE` queries in `sql_gate.py`",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -7042,7 +7222,7 @@
             "url": "https://github.com/yaniguan/lab-verify/issues/27",
             "title": "[Formal] Model cryptographic key-rotation epochs and supervisor co-signature TTL window in `LabVerifyLean.lean`",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -7056,7 +7236,7 @@
             "url": "https://github.com/yaniguan/lab-verify/issues/28",
             "title": "[Interop] Add `autolab-wire/v1` overnight frontier deferral and daytime human co-sign release to `stepbot`",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -7070,12 +7250,65 @@
             "url": "https://github.com/yaniguan/lab-verify/issues/29",
             "title": "[Verification] Fix Layer-4 float sort-key cliff and greedy row matching on unordered `AVG`/`SUM` aggregate queries",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "verification",
             "severity": "medium",
             "files": [
               "src/lab_verify/sql_gate.py#L664-L683",
               "community_extensions/mutant_sql_synthesizer.py#L326-L341"
+            ]
+          },
+          {
+            "index": 29,
+            "number": 32,
+            "url": "https://github.com/yaniguan/lab-verify/issues/32",
+            "title": "Lean gate passes false proofs: compile every candidate and check axioms",
+            "round": 3,
+            "state": "closed",
+            "category": "formal",
+            "severity": "high",
+            "files": [
+              "lean/lakefile.toml"
+            ]
+          },
+          {
+            "index": 30,
+            "number": 33,
+            "url": "https://github.com/yaniguan/lab-verify/issues/33",
+            "title": "Fix SQL false rejects and fixed limits; run gate on real EHRSQL-2024 data",
+            "round": 3,
+            "state": "closed",
+            "category": "benchmark",
+            "severity": "high",
+            "files": [
+              "valid/annotated.json",
+              "scripts/run_ehrsql_real.py"
+            ]
+          },
+          {
+            "index": 31,
+            "number": 34,
+            "url": "https://github.com/yaniguan/lab-verify/issues/34",
+            "title": "Make lean-mcp/v1 verify and the wire node fail closed by default",
+            "round": 3,
+            "state": "closed",
+            "category": "security",
+            "severity": "high",
+            "files": [
+              "autolab_wire.py"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 35,
+            "url": "https://github.com/yaniguan/lab-verify/issues/35",
+            "title": "Demo labels q4/q12 are not NULL/date safe; counterexample DBs miss them",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "docs/ARCHITECTURE_AND_HISTORY.md"
             ]
           }
         ]
@@ -7084,6 +7317,9 @@
         "count": 10,
         "round1_count": 0,
         "round2_count": 10,
+        "round3_count": 0,
+        "closed_count": 10,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -7091,7 +7327,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/1",
             "title": "[Numerics] Cyclic PCD NNLS stalls before KKT convergence on nearly collinear polymorphs and ignores channel weights in solver objective",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "numerics",
             "severity": "high",
             "files": [
@@ -7104,7 +7340,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/2",
             "title": "[Numerics] Bragg 2-theta peak-shift and Vegard solid-solution lattice strain trigger false HIGH_SPECTRAL_RWP_RESIDUAL quarantine in deconvolve_spectrum",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "numerics",
             "severity": "high",
             "files": [
@@ -7119,7 +7355,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/3",
             "title": "[Bug] Unmodeled amorphous background halo, silent NaN-to-zero detector clamping, and all-zero weight division bypass in xrd_deconvolve.py",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -7133,7 +7369,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/4",
             "title": "[Causal] Sequential masking of simultaneous EXECUTION_ARTIFACT and AMBIGUOUS_CHARACTERIZATION faults in attribute_assay_outcome misroutes uncalibrated-detector runs to RETRY_ROBOT",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "causal",
             "severity": "high",
             "files": [
@@ -7148,7 +7384,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/5",
             "title": "[Causal] Binary positive-control gate misses sub-threshold sensitivity drift, conflates plate-wide reagent failure with RETRY_ROBOT, and defaults empty wire packets to CERTIFIED_POSITIVE",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "causal",
             "severity": "high",
             "files": [
@@ -7163,7 +7399,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/6",
             "title": "[Decision] Correlated primary/secondary modality failure modes on centrosymmetric or fluorescent phases and clamped false-positive loss bias in route_orthogonal_assay",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "decision",
             "severity": "medium",
             "files": [
@@ -7178,7 +7414,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/7",
             "title": "[Security] Concurrent multi-worker append race condition, NaN JSON corruption, and unauthenticated SHA-256 history rewrite in CertifiedLedger",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "security",
             "severity": "high",
             "files": [
@@ -7192,7 +7428,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/8",
             "title": "[Formal] Add compiled --batch-tsv CLI executable in LabAttribLean.lean and full telemetry commitment in computeAbstractEntryHash for runtime parity testing",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -7208,7 +7444,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/9",
             "title": "[Interop] autolab-wire/v1 two-turn orthogonal resolution loop deadlocks on L4_ATTRIB_QUARANTINE and drops deconvolved snr_tenths",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -7221,7 +7457,7 @@
             "url": "https://github.com/yaniguan/lab-attrib/issues/10",
             "title": "[Calibration] Isotropic global tau jump from single-direction stepping-stones and non-exchangeable UCB conformal quantile fallback in attributed_frontier.py",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "calibration",
             "severity": "high",
             "files": [
@@ -7232,12 +7468,29 @@
         ]
       },
       "labbench-posttrain": {
-        "count": 28,
+        "count": 33,
         "round1_count": 22,
-        "round2_count": 6,
+        "round2_count": 7,
+        "round3_count": 4,
+        "closed_count": 31,
+        "open_count": 2,
         "items": [
           {
             "index": 1,
+            "number": 18,
+            "url": "https://github.com/yaniguan/labbench-posttrain/issues/18",
+            "title": "exp: first GRPO vs GSPO run with reward controls and 3 seeds",
+            "round": 2,
+            "state": "open",
+            "category": "benchmark",
+            "severity": "medium",
+            "files": [
+              "configs/recipes/model/qwen3_1.7b.yaml"
+            ],
+            "pending_gpu": true
+          },
+          {
+            "index": 2,
             "number": 21,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/21",
             "title": "[Bug] GDPO per-channel standardization magnifies tiny reasoning/length penalties to full unit-variance weight",
@@ -7253,7 +7506,7 @@
             ]
           },
           {
-            "index": 2,
+            "index": 3,
             "number": 22,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/22",
             "title": "[Bug] LabV0Corpus RL and Eval stages crash with KeyError('answer') via mismatched BioProBenchEnv default",
@@ -7268,7 +7521,7 @@
             ]
           },
           {
-            "index": 3,
+            "index": 4,
             "number": 23,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/23",
             "title": "[Bug] NeMoRLEngine silently compiles GDPO multi-reward configs for SFT, DPO, PPO, and Eval stages",
@@ -7281,7 +7534,7 @@
             ]
           },
           {
-            "index": 4,
+            "index": 5,
             "number": 24,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/24",
             "title": "[Bug] Safety bounds in StructuredActionPlanTemplate and schema_valid_actions are bypassed by string or boolean parameter values",
@@ -7296,7 +7549,7 @@
             ]
           },
           {
-            "index": 5,
+            "index": 6,
             "number": 25,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/25",
             "title": "[Bug] Case-insensitive unit normalization conflates length (nm, mm, m) and time/conductance (s, S) with molarity",
@@ -7309,7 +7562,7 @@
             ]
           },
           {
-            "index": 6,
+            "index": 7,
             "number": 26,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/26",
             "title": "[Bug] CALiSolPredict Gaussian calibration reward has a flat improper plateau whenever |k_hat - k_true| < sigma_scale",
@@ -7322,7 +7575,7 @@
             ]
           },
           {
-            "index": 7,
+            "index": 8,
             "number": 27,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/27",
             "title": "[Bug] scientist/distill.py tokenizer family check equates all HuggingFace PreTrainedTokenizerFast models",
@@ -7336,7 +7589,7 @@
             ]
           },
           {
-            "index": 8,
+            "index": 9,
             "number": 28,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/28",
             "title": "[Bug] generate_rollouts never populates Rollout.gen_logprobs, rendering TIS/ICE-POP importance sampling a no-op",
@@ -7352,7 +7605,7 @@
             ]
           },
           {
-            "index": 9,
+            "index": 10,
             "number": 29,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/29",
             "title": "[Bug] TorchLocalEngine sets non-existent checkpoint_path on TROPDStage because train_tropd never saves checkpoints",
@@ -7367,7 +7620,7 @@
             ]
           },
           {
-            "index": 10,
+            "index": 11,
             "number": 30,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/30",
             "title": "[Bug] PPO checkpoints omit value_head state_dict and train_ppo ignores reward shaping & step-varying baseline seeds",
@@ -7384,7 +7637,7 @@
             ]
           },
           {
-            "index": 11,
+            "index": 12,
             "number": 31,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/31",
             "title": "[Bug] extract_verified_answer and bioenvs.base.extract_answer leak draft tags from <think> scratchpads",
@@ -7398,7 +7651,7 @@
             ]
           },
           {
-            "index": 12,
+            "index": 13,
             "number": 32,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/32",
             "title": "[Bug] ORD.score accepts boolean lists [False, True] as valid permutations and PermutationOrderTemplate ignores missing prerequisite IDs",
@@ -7412,7 +7665,7 @@
             ]
           },
           {
-            "index": 13,
+            "index": 14,
             "number": 33,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/33",
             "title": "[Bug] parse_smiles_invariants returns incompatible formula dicts across RDKit vs pure-Python paths",
@@ -7426,7 +7679,7 @@
             ]
           },
           {
-            "index": 14,
+            "index": 15,
             "number": 34,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/34",
             "title": "[Bug] Packaging gaps in pyproject.toml and CI: missing pydantic/common/operator packages, pytest pythonpath, and eager tokenizers import",
@@ -7442,7 +7695,7 @@
             ]
           },
           {
-            "index": 15,
+            "index": 16,
             "number": 35,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/35",
             "title": "[Bug] Top-level training side effects and discarded weights in operator/train_bc.py, operator/world_model.py, and scientist/train_projector.py",
@@ -7457,7 +7710,7 @@
             ]
           },
           {
-            "index": 16,
+            "index": 17,
             "number": 36,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/36",
             "title": "[Bug] Overlapping stride-1 mini-batches in train_sft/train_dpo and hardcoded 2-row/48-token truncation in RL SFT anchors",
@@ -7473,7 +7726,7 @@
             ]
           },
           {
-            "index": 17,
+            "index": 18,
             "number": 37,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/37",
             "title": "[Bug] Hybrid MPO double-weights BCO relative to DPO and defaults missing unpaired labels to negative (0)",
@@ -7487,7 +7740,7 @@
             ]
           },
           {
-            "index": 18,
+            "index": 19,
             "number": 38,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/38",
             "title": "[Bug] Cross-platform Windows encoding crashes, POSIX-hardcoded smoke runner, and A100-only GPU assertion",
@@ -7504,7 +7757,7 @@
             ]
           },
           {
-            "index": 19,
+            "index": 20,
             "number": 39,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/39",
             "title": "[Bug] Concurrent unguarded JSONL appends in labeval/run.py and 6x retry backoff on permanent 4xx errors in common/llm.py",
@@ -7518,7 +7771,7 @@
             ]
           },
           {
-            "index": 20,
+            "index": 21,
             "number": 40,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/40",
             "title": "[Bug] Protocol parser splits on chemical abbreviations ('sat. NH4Cl', 'aq. NaOH') and broadcasts clause params across distinct verbs",
@@ -7532,7 +7785,7 @@
             ]
           },
           {
-            "index": 21,
+            "index": 22,
             "number": 41,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/41",
             "title": "[Bug] Data/doc drift and contamination/eval edge cases (CALiSol license/count mismatch, BioProBench SplitGuard, eval_suite zero-accuracy truthiness)",
@@ -7550,7 +7803,7 @@
             ]
           },
           {
-            "index": 22,
+            "index": 23,
             "number": 42,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/42",
             "title": "[Enhancement] Define typed interchange contracts between labrl VerifiableEnv/InstrumentAction and sibling Auto-Lab L4/L6 repos",
@@ -7565,12 +7818,12 @@
             ]
           },
           {
-            "index": 23,
+            "index": 24,
             "number": 44,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/44",
             "title": "[Bug][RLVR] Zero-variance group advantage collapse and spurious shaping/batch-std gradients in GRPO/GDPO when rollouts fail the multiplicative Lean gate",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -7582,12 +7835,12 @@
             ]
           },
           {
-            "index": 24,
+            "index": 25,
             "number": 45,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/45",
             "title": "[Bug][SplitGuard] Unicode homoglyph, zero-width character, Base64/case obfuscation, and partial packet scanning bypasses in SplitGuard and autolab_wire",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -7597,12 +7850,12 @@
             ]
           },
           {
-            "index": 25,
+            "index": 26,
             "number": 46,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/46",
             "title": "[Bug][Data] Non-canonical Murcko-scaffold tautomer, unstripped counterion, and empty-scaffold ('scaffold|') split leakage across ChEMBL, PubChem, and QM9",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -7614,12 +7867,12 @@
             ]
           },
           {
-            "index": 26,
+            "index": 27,
             "number": 47,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/47",
             "title": "[Formal] Formalize multi-objective GDPO Pareto-weight normalization and Reverse-KL SFT-anchor drift bound in LabPostTrainLean",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -7631,12 +7884,12 @@
             ]
           },
           {
-            "index": 27,
+            "index": 28,
             "number": 48,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/48",
             "title": "[Interop] Differentiate lab-attrib CERTIFIED_NEGATIVE scientific disproofs from L4_ATTRIB_QUARANTINE artifacts in autolab_wire.py for SFT, DPO, and MPO/BCO",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -7648,7 +7901,7 @@
             ]
           },
           {
-            "index": 28,
+            "index": 29,
             "number": 49,
             "url": "https://github.com/yaniguan/labbench-posttrain/issues/49",
             "title": "[Training] Execute and log PENDING 8xA100/H100 Qwen3-8B sequential SFT -> MPO -> GDPO baseline runs and fix multi-stage NeMo-RL handoffs",
@@ -7662,14 +7915,81 @@
               "src/labrl/pipeline/__init__.py#L60-L100",
               "src/labrl/cli.py#L76-L88",
               "src/labrl/engines/__init__.py#L416-L463"
+            ],
+            "pending_gpu": true
+          },
+          {
+            "index": 30,
+            "number": 52,
+            "url": "https://github.com/yaniguan/labbench-posttrain/issues/52",
+            "title": "Launch path breaks on pinned yaniguan/RL commit: add CPU contract test and fix",
+            "round": 3,
+            "state": "closed",
+            "category": "training",
+            "severity": "high",
+            "files": [
+              "scripts/posttrain/run_nemo_rl.py",
+              "nemo_rl/data/utils.py",
+              "run_nemo_rl.py",
+              "examples/run_sft.py"
+            ]
+          },
+          {
+            "index": 31,
+            "number": 53,
+            "url": "https://github.com/yaniguan/labbench-posttrain/issues/53",
+            "title": "Wire adapter treats unknown outcomes as certified positives; fail closed",
+            "round": 3,
+            "state": "closed",
+            "category": "interop",
+            "severity": "high",
+            "files": [
+              "autolab_wire.py",
+              "README.md",
+              "tests/test_autolab_wire.py"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 54,
+            "url": "https://github.com/yaniguan/labbench-posttrain/issues/54",
+            "title": "Reverse-KL anchor gradient is exact per token only; add multi-step test",
+            "round": 3,
+            "state": "closed",
+            "category": "training",
+            "severity": "high",
+            "files": [
+              "tests/test_kl_sequence_level.py",
+              "posttrain/kl.py",
+              "docs/posttrain/kl_anchor.md",
+              "docs/posttrain/losses_and_gradients.md"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 55,
+            "url": "https://github.com/yaniguan/labbench-posttrain/issues/55",
+            "title": "Lean proofs never compiled in CI; GDPO/KL checks unused by trainers",
+            "round": 3,
+            "state": "closed",
+            "category": "formal",
+            "severity": "high",
+            "files": [
+              ".github/workflows/ci.yml",
+              "lean/LabPostTrainLean.lean",
+              "posttrain/grpo.py",
+              "AutoLabLean/L3_PostTrain.lean"
             ]
           }
         ]
       },
       "twinstep": {
-        "count": 30,
+        "count": 34,
         "round1_count": 24,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 34,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -8014,7 +8334,7 @@
             "url": "https://github.com/yaniguan/twinstep/issues/28",
             "title": "[Bug] Prevent compound inject_k_errors edits from cancelling transitive swap_order faults or colliding step_indices",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -8028,7 +8348,7 @@
             "url": "https://github.com/yaniguan/twinstep/issues/29",
             "title": "[Bug] Align fallback _parse_simple_yaml with PyYAML on document markers, quoted/escaped colon keys, and underscore/scientific scalars",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -8041,7 +8361,7 @@
             "url": "https://github.com/yaniguan/twinstep/issues/30",
             "title": "[Semantics] Fix multi-plate well aliasing, Mix-to-Transfer anti-dependencies, and cross-plate cycle inversion in dependencies.py and baseline.py",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "semantics",
             "severity": "medium",
             "files": [
@@ -8057,7 +8377,7 @@
             "url": "https://github.com/yaniguan/twinstep/issues/31",
             "title": "[Formal] Prove transitive-reduction completeness, permutation nodup soundness, and topological-sort uniqueness in TwinStepLean",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -8073,7 +8393,7 @@
             "url": "https://github.com/yaniguan/twinstep/issues/32",
             "title": "[Interop] Synthesize contrastive error twins from stepbot YAML protocols and lab-attrib EXECUTION_ARTIFACT telemetry in autolab_wire.py",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -8087,7 +8407,7 @@
             "url": "https://github.com/yaniguan/twinstep/issues/33",
             "title": "[Dataset] Add difficulty-stratified and saboteur-backed hard-negative twin export for DPO, MPO, and GDPO",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "dataset",
             "severity": "low",
             "files": [
@@ -8096,13 +8416,68 @@
               "src/twinstep/cli.py#L120-L152",
               "community_extensions/saboteur_evolver.py"
             ]
+          },
+          {
+            "index": 31,
+            "number": 35,
+            "url": "https://github.com/yaniguan/twinstep/issues/35",
+            "title": "Add a held-out protocol split so scores cannot come from memorizing 3 files",
+            "round": 3,
+            "state": "closed",
+            "category": "data",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 36,
+            "url": "https://github.com/yaniguan/twinstep/issues/36",
+            "title": "Stop false alarms on clean multi-stage assays in the rule checker",
+            "round": 3,
+            "state": "closed",
+            "category": "formal",
+            "severity": "high",
+            "files": [
+              "lean/lakefile.toml"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 37,
+            "url": "https://github.com/yaniguan/twinstep/issues/37",
+            "title": "List allowed labels and index rule in prompts; add a balanced score",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
+          },
+          {
+            "index": 34,
+            "number": 38,
+            "url": "https://github.com/yaniguan/twinstep/issues/38",
+            "title": "Fix stale counts and unsupported claims in README and docs",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "medium",
+            "files": [
+              "lean/README.md"
+            ]
           }
         ]
       },
       "labfill": {
-        "count": 30,
+        "count": 34,
         "round1_count": 24,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 33,
+        "open_count": 1,
         "items": [
           {
             "index": 1,
@@ -8447,7 +8822,7 @@
             "url": "https://github.com/yaniguan/labfill/issues/30",
             "title": "[Systems] Replace dense (B, 1, S, S) block-diagonal boolean masks with cu_seqlens varlen dispatch to avoid O(S^2) blowup at bin_cap >= 4096",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "systems",
             "severity": "medium",
             "files": [
@@ -8461,7 +8836,7 @@
             "url": "https://github.com/yaniguan/labfill/issues/31",
             "title": "[Bug] Fix flat token-mean cross-entropy reduction bias across co-packed short and long protocols and wire per-sequence / curriculum loss weights",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -8476,7 +8851,7 @@
             "url": "https://github.com/yaniguan/labfill/issues/32",
             "title": "[Bug] Prevent silent position_ids clamping when seq_len > max_seq_len and unify oversized token_length > bin_cap handling",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -8493,7 +8868,7 @@
             "url": "https://github.com/yaniguan/labfill/issues/33",
             "title": "[Formal] Prove Best-Fit-Decreasing approximation bound, causal block-diagonal mask isolation, and unique-seqId disjointness in LabFillLean",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -8509,7 +8884,7 @@
             "url": "https://github.com/yaniguan/labfill/issues/34",
             "title": "[Interop] Emit per-bin slice layouts, cu_seqlens offsets, and prompt/completion loss-mask spans in autolab-wire/v1 packed_batch for labbench-posttrain",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -8532,14 +8907,71 @@
               "docs/ARCHITECTURE_AND_HISTORY.md",
               "benchmarks/run_all.py#L302",
               "labfill/fill_gpu.py"
+            ],
+            "pending_gpu": true
+          },
+          {
+            "index": 31,
+            "number": 37,
+            "url": "https://github.com/yaniguan/labfill/issues/37",
+            "title": "Batched checker accepts back-transfers in large containers (int64 overflow)",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 38,
+            "url": "https://github.com/yaniguan/labfill/issues/38",
+            "title": "Run exported protocols through YLM LabLean in CI and fix exporter gaps",
+            "round": 3,
+            "state": "closed",
+            "category": "formal",
+            "severity": "high",
+            "files": [
+              "docs/ARCHITECTURE_AND_HISTORY.md"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 39,
+            "url": "https://github.com/yaniguan/labfill/issues/39",
+            "title": "Exported twinstep and DPO records point step_index at the wrong step",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "twinstep/src/twinstep/evaluate.py"
+            ]
+          },
+          {
+            "index": 34,
+            "number": 40,
+            "url": "https://github.com/yaniguan/labfill/issues/40",
+            "title": "Regenerate stale Recipe-2 numbers and report repair recovery and seed spread",
+            "round": 3,
+            "state": "closed",
+            "category": "ci",
+            "severity": "medium",
+            "files": [
+              "benchmarks/results/cpu_2026-11-18_t1.json",
+              "run_all.py"
             ]
           }
         ]
       },
       "lab-ears": {
-        "count": 30,
+        "count": 34,
         "round1_count": 24,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 34,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -8861,7 +9293,7 @@
             "url": "https://github.com/yaniguan/lab-ears/issues/28",
             "title": "[Bug] parse_quantities() emits phantom Concentration spans inside 'x g' Speed, mis-scales '0,500' comma decimals by 1000x, and truncates scientific notation",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -8874,7 +9306,7 @@
             "url": "https://github.com/yaniguan/lab-ears/issues/29",
             "title": "[Bug] CrossModalInterlockDetector produces NaN low-band power at 48 kHz USB mic rates, silently disabling stepper-stall halts",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -8887,7 +9319,7 @@
             "url": "https://github.com/yaniguan/lab-ears/issues/30",
             "title": "[Formal] LabEarsLean omits Nyquist upper bounds, finite-window Hann skirt bleed margins, and outward float64-to-Nat rounding",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -8902,7 +9334,7 @@
             "url": "https://github.com/yaniguan/lab-ears/issues/31",
             "title": "[Interop] autolab_wire.py collapses multi-step protocol spans via first-match-wins, drops canonical range bounds and Concentration, and misparses '13C NMR' as 13 deg C",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -8915,7 +9347,7 @@
             "url": "https://github.com/yaniguan/lab-ears/issues/32",
             "title": "[Interop] autolab-wire/v1 ignores flagged AudioEvent and CrossModalInterlock halts and drifts on raw_audio_kept vs raw_audio_saved privacy fields",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -8931,7 +9363,7 @@
             "url": "https://github.com/yaniguan/lab-ears/issues/33",
             "title": "[Benchmark] Live bench monitoring & DCASE streaming gaps: 100% held-out FPR from in-sample threshold fallback, per-step retraining, and non-streaming global pooling",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "benchmark",
             "severity": "low",
             "files": [
@@ -8941,13 +9373,70 @@
               "acoustic/evaluate.py",
               "results/dcase2023_cpu.json"
             ]
+          },
+          {
+            "index": 31,
+            "number": 36,
+            "url": "https://github.com/yaniguan/lab-ears/issues/36",
+            "title": "Streaming threshold is calibrated on 10 s clips but applied to 2 s chunks",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 37,
+            "url": "https://github.com/yaniguan/lab-ears/issues/37",
+            "title": "Interlock benchmark speech is pure in-band tones; real speech causes false halts",
+            "round": 3,
+            "state": "closed",
+            "category": "benchmark",
+            "severity": "high",
+            "files": [
+              "lean/README.md"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 38,
+            "url": "https://github.com/yaniguan/lab-ears/issues/38",
+            "title": "WLP numbers in README/docs are stale and only report the tuned test split",
+            "round": 3,
+            "state": "closed",
+            "category": "data",
+            "severity": "medium",
+            "files": [
+              "demo/parse_protocol.py",
+              "docs/ARCHITECTURE_AND_HISTORY.md",
+              "results/dcase2023_cpu.json"
+            ]
+          },
+          {
+            "index": 34,
+            "number": 39,
+            "url": "https://github.com/yaniguan/lab-ears/issues/39",
+            "title": "Wire privacy gate passes audio events that declare no privacy fields",
+            "round": 3,
+            "state": "closed",
+            "category": "security",
+            "severity": "high",
+            "files": [
+              "tests/test_autolab_wire.py"
+            ]
           }
         ]
       },
       "stepbot": {
-        "count": 30,
+        "count": 34,
         "round1_count": 24,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 34,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -9287,7 +9776,7 @@
             "url": "https://github.com/yaniguan/stepbot/issues/28",
             "title": "[Security] Harden mcp-dispatch --state with atomic fsync writes, fail-closed corruption checks, and bounded consumed_nonces retention",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "security",
             "severity": "high",
             "files": [
@@ -9302,7 +9791,7 @@
             "url": "https://github.com/yaniguan/stepbot/issues/29",
             "title": "[Security] Gate _check_with_opentrons behind _parse_safe_protocol_ast, privatize _MockWell mutators, and enforce envelope_bounds on dispatch",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "security",
             "severity": "high",
             "files": [
@@ -9317,7 +9806,7 @@
             "url": "https://github.com/yaniguan/stepbot/issues/30",
             "title": "[Bug] Support Opentrons Flex (apiLevel 2.18+) A1-D3 deck slots, requirements block, and Flex pipettes",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -9334,7 +9823,7 @@
             "url": "https://github.com/yaniguan/stepbot/issues/31",
             "title": "[Formal] Prove multi-step cumulative tip-rack depletion and multi-chunk distribute conservation in StepbotLean",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -9349,7 +9838,7 @@
             "url": "https://github.com/yaniguan/stepbot/issues/32",
             "title": "[Interop] Export post-dispatch well-volume, tip-usage, and rheology/pressure telemetry in autolab-wire/v1 for lab-attrib AssayTelemetry",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -9366,20 +9855,76 @@
             "url": "https://github.com/yaniguan/stepbot/issues/33",
             "title": "[Enhancement] Add hardware-in-the-loop Opentrons HTTP Run API v2 adapter gated behind StepbotMcpExecutor",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "enhancement",
             "severity": "low",
             "files": [
               "src/stepbot/mcp_runtime.py",
               "src/stepbot/cli.py"
             ]
+          },
+          {
+            "index": 31,
+            "number": 35,
+            "url": "https://github.com/yaniguan/stepbot/issues/35",
+            "title": "Match Opentrons stroke splitting and tip use for multi_aspirate transfers",
+            "round": 3,
+            "state": "closed",
+            "category": "data",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 36,
+            "url": "https://github.com/yaniguan/stepbot/issues/36",
+            "title": "Add a differential test of the mock checker against opentrons.simulate",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "tests/test_sim_differential.py"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 37,
+            "url": "https://github.com/yaniguan/stepbot/issues/37",
+            "title": "Count tip contact with liquid in the destination well in lineage checks",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "examples/plate_fill.yaml",
+              "examples/out/plate_fill.py"
+            ]
+          },
+          {
+            "index": 34,
+            "number": 38,
+            "url": "https://github.com/yaniguan/stepbot/issues/38",
+            "title": "Reject NaN and infinite numbers in volumes, delays and liquids",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
           }
         ]
       },
       "lab-hands": {
-        "count": 30,
+        "count": 34,
         "round1_count": 24,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 34,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -9704,7 +10249,7 @@
             "url": "https://github.com/yaniguan/lab-hands/issues/26",
             "title": "[Bug][Geometry] Discrete 21/25-point link sampling in slosh_minimum_jerk misses obstacle corners and batch_min_clearance ignores capsule radius",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -9720,7 +10265,7 @@
             "url": "https://github.com/yaniguan/lab-hands/issues/27",
             "title": "[Bug][Kinematics] Stateless IK branch selection causes unplanned 4.36 rad elbow flips across sequential transfers and 6.37 s multi-well tour spikes",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -9736,7 +10281,7 @@
             "url": "https://github.com/yaniguan/lab-hands/issues/28",
             "title": "[Bug][Control] Open-plate slosh time-scaler ignores rotational Euler and centrifugal acceleration at corner wells (violating 0.70*h_free on 58/60 tasks)",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -9750,7 +10295,7 @@
             "url": "https://github.com/yaniguan/lab-hands/issues/29",
             "title": "[Formal] Bridge scalar witness gap in LabHandsLean with continuous C-space swept-volume Lipschitz soundness proof",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -9764,7 +10309,7 @@
             "url": "https://github.com/yaniguan/lab-hands/issues/30",
             "title": "[Interop] Propagate measured path clearance and tactile insertion slip/force residuals over autolab-wire/v1 to lab-feet and lab-attrib",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -9778,7 +10323,7 @@
             "url": "https://github.com/yaniguan/lab-hands/issues/31",
             "title": "[Robotics] Enforce per-labware Z-rim and attached-tip vertical clearances and add 6-DOF SE(3) kinematic interface for tall blocks and tipracks",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "robotics",
             "severity": "medium",
             "files": [
@@ -9786,13 +10331,73 @@
               "lab_hands/trajectory.py#L225-L265",
               "lab_hands/labware.py#L179"
             ]
+          },
+          {
+            "index": 31,
+            "number": 34,
+            "url": "https://github.com/yaniguan/lab-hands/issues/34",
+            "title": "Take labware heights and tip lengths from the official Opentrons definitions",
+            "round": 3,
+            "state": "closed",
+            "category": "ci",
+            "severity": "high",
+            "files": [
+              "scripts/sync_opentrons_labware.py",
+              "lab_hands/data/opentrons_labware_v1.json",
+              "tests/test_phase2_audit_fixes.py"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 35,
+            "url": "https://github.com/yaniguan/lab-hands/issues/35",
+            "title": "Wire gate: plan to the requested clearance and halt on bad packet fields",
+            "round": 3,
+            "state": "closed",
+            "category": "interop",
+            "severity": "high",
+            "files": [
+              "autolab_wire.py"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 36,
+            "url": "https://github.com/yaniguan/lab-hands/issues/36",
+            "title": "Audit LeRobot episodes with the recording robot's kinematics, not ArmSE3",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "meta/info.json",
+              "lab_hands/kinematics.py"
+            ]
+          },
+          {
+            "index": 34,
+            "number": 37,
+            "url": "https://github.com/yaniguan/lab-hands/issues/37",
+            "title": "Fix the slosh natural frequency formula and flag wells outside the model",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "lab_hands/trajectory.py",
+              "lab_hands/datasets.py",
+              "community_extensions/slosh_minimum_jerk.py"
+            ]
           }
         ]
       },
       "lab-feet": {
-        "count": 30,
+        "count": 34,
         "round1_count": 24,
         "round2_count": 6,
+        "round3_count": 4,
+        "closed_count": 34,
+        "open_count": 0,
         "items": [
           {
             "index": 1,
@@ -10119,7 +10724,7 @@
             "url": "https://github.com/yaniguan/lab-feet/issues/26",
             "title": "[Numerics] Dynamic activation outlier collapse in _quantize_activations_int8 and unquantized h_cal / alpha_min=0.70 floor in 4-bit scale clipping",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "numerics",
             "severity": "high",
             "files": [
@@ -10132,7 +10737,7 @@
             "url": "https://github.com/yaniguan/lab-feet/issues/27",
             "title": "[Bug] Odd-length 4-bit nibble padding truncation and missing payload-shape validation across pack_4bit, QuantizedLayer, LFT1, and DriftAbstainingInt4Classifier",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -10147,7 +10752,7 @@
             "url": "https://github.com/yaniguan/lab-feet/issues/28",
             "title": "[Bug] 32-bit fixed-point requantization multiply wraparound defeats int4 saturation clip detection and unguarded int32 accumulator bounds on wide layers",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "bug",
             "severity": "high",
             "files": [
@@ -10161,7 +10766,7 @@
             "url": "https://github.com/yaniguan/lab-feet/issues/29",
             "title": "[Formal] Formalize bit-exact saturating requantization, two's-complement nibble round-trip, rounding-mode parity, and signed 5-gate DriftAbstainMonitorCheck in LabFeetLean",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "formal",
             "severity": "high",
             "files": [
@@ -10176,7 +10781,7 @@
             "url": "https://github.com/yaniguan/lab-feet/issues/30",
             "title": "[Interop] Hot-load labbench-posttrain distilled student checkpoints in autolab-wire/v1 with SHA-256 calibration verification before emitting lab-attrib telemetry",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "interop",
             "severity": "medium",
             "files": [
@@ -10190,7 +10795,7 @@
             "url": "https://github.com/yaniguan/lab-feet/issues/31",
             "title": "[Hardware] Add freestanding C99 / CMSIS-NN / TFLite Micro header and ONNX Runtime (QLinearMatMul / MatMulNBits) export for MCU, Jetson, and Raspberry Pi bench nodes",
             "round": 2,
-            "state": "open",
+            "state": "closed",
             "category": "hardware",
             "severity": "low",
             "files": [
@@ -10198,6 +10803,60 @@
               "src/lab_feet/quantize.py",
               "demo/output.txt",
               "src/lab_feet/cli.py"
+            ]
+          },
+          {
+            "index": 31,
+            "number": 34,
+            "url": "https://github.com/yaniguan/lab-feet/issues/34",
+            "title": "Fix ONNX qlinear export: int8-clipped logits give chance-level accuracy",
+            "round": 3,
+            "state": "closed",
+            "category": "bug",
+            "severity": "high",
+            "files": [
+              "README.md"
+            ]
+          },
+          {
+            "index": 32,
+            "number": 35,
+            "url": "https://github.com/yaniguan/lab-feet/issues/35",
+            "title": "Wire node passes hot-loaded checkpoints it cannot check (fail-open)",
+            "round": 3,
+            "state": "closed",
+            "category": "interop",
+            "severity": "high",
+            "files": [
+              "autolab_wire.py",
+              "tests/test_autolab_wire.py"
+            ]
+          },
+          {
+            "index": 33,
+            "number": 36,
+            "url": "https://github.com/yaniguan/lab-feet/issues/36",
+            "title": "Test SAFE_HOLD on real gas-sensor drift against MSP and energy baselines",
+            "round": 3,
+            "state": "closed",
+            "category": "benchmark",
+            "severity": "high",
+            "files": [
+              "community_extensions/drift_abstaining_int4.py"
+            ]
+          },
+          {
+            "index": 34,
+            "number": 37,
+            "url": "https://github.com/yaniguan/lab-feet/issues/37",
+            "title": "Compare KL+CE distillation with a same-trainer CE control over 10 seeds",
+            "round": 3,
+            "state": "closed",
+            "category": "benchmark",
+            "severity": "high",
+            "files": [
+              "demo/distill_quantize.py",
+              "schema/benchmark_report.schema.json"
             ]
           }
         ]

@@ -1,12 +1,23 @@
 {
-  "total_issues": 416,
+  "total_issues": 461,
   "round1_issues": 322,
-  "round2_issues": 94,
+  "round2_issues": 95,
+  "round3_issues": 44,
+  "closed_issues": 458,
+  "open_issues": 3,
+  "open_pending_gpu_issues": [
+    "labfill#35",
+    "labbench-posttrain#49",
+    "labbench-posttrain#18"
+  ],
   "repos": {
     "lab-ask-why": {
       "count": 28,
       "round1_count": 22,
       "round2_count": 6,
+      "round3_count": 0,
+      "closed_count": 28,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -314,7 +325,7 @@
           "url": "https://github.com/yaniguan/lab-ask-why/issues/24",
           "title": "[Bug] Polarity classifier and biomedical tokenizer misclassify scoped negations, 'cannot', NEUTRAL rationales, and '-' alleles",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -329,7 +340,7 @@
           "url": "https://github.com/yaniguan/lab-ask-why/issues/25",
           "title": "[Bug] Unnormalized BM25 abstention/confidence scaling causes small-corpus false abstention and open-corpus IDF leakage",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -343,7 +354,7 @@
           "url": "https://github.com/yaniguan/lab-ask-why/issues/26",
           "title": "[Bug] crux_tournament selects negative-net-EVSI experiments while precursor_ghost_guard fails under reference intensity scaling",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -357,7 +368,7 @@
           "url": "https://github.com/yaniguan/lab-ask-why/issues/27",
           "title": "[Formal] Banker's round() violates Lean 4 permille safety bounds at .5 boundaries and LabAskWhyLean lacks multi-claim consistency",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -374,7 +385,7 @@
           "url": "https://github.com/yaniguan/lab-ask-why/issues/28",
           "title": "[Interop] Close autolab-wire/v1 loop with lab-attrib negative certificates, fix discriminating_question index, and align lab-decide schema",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -391,7 +402,7 @@
           "url": "https://github.com/yaniguan/lab-ask-why/issues/29",
           "title": "[Enhancement] Add hybrid dense/cross-encoder retrieval reranking and structured falsifiable control-well parameter synthesis",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "enhancement",
           "severity": "low",
           "files": [
@@ -403,9 +414,12 @@
       ]
     },
     "lab-decide": {
-      "count": 28,
+      "count": 32,
       "round1_count": 22,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 32,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -718,7 +732,7 @@
           "url": "https://github.com/yaniguan/lab-decide/issues/24",
           "title": "[Statistical] Unweighted calibration updates on active boundary picks break exchangeability and weighted_conformal_quantile fails IEEE-754 boundary ranks",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "statistical",
           "severity": "high",
           "files": [
@@ -733,7 +747,7 @@
           "url": "https://github.com/yaniguan/lab-decide/issues/25",
           "title": "[Bug] Mondrian bin starvation: abstained phys_bounds intervals ratchet ScaffoldMondrianACI alpha_t upward and low-n trust_pct splits starve q_in",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -747,7 +761,7 @@
           "url": "https://github.com/yaniguan/lab-decide/issues/26",
           "title": "[Bug] Zero-variance training descriptor scaling sets feature_weights=0 and blinds kNN applicability gating to unseen OOD chemotypes, salts, and solvents",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -761,7 +775,7 @@
           "url": "https://github.com/yaniguan/lab-decide/issues/27",
           "title": "[Formal] Lean 4 LabDecideLean vs Python runtime gaps: IEEE-754 conformalRank ceiling divergence and Chem-RRT annular shell / unassayed support chaining",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -778,7 +792,7 @@
           "url": "https://github.com/yaniguan/lab-decide/issues/28",
           "title": "[Interop] autolab-wire/v1 lacks ledger_entry_sha256 deduplication and 64-hex digest validation across multi-round campaigns",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -791,7 +805,7 @@
           "url": "https://github.com/yaniguan/lab-decide/issues/29",
           "title": "[Enhancement] Locally scaled Conformalized Quantile Regression (CQR-r) on real descriptors and guard against negative-width CQR interval crossing (lo > hi)",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "enhancement",
           "severity": "low",
           "files": [
@@ -800,6 +814,60 @@
             "src/lab_decide/calisol.py#L189-L231",
             "src/lab_decide/acquisition.py#L246"
           ]
+        },
+        {
+          "index": 29,
+          "number": 32,
+          "url": "https://github.com/yaniguan/lab-decide/issues/32",
+          "title": "autolab_wire: score candidates with the fitted model, not packet defaults",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py",
+            "fifteen_repo_wire_check.py"
+          ]
+        },
+        {
+          "index": 30,
+          "number": 33,
+          "url": "https://github.com/yaniguan/lab-decide/issues/33",
+          "title": "Benchmark TrustRegionAdvisor as a sequential campaign; it never beats greedy",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "scripts/benchmark_campaign.py"
+          ]
+        },
+        {
+          "index": 31,
+          "number": 34,
+          "url": "https://github.com/yaniguan/lab-decide/issues/34",
+          "title": "kNN gate is inverted on reaction-yield data; add a multi-seed real-data report",
+          "round": 3,
+          "state": "closed",
+          "category": "data",
+          "severity": "high",
+          "files": [
+            "scripts/benchmark_registry.py",
+            "results/registry_benchmark.json"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 35,
+          "url": "https://github.com/yaniguan/lab-decide/issues/35",
+          "title": "Scaffold split ignores row fractions and falls back to regex groups",
+          "round": 3,
+          "state": "closed",
+          "category": "data",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
         }
       ]
     },
@@ -807,6 +875,9 @@
       "count": 28,
       "round1_count": 22,
       "round2_count": 6,
+      "round3_count": 0,
+      "closed_count": 28,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -1125,7 +1196,7 @@
           "url": "https://github.com/yaniguan/buy-or-make/issues/26",
           "title": "[Bug] Fix asymmetric salt-form matching, bare quaternary cation desalting, and silent stereoisomer InChIKey misses",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -1141,7 +1212,7 @@
           "url": "https://github.com/yaniguan/buy-or-make/issues/27",
           "title": "[Chemistry] Guard RETRO_TEMPLATES against tertiary SN2 eliminations, unprotected competing nucleophiles, and AB-monomer Suzuki homopolymerization",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "chemistry",
           "severity": "high",
           "files": [
@@ -1155,7 +1226,7 @@
           "url": "https://github.com/yaniguan/buy-or-make/issues/28",
           "title": "[Bug] Compound step-depth reaction yields and enforce discrete pack-size MOQ bounds in route cost estimation and budget filtering",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -1170,7 +1241,7 @@
           "url": "https://github.com/yaniguan/buy-or-make/issues/29",
           "title": "[Formal] Extend Lean 4 AtomVec and Python AtomCountVec beyond lumped CNOSHal to prevent cross-halogen swaps and cover B, P, Si, and organometallics",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -1186,7 +1257,7 @@
           "url": "https://github.com/yaniguan/buy-or-make/issues/30",
           "title": "[Interop] Propagate leaf vendor lead times, pack-size MOQs, and precursor basis catalogs across AvailabilityRecord and autolab-wire/v1 for labshift and lab-attrib",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -1202,7 +1273,7 @@
           "url": "https://github.com/yaniguan/buy-or-make/issues/31",
           "title": "[Performance] Configure SQLite WAL mode, busy_timeout, thread-safe connections, and read-only URI openers across ResponseCache, LocalStockBackend, and ReactionLookupBackend",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "performance",
           "severity": "medium",
           "files": [
@@ -1214,9 +1285,12 @@
       ]
     },
     "labshift": {
-      "count": 30,
+      "count": 34,
       "round1_count": 24,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 34,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -1559,7 +1633,7 @@
           "url": "https://github.com/yaniguan/labshift/issues/28",
           "title": "[Bug] solve_greedy_repair pins intermediate coupled steps to earliest start and deadlocks on multi-step max_wait chains",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -1572,7 +1646,7 @@
           "url": "https://github.com/yaniguan/labshift/issues/29",
           "title": "[Bug] robot_arm transfer_time frees source station before arm pickup when wait > transfer_time and lacks pool-pair transit matrix",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -1589,7 +1663,7 @@
           "url": "https://github.com/yaniguan/labshift/issues/30",
           "title": "[Optimization] Support sequence-dependent setup, decontamination, and thermal-equilibration times between incompatible assays",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "optimization",
           "severity": "medium",
           "files": [
@@ -1605,7 +1679,7 @@
           "url": "https://github.com/yaniguan/labshift/issues/31",
           "title": "[Formal] Prove sweep-line vs discrete-time pool capacity equivalence, lane-coloring bridge, and opId uniqueness in LabShiftLean",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -1621,7 +1695,7 @@
           "url": "https://github.com/yaniguan/labshift/issues/32",
           "title": "[Interop] Support dynamic autolab-wire/v1 rolling-horizon rescheduling when lab-attrib triggers urgent RUN_ORTHOGONAL_ASSAY (Raman / LC-MS) mid-campaign",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -1637,12 +1711,70 @@
           "url": "https://github.com/yaniguan/labshift/issues/33",
           "title": "[Scale] Eliminate CP-SAT warm-start cliff, 2*sum_work horizon blowup, and O(J*H^2) flow-scale inflation on >100-job overnight batches",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "scale",
           "severity": "medium",
           "files": [
             "src/labshift/cpsat.py",
             "src/labshift/greedy.py"
+          ]
+        },
+        {
+          "index": 31,
+          "number": 35,
+          "url": "https://github.com/yaniguan/labshift/issues/35",
+          "title": "Reject unknown time units in protocol import instead of reading them as minutes",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "src/labshift/protocol.py",
+            "protocol.py",
+            "tests/test_protocol.py"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 36,
+          "url": "https://github.com/yaniguan/labshift/issues/36",
+          "title": "Add stdlib makespan lower bounds and report a gap for every solver",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "src/labshift/bounds.py",
+            "benchmarks/medium_00.json",
+            "benchmarks/large_05.json"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 37,
+          "url": "https://github.com/yaniguan/labshift/issues/37",
+          "title": "Add a planted-schedule tier: greedy_repair solves every built-in preset",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
+        },
+        {
+          "index": 34,
+          "number": 38,
+          "url": "https://github.com/yaniguan/labshift/issues/38",
+          "title": "Make the stepbot bridge import stepbot's own example protocols",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "examples/dilution_series.yaml",
+            "plate_fill.yaml",
+            "reservoir_mix.yaml"
           ]
         }
       ]
@@ -1651,6 +1783,9 @@
       "count": 28,
       "round1_count": 22,
       "round2_count": 6,
+      "round3_count": 0,
+      "closed_count": 28,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -1952,7 +2087,7 @@
           "url": "https://github.com/yaniguan/lab-automation-atlas/issues/24",
           "title": "[Security] Harden SSRF URL canonicalization, DNS-rebinding socket pinning, and MCP endpoint validation parity",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "security",
           "severity": "high",
           "files": [
@@ -1967,7 +2102,7 @@
           "url": "https://github.com/yaniguan/lab-automation-atlas/issues/25",
           "title": "[Bug] Parse compound SPDX license expressions and replace default-allow training license denylist with default-deny policy",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -1983,7 +2118,7 @@
           "url": "https://github.com/yaniguan/lab-automation-atlas/issues/26",
           "title": "[Formal] Extend LabAtlasLean with a bounded license join-semilattice, transitive derivation taint propagation, and Python parity checks",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -1999,7 +2134,7 @@
           "url": "https://github.com/yaniguan/lab-automation-atlas/issues/27",
           "title": "[Interop] Dynamically resolve platform grounding metadata per target_platform from atlas.json in autolab_wire.py instead of static OT-2 defaults",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -2014,7 +2149,7 @@
           "url": "https://github.com/yaniguan/lab-automation-atlas/issues/28",
           "title": "[Schema] Add typed hardware capability envelopes and analytical characterization modalities to atlas.schema.json for stepbot and lab-attrib",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "schema",
           "severity": "medium",
           "files": [
@@ -2031,7 +2166,7 @@
           "url": "https://github.com/yaniguan/lab-automation-atlas/issues/29",
           "title": "[Bug] Fix WAF 403 cross-domain redirect bypass, HTTP 416 Range fallback failure, and unbracketed `](` link false positives in linkcheck.py",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -2041,9 +2176,12 @@
       ]
     },
     "lab-rehearsal": {
-      "count": 28,
+      "count": 32,
       "round1_count": 22,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 32,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -2368,7 +2506,7 @@
           "url": "https://github.com/yaniguan/lab-rehearsal/issues/24",
           "title": "[Physics] Model volatile-solvent evaporation loss, solute up-concentration, and incubate/seal/thaw state transitions in rehearse() and IR adapters",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "physics",
           "severity": "high",
           "files": [
@@ -2384,7 +2522,7 @@
           "url": "https://github.com/yaniguan/lab-rehearsal/issues/25",
           "title": "[Bug] Track 8-channel manifold (p20_multi / p300_multi) column tip consumption, 8x shared-trough drawdown, and A..H row state",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -2399,7 +2537,7 @@
           "url": "https://github.com/yaniguan/lab-rehearsal/issues/26",
           "title": "[Formal] Eliminate float-to-tenth-uL quantization drift and align multi-dispense and concentration rules between Python and LabRehearsalLean",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -2415,7 +2553,7 @@
           "url": "https://github.com/yaniguan/lab-rehearsal/issues/27",
           "title": "[Interop] Compile rehearsed multi-step trajectories into autolab-wire/v1 protocol_yaml_dict instead of emitting a hardcoded single-transfer stub",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -2429,7 +2567,7 @@
           "url": "https://github.com/yaniguan/lab-rehearsal/issues/28",
           "title": "[Interop] Persist wire episodic memory and reconcile fast_deny_known_failures with lab-attrib EXECUTION_ARTIFACT retry routing",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -2446,7 +2584,7 @@
           "url": "https://github.com/yaniguan/lab-rehearsal/issues/29",
           "title": "[Memory] Persist and index BottomReasoningTrace and structural step skeletons in runs.jsonl for sub-linear protocol similarity recall",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "memory",
           "severity": "medium",
           "files": [
@@ -2456,13 +2594,72 @@
             "schema/run_record.schema.json#L7-L52",
             "demo/memory/runs.jsonl"
           ]
+        },
+        {
+          "index": 29,
+          "number": 32,
+          "url": "https://github.com/yaniguan/lab-rehearsal/issues/32",
+          "title": "Stop the wire node from silently capping requested volumes at 200 uL",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py"
+          ]
+        },
+        {
+          "index": 30,
+          "number": 33,
+          "url": "https://github.com/yaniguan/lab-rehearsal/issues/33",
+          "title": "Block approval when the compiled wire protocol differs from the rehearsed one",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "demo/protocols/good_serial_dilution.json"
+          ]
+        },
+        {
+          "index": 31,
+          "number": 34,
+          "url": "https://github.com/yaniguan/lab-rehearsal/issues/34",
+          "title": "Fix labware and tip-rack merging so real Opentrons fixtures rehearse correctly",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "transferSettings.json",
+            "multipleTipracks.json",
+            "scripts/fetch_opentrons_fixtures.py"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 35,
+          "url": "https://github.com/yaniguan/lab-rehearsal/issues/35",
+          "title": "Run the real Lean checker in CI and diff its verdicts against the Python twin",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            ".github/workflows/demo.yml",
+            "lean/Main.lean",
+            "autolab_wire.py"
+          ]
         }
       ]
     },
     "lab-verify": {
-      "count": 28,
+      "count": 32,
       "round1_count": 22,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 32,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -2780,7 +2977,7 @@
           "url": "https://github.com/yaniguan/lab-verify/issues/24",
           "title": "[Security] Replace shared symmetric HMAC secret with asymmetric Ed25519 role-separated keys in `lean-mcp/v1`",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "security",
           "severity": "high",
           "files": [
@@ -2796,7 +2993,7 @@
           "url": "https://github.com/yaniguan/lab-verify/issues/25",
           "title": "[Security] Persist `current_deck_epoch` and `consumed_nonces` with atomic file locking across CLI `mcp-verify` invocations",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "security",
           "severity": "high",
           "files": [
@@ -2811,7 +3008,7 @@
           "url": "https://github.com/yaniguan/lab-verify/issues/26",
           "title": "[Bug] Prevent recursive CTE string-expansion memory bombs and base-less `WITH RECURSIVE` queries in `sql_gate.py`",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -2824,7 +3021,7 @@
           "url": "https://github.com/yaniguan/lab-verify/issues/27",
           "title": "[Formal] Model cryptographic key-rotation epochs and supervisor co-signature TTL window in `LabVerifyLean.lean`",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -2838,7 +3035,7 @@
           "url": "https://github.com/yaniguan/lab-verify/issues/28",
           "title": "[Interop] Add `autolab-wire/v1` overnight frontier deferral and daytime human co-sign release to `stepbot`",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -2852,12 +3049,65 @@
           "url": "https://github.com/yaniguan/lab-verify/issues/29",
           "title": "[Verification] Fix Layer-4 float sort-key cliff and greedy row matching on unordered `AVG`/`SUM` aggregate queries",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "verification",
           "severity": "medium",
           "files": [
             "src/lab_verify/sql_gate.py#L664-L683",
             "community_extensions/mutant_sql_synthesizer.py#L326-L341"
+          ]
+        },
+        {
+          "index": 29,
+          "number": 32,
+          "url": "https://github.com/yaniguan/lab-verify/issues/32",
+          "title": "Lean gate passes false proofs: compile every candidate and check axioms",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            "lean/lakefile.toml"
+          ]
+        },
+        {
+          "index": 30,
+          "number": 33,
+          "url": "https://github.com/yaniguan/lab-verify/issues/33",
+          "title": "Fix SQL false rejects and fixed limits; run gate on real EHRSQL-2024 data",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "valid/annotated.json",
+            "scripts/run_ehrsql_real.py"
+          ]
+        },
+        {
+          "index": 31,
+          "number": 34,
+          "url": "https://github.com/yaniguan/lab-verify/issues/34",
+          "title": "Make lean-mcp/v1 verify and the wire node fail closed by default",
+          "round": 3,
+          "state": "closed",
+          "category": "security",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 35,
+          "url": "https://github.com/yaniguan/lab-verify/issues/35",
+          "title": "Demo labels q4/q12 are not NULL/date safe; counterexample DBs miss them",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "docs/ARCHITECTURE_AND_HISTORY.md"
           ]
         }
       ]
@@ -2866,6 +3116,9 @@
       "count": 10,
       "round1_count": 0,
       "round2_count": 10,
+      "round3_count": 0,
+      "closed_count": 10,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -2873,7 +3126,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/1",
           "title": "[Numerics] Cyclic PCD NNLS stalls before KKT convergence on nearly collinear polymorphs and ignores channel weights in solver objective",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "numerics",
           "severity": "high",
           "files": [
@@ -2886,7 +3139,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/2",
           "title": "[Numerics] Bragg 2-theta peak-shift and Vegard solid-solution lattice strain trigger false HIGH_SPECTRAL_RWP_RESIDUAL quarantine in deconvolve_spectrum",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "numerics",
           "severity": "high",
           "files": [
@@ -2901,7 +3154,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/3",
           "title": "[Bug] Unmodeled amorphous background halo, silent NaN-to-zero detector clamping, and all-zero weight division bypass in xrd_deconvolve.py",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -2915,7 +3168,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/4",
           "title": "[Causal] Sequential masking of simultaneous EXECUTION_ARTIFACT and AMBIGUOUS_CHARACTERIZATION faults in attribute_assay_outcome misroutes uncalibrated-detector runs to RETRY_ROBOT",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "causal",
           "severity": "high",
           "files": [
@@ -2930,7 +3183,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/5",
           "title": "[Causal] Binary positive-control gate misses sub-threshold sensitivity drift, conflates plate-wide reagent failure with RETRY_ROBOT, and defaults empty wire packets to CERTIFIED_POSITIVE",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "causal",
           "severity": "high",
           "files": [
@@ -2945,7 +3198,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/6",
           "title": "[Decision] Correlated primary/secondary modality failure modes on centrosymmetric or fluorescent phases and clamped false-positive loss bias in route_orthogonal_assay",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "decision",
           "severity": "medium",
           "files": [
@@ -2960,7 +3213,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/7",
           "title": "[Security] Concurrent multi-worker append race condition, NaN JSON corruption, and unauthenticated SHA-256 history rewrite in CertifiedLedger",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "security",
           "severity": "high",
           "files": [
@@ -2974,7 +3227,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/8",
           "title": "[Formal] Add compiled --batch-tsv CLI executable in LabAttribLean.lean and full telemetry commitment in computeAbstractEntryHash for runtime parity testing",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -2990,7 +3243,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/9",
           "title": "[Interop] autolab-wire/v1 two-turn orthogonal resolution loop deadlocks on L4_ATTRIB_QUARANTINE and drops deconvolved snr_tenths",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -3003,7 +3256,7 @@
           "url": "https://github.com/yaniguan/lab-attrib/issues/10",
           "title": "[Calibration] Isotropic global tau jump from single-direction stepping-stones and non-exchangeable UCB conformal quantile fallback in attributed_frontier.py",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "calibration",
           "severity": "high",
           "files": [
@@ -3014,12 +3267,29 @@
       ]
     },
     "labbench-posttrain": {
-      "count": 28,
+      "count": 33,
       "round1_count": 22,
-      "round2_count": 6,
+      "round2_count": 7,
+      "round3_count": 4,
+      "closed_count": 31,
+      "open_count": 2,
       "items": [
         {
           "index": 1,
+          "number": 18,
+          "url": "https://github.com/yaniguan/labbench-posttrain/issues/18",
+          "title": "exp: first GRPO vs GSPO run with reward controls and 3 seeds",
+          "round": 2,
+          "state": "open",
+          "category": "benchmark",
+          "severity": "medium",
+          "files": [
+            "configs/recipes/model/qwen3_1.7b.yaml"
+          ],
+          "pending_gpu": true
+        },
+        {
+          "index": 2,
           "number": 21,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/21",
           "title": "[Bug] GDPO per-channel standardization magnifies tiny reasoning/length penalties to full unit-variance weight",
@@ -3035,7 +3305,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "number": 22,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/22",
           "title": "[Bug] LabV0Corpus RL and Eval stages crash with KeyError('answer') via mismatched BioProBenchEnv default",
@@ -3050,7 +3320,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "number": 23,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/23",
           "title": "[Bug] NeMoRLEngine silently compiles GDPO multi-reward configs for SFT, DPO, PPO, and Eval stages",
@@ -3063,7 +3333,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "number": 24,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/24",
           "title": "[Bug] Safety bounds in StructuredActionPlanTemplate and schema_valid_actions are bypassed by string or boolean parameter values",
@@ -3078,7 +3348,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "number": 25,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/25",
           "title": "[Bug] Case-insensitive unit normalization conflates length (nm, mm, m) and time/conductance (s, S) with molarity",
@@ -3091,7 +3361,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "number": 26,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/26",
           "title": "[Bug] CALiSolPredict Gaussian calibration reward has a flat improper plateau whenever |k_hat - k_true| < sigma_scale",
@@ -3104,7 +3374,7 @@
           ]
         },
         {
-          "index": 7,
+          "index": 8,
           "number": 27,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/27",
           "title": "[Bug] scientist/distill.py tokenizer family check equates all HuggingFace PreTrainedTokenizerFast models",
@@ -3118,7 +3388,7 @@
           ]
         },
         {
-          "index": 8,
+          "index": 9,
           "number": 28,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/28",
           "title": "[Bug] generate_rollouts never populates Rollout.gen_logprobs, rendering TIS/ICE-POP importance sampling a no-op",
@@ -3134,7 +3404,7 @@
           ]
         },
         {
-          "index": 9,
+          "index": 10,
           "number": 29,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/29",
           "title": "[Bug] TorchLocalEngine sets non-existent checkpoint_path on TROPDStage because train_tropd never saves checkpoints",
@@ -3149,7 +3419,7 @@
           ]
         },
         {
-          "index": 10,
+          "index": 11,
           "number": 30,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/30",
           "title": "[Bug] PPO checkpoints omit value_head state_dict and train_ppo ignores reward shaping & step-varying baseline seeds",
@@ -3166,7 +3436,7 @@
           ]
         },
         {
-          "index": 11,
+          "index": 12,
           "number": 31,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/31",
           "title": "[Bug] extract_verified_answer and bioenvs.base.extract_answer leak draft tags from <think> scratchpads",
@@ -3180,7 +3450,7 @@
           ]
         },
         {
-          "index": 12,
+          "index": 13,
           "number": 32,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/32",
           "title": "[Bug] ORD.score accepts boolean lists [False, True] as valid permutations and PermutationOrderTemplate ignores missing prerequisite IDs",
@@ -3194,7 +3464,7 @@
           ]
         },
         {
-          "index": 13,
+          "index": 14,
           "number": 33,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/33",
           "title": "[Bug] parse_smiles_invariants returns incompatible formula dicts across RDKit vs pure-Python paths",
@@ -3208,7 +3478,7 @@
           ]
         },
         {
-          "index": 14,
+          "index": 15,
           "number": 34,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/34",
           "title": "[Bug] Packaging gaps in pyproject.toml and CI: missing pydantic/common/operator packages, pytest pythonpath, and eager tokenizers import",
@@ -3224,7 +3494,7 @@
           ]
         },
         {
-          "index": 15,
+          "index": 16,
           "number": 35,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/35",
           "title": "[Bug] Top-level training side effects and discarded weights in operator/train_bc.py, operator/world_model.py, and scientist/train_projector.py",
@@ -3239,7 +3509,7 @@
           ]
         },
         {
-          "index": 16,
+          "index": 17,
           "number": 36,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/36",
           "title": "[Bug] Overlapping stride-1 mini-batches in train_sft/train_dpo and hardcoded 2-row/48-token truncation in RL SFT anchors",
@@ -3255,7 +3525,7 @@
           ]
         },
         {
-          "index": 17,
+          "index": 18,
           "number": 37,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/37",
           "title": "[Bug] Hybrid MPO double-weights BCO relative to DPO and defaults missing unpaired labels to negative (0)",
@@ -3269,7 +3539,7 @@
           ]
         },
         {
-          "index": 18,
+          "index": 19,
           "number": 38,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/38",
           "title": "[Bug] Cross-platform Windows encoding crashes, POSIX-hardcoded smoke runner, and A100-only GPU assertion",
@@ -3286,7 +3556,7 @@
           ]
         },
         {
-          "index": 19,
+          "index": 20,
           "number": 39,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/39",
           "title": "[Bug] Concurrent unguarded JSONL appends in labeval/run.py and 6x retry backoff on permanent 4xx errors in common/llm.py",
@@ -3300,7 +3570,7 @@
           ]
         },
         {
-          "index": 20,
+          "index": 21,
           "number": 40,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/40",
           "title": "[Bug] Protocol parser splits on chemical abbreviations ('sat. NH4Cl', 'aq. NaOH') and broadcasts clause params across distinct verbs",
@@ -3314,7 +3584,7 @@
           ]
         },
         {
-          "index": 21,
+          "index": 22,
           "number": 41,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/41",
           "title": "[Bug] Data/doc drift and contamination/eval edge cases (CALiSol license/count mismatch, BioProBench SplitGuard, eval_suite zero-accuracy truthiness)",
@@ -3332,7 +3602,7 @@
           ]
         },
         {
-          "index": 22,
+          "index": 23,
           "number": 42,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/42",
           "title": "[Enhancement] Define typed interchange contracts between labrl VerifiableEnv/InstrumentAction and sibling Auto-Lab L4/L6 repos",
@@ -3347,12 +3617,12 @@
           ]
         },
         {
-          "index": 23,
+          "index": 24,
           "number": 44,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/44",
           "title": "[Bug][RLVR] Zero-variance group advantage collapse and spurious shaping/batch-std gradients in GRPO/GDPO when rollouts fail the multiplicative Lean gate",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -3364,12 +3634,12 @@
           ]
         },
         {
-          "index": 24,
+          "index": 25,
           "number": 45,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/45",
           "title": "[Bug][SplitGuard] Unicode homoglyph, zero-width character, Base64/case obfuscation, and partial packet scanning bypasses in SplitGuard and autolab_wire",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -3379,12 +3649,12 @@
           ]
         },
         {
-          "index": 25,
+          "index": 26,
           "number": 46,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/46",
           "title": "[Bug][Data] Non-canonical Murcko-scaffold tautomer, unstripped counterion, and empty-scaffold ('scaffold|') split leakage across ChEMBL, PubChem, and QM9",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -3396,12 +3666,12 @@
           ]
         },
         {
-          "index": 26,
+          "index": 27,
           "number": 47,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/47",
           "title": "[Formal] Formalize multi-objective GDPO Pareto-weight normalization and Reverse-KL SFT-anchor drift bound in LabPostTrainLean",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -3413,12 +3683,12 @@
           ]
         },
         {
-          "index": 27,
+          "index": 28,
           "number": 48,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/48",
           "title": "[Interop] Differentiate lab-attrib CERTIFIED_NEGATIVE scientific disproofs from L4_ATTRIB_QUARANTINE artifacts in autolab_wire.py for SFT, DPO, and MPO/BCO",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -3430,7 +3700,7 @@
           ]
         },
         {
-          "index": 28,
+          "index": 29,
           "number": 49,
           "url": "https://github.com/yaniguan/labbench-posttrain/issues/49",
           "title": "[Training] Execute and log PENDING 8xA100/H100 Qwen3-8B sequential SFT -> MPO -> GDPO baseline runs and fix multi-stage NeMo-RL handoffs",
@@ -3444,14 +3714,81 @@
             "src/labrl/pipeline/__init__.py#L60-L100",
             "src/labrl/cli.py#L76-L88",
             "src/labrl/engines/__init__.py#L416-L463"
+          ],
+          "pending_gpu": true
+        },
+        {
+          "index": 30,
+          "number": 52,
+          "url": "https://github.com/yaniguan/labbench-posttrain/issues/52",
+          "title": "Launch path breaks on pinned yaniguan/RL commit: add CPU contract test and fix",
+          "round": 3,
+          "state": "closed",
+          "category": "training",
+          "severity": "high",
+          "files": [
+            "scripts/posttrain/run_nemo_rl.py",
+            "nemo_rl/data/utils.py",
+            "run_nemo_rl.py",
+            "examples/run_sft.py"
+          ]
+        },
+        {
+          "index": 31,
+          "number": 53,
+          "url": "https://github.com/yaniguan/labbench-posttrain/issues/53",
+          "title": "Wire adapter treats unknown outcomes as certified positives; fail closed",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py",
+            "README.md",
+            "tests/test_autolab_wire.py"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 54,
+          "url": "https://github.com/yaniguan/labbench-posttrain/issues/54",
+          "title": "Reverse-KL anchor gradient is exact per token only; add multi-step test",
+          "round": 3,
+          "state": "closed",
+          "category": "training",
+          "severity": "high",
+          "files": [
+            "tests/test_kl_sequence_level.py",
+            "posttrain/kl.py",
+            "docs/posttrain/kl_anchor.md",
+            "docs/posttrain/losses_and_gradients.md"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 55,
+          "url": "https://github.com/yaniguan/labbench-posttrain/issues/55",
+          "title": "Lean proofs never compiled in CI; GDPO/KL checks unused by trainers",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            ".github/workflows/ci.yml",
+            "lean/LabPostTrainLean.lean",
+            "posttrain/grpo.py",
+            "AutoLabLean/L3_PostTrain.lean"
           ]
         }
       ]
     },
     "twinstep": {
-      "count": 30,
+      "count": 34,
       "round1_count": 24,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 34,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -3796,7 +4133,7 @@
           "url": "https://github.com/yaniguan/twinstep/issues/28",
           "title": "[Bug] Prevent compound inject_k_errors edits from cancelling transitive swap_order faults or colliding step_indices",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -3810,7 +4147,7 @@
           "url": "https://github.com/yaniguan/twinstep/issues/29",
           "title": "[Bug] Align fallback _parse_simple_yaml with PyYAML on document markers, quoted/escaped colon keys, and underscore/scientific scalars",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -3823,7 +4160,7 @@
           "url": "https://github.com/yaniguan/twinstep/issues/30",
           "title": "[Semantics] Fix multi-plate well aliasing, Mix-to-Transfer anti-dependencies, and cross-plate cycle inversion in dependencies.py and baseline.py",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "semantics",
           "severity": "medium",
           "files": [
@@ -3839,7 +4176,7 @@
           "url": "https://github.com/yaniguan/twinstep/issues/31",
           "title": "[Formal] Prove transitive-reduction completeness, permutation nodup soundness, and topological-sort uniqueness in TwinStepLean",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -3855,7 +4192,7 @@
           "url": "https://github.com/yaniguan/twinstep/issues/32",
           "title": "[Interop] Synthesize contrastive error twins from stepbot YAML protocols and lab-attrib EXECUTION_ARTIFACT telemetry in autolab_wire.py",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -3869,7 +4206,7 @@
           "url": "https://github.com/yaniguan/twinstep/issues/33",
           "title": "[Dataset] Add difficulty-stratified and saboteur-backed hard-negative twin export for DPO, MPO, and GDPO",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "dataset",
           "severity": "low",
           "files": [
@@ -3878,13 +4215,68 @@
             "src/twinstep/cli.py#L120-L152",
             "community_extensions/saboteur_evolver.py"
           ]
+        },
+        {
+          "index": 31,
+          "number": 35,
+          "url": "https://github.com/yaniguan/twinstep/issues/35",
+          "title": "Add a held-out protocol split so scores cannot come from memorizing 3 files",
+          "round": 3,
+          "state": "closed",
+          "category": "data",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 36,
+          "url": "https://github.com/yaniguan/twinstep/issues/36",
+          "title": "Stop false alarms on clean multi-stage assays in the rule checker",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            "lean/lakefile.toml"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 37,
+          "url": "https://github.com/yaniguan/twinstep/issues/37",
+          "title": "List allowed labels and index rule in prompts; add a balanced score",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
+        },
+        {
+          "index": 34,
+          "number": 38,
+          "url": "https://github.com/yaniguan/twinstep/issues/38",
+          "title": "Fix stale counts and unsupported claims in README and docs",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "medium",
+          "files": [
+            "lean/README.md"
+          ]
         }
       ]
     },
     "labfill": {
-      "count": 30,
+      "count": 34,
       "round1_count": 24,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 33,
+      "open_count": 1,
       "items": [
         {
           "index": 1,
@@ -4229,7 +4621,7 @@
           "url": "https://github.com/yaniguan/labfill/issues/30",
           "title": "[Systems] Replace dense (B, 1, S, S) block-diagonal boolean masks with cu_seqlens varlen dispatch to avoid O(S^2) blowup at bin_cap >= 4096",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "systems",
           "severity": "medium",
           "files": [
@@ -4243,7 +4635,7 @@
           "url": "https://github.com/yaniguan/labfill/issues/31",
           "title": "[Bug] Fix flat token-mean cross-entropy reduction bias across co-packed short and long protocols and wire per-sequence / curriculum loss weights",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -4258,7 +4650,7 @@
           "url": "https://github.com/yaniguan/labfill/issues/32",
           "title": "[Bug] Prevent silent position_ids clamping when seq_len > max_seq_len and unify oversized token_length > bin_cap handling",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -4275,7 +4667,7 @@
           "url": "https://github.com/yaniguan/labfill/issues/33",
           "title": "[Formal] Prove Best-Fit-Decreasing approximation bound, causal block-diagonal mask isolation, and unique-seqId disjointness in LabFillLean",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -4291,7 +4683,7 @@
           "url": "https://github.com/yaniguan/labfill/issues/34",
           "title": "[Interop] Emit per-bin slice layouts, cu_seqlens offsets, and prompt/completion loss-mask spans in autolab-wire/v1 packed_batch for labbench-posttrain",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -4314,14 +4706,71 @@
             "docs/ARCHITECTURE_AND_HISTORY.md",
             "benchmarks/run_all.py#L302",
             "labfill/fill_gpu.py"
+          ],
+          "pending_gpu": true
+        },
+        {
+          "index": 31,
+          "number": 37,
+          "url": "https://github.com/yaniguan/labfill/issues/37",
+          "title": "Batched checker accepts back-transfers in large containers (int64 overflow)",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 38,
+          "url": "https://github.com/yaniguan/labfill/issues/38",
+          "title": "Run exported protocols through YLM LabLean in CI and fix exporter gaps",
+          "round": 3,
+          "state": "closed",
+          "category": "formal",
+          "severity": "high",
+          "files": [
+            "docs/ARCHITECTURE_AND_HISTORY.md"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 39,
+          "url": "https://github.com/yaniguan/labfill/issues/39",
+          "title": "Exported twinstep and DPO records point step_index at the wrong step",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "twinstep/src/twinstep/evaluate.py"
+          ]
+        },
+        {
+          "index": 34,
+          "number": 40,
+          "url": "https://github.com/yaniguan/labfill/issues/40",
+          "title": "Regenerate stale Recipe-2 numbers and report repair recovery and seed spread",
+          "round": 3,
+          "state": "closed",
+          "category": "ci",
+          "severity": "medium",
+          "files": [
+            "benchmarks/results/cpu_2026-11-18_t1.json",
+            "run_all.py"
           ]
         }
       ]
     },
     "lab-ears": {
-      "count": 30,
+      "count": 34,
       "round1_count": 24,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 34,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -4643,7 +5092,7 @@
           "url": "https://github.com/yaniguan/lab-ears/issues/28",
           "title": "[Bug] parse_quantities() emits phantom Concentration spans inside 'x g' Speed, mis-scales '0,500' comma decimals by 1000x, and truncates scientific notation",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -4656,7 +5105,7 @@
           "url": "https://github.com/yaniguan/lab-ears/issues/29",
           "title": "[Bug] CrossModalInterlockDetector produces NaN low-band power at 48 kHz USB mic rates, silently disabling stepper-stall halts",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -4669,7 +5118,7 @@
           "url": "https://github.com/yaniguan/lab-ears/issues/30",
           "title": "[Formal] LabEarsLean omits Nyquist upper bounds, finite-window Hann skirt bleed margins, and outward float64-to-Nat rounding",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -4684,7 +5133,7 @@
           "url": "https://github.com/yaniguan/lab-ears/issues/31",
           "title": "[Interop] autolab_wire.py collapses multi-step protocol spans via first-match-wins, drops canonical range bounds and Concentration, and misparses '13C NMR' as 13 deg C",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -4697,7 +5146,7 @@
           "url": "https://github.com/yaniguan/lab-ears/issues/32",
           "title": "[Interop] autolab-wire/v1 ignores flagged AudioEvent and CrossModalInterlock halts and drifts on raw_audio_kept vs raw_audio_saved privacy fields",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -4713,7 +5162,7 @@
           "url": "https://github.com/yaniguan/lab-ears/issues/33",
           "title": "[Benchmark] Live bench monitoring & DCASE streaming gaps: 100% held-out FPR from in-sample threshold fallback, per-step retraining, and non-streaming global pooling",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "benchmark",
           "severity": "low",
           "files": [
@@ -4723,13 +5172,70 @@
             "acoustic/evaluate.py",
             "results/dcase2023_cpu.json"
           ]
+        },
+        {
+          "index": 31,
+          "number": 36,
+          "url": "https://github.com/yaniguan/lab-ears/issues/36",
+          "title": "Streaming threshold is calibrated on 10 s clips but applied to 2 s chunks",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 37,
+          "url": "https://github.com/yaniguan/lab-ears/issues/37",
+          "title": "Interlock benchmark speech is pure in-band tones; real speech causes false halts",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "lean/README.md"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 38,
+          "url": "https://github.com/yaniguan/lab-ears/issues/38",
+          "title": "WLP numbers in README/docs are stale and only report the tuned test split",
+          "round": 3,
+          "state": "closed",
+          "category": "data",
+          "severity": "medium",
+          "files": [
+            "demo/parse_protocol.py",
+            "docs/ARCHITECTURE_AND_HISTORY.md",
+            "results/dcase2023_cpu.json"
+          ]
+        },
+        {
+          "index": 34,
+          "number": 39,
+          "url": "https://github.com/yaniguan/lab-ears/issues/39",
+          "title": "Wire privacy gate passes audio events that declare no privacy fields",
+          "round": 3,
+          "state": "closed",
+          "category": "security",
+          "severity": "high",
+          "files": [
+            "tests/test_autolab_wire.py"
+          ]
         }
       ]
     },
     "stepbot": {
-      "count": 30,
+      "count": 34,
       "round1_count": 24,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 34,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -5069,7 +5575,7 @@
           "url": "https://github.com/yaniguan/stepbot/issues/28",
           "title": "[Security] Harden mcp-dispatch --state with atomic fsync writes, fail-closed corruption checks, and bounded consumed_nonces retention",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "security",
           "severity": "high",
           "files": [
@@ -5084,7 +5590,7 @@
           "url": "https://github.com/yaniguan/stepbot/issues/29",
           "title": "[Security] Gate _check_with_opentrons behind _parse_safe_protocol_ast, privatize _MockWell mutators, and enforce envelope_bounds on dispatch",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "security",
           "severity": "high",
           "files": [
@@ -5099,7 +5605,7 @@
           "url": "https://github.com/yaniguan/stepbot/issues/30",
           "title": "[Bug] Support Opentrons Flex (apiLevel 2.18+) A1-D3 deck slots, requirements block, and Flex pipettes",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -5116,7 +5622,7 @@
           "url": "https://github.com/yaniguan/stepbot/issues/31",
           "title": "[Formal] Prove multi-step cumulative tip-rack depletion and multi-chunk distribute conservation in StepbotLean",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -5131,7 +5637,7 @@
           "url": "https://github.com/yaniguan/stepbot/issues/32",
           "title": "[Interop] Export post-dispatch well-volume, tip-usage, and rheology/pressure telemetry in autolab-wire/v1 for lab-attrib AssayTelemetry",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -5148,20 +5654,76 @@
           "url": "https://github.com/yaniguan/stepbot/issues/33",
           "title": "[Enhancement] Add hardware-in-the-loop Opentrons HTTP Run API v2 adapter gated behind StepbotMcpExecutor",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "enhancement",
           "severity": "low",
           "files": [
             "src/stepbot/mcp_runtime.py",
             "src/stepbot/cli.py"
           ]
+        },
+        {
+          "index": 31,
+          "number": 35,
+          "url": "https://github.com/yaniguan/stepbot/issues/35",
+          "title": "Match Opentrons stroke splitting and tip use for multi_aspirate transfers",
+          "round": 3,
+          "state": "closed",
+          "category": "data",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 36,
+          "url": "https://github.com/yaniguan/stepbot/issues/36",
+          "title": "Add a differential test of the mock checker against opentrons.simulate",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "tests/test_sim_differential.py"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 37,
+          "url": "https://github.com/yaniguan/stepbot/issues/37",
+          "title": "Count tip contact with liquid in the destination well in lineage checks",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "examples/plate_fill.yaml",
+            "examples/out/plate_fill.py"
+          ]
+        },
+        {
+          "index": 34,
+          "number": 38,
+          "url": "https://github.com/yaniguan/stepbot/issues/38",
+          "title": "Reject NaN and infinite numbers in volumes, delays and liquids",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
         }
       ]
     },
     "lab-hands": {
-      "count": 30,
+      "count": 34,
       "round1_count": 24,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 34,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -5486,7 +6048,7 @@
           "url": "https://github.com/yaniguan/lab-hands/issues/26",
           "title": "[Bug][Geometry] Discrete 21/25-point link sampling in slosh_minimum_jerk misses obstacle corners and batch_min_clearance ignores capsule radius",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -5502,7 +6064,7 @@
           "url": "https://github.com/yaniguan/lab-hands/issues/27",
           "title": "[Bug][Kinematics] Stateless IK branch selection causes unplanned 4.36 rad elbow flips across sequential transfers and 6.37 s multi-well tour spikes",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -5518,7 +6080,7 @@
           "url": "https://github.com/yaniguan/lab-hands/issues/28",
           "title": "[Bug][Control] Open-plate slosh time-scaler ignores rotational Euler and centrifugal acceleration at corner wells (violating 0.70*h_free on 58/60 tasks)",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -5532,7 +6094,7 @@
           "url": "https://github.com/yaniguan/lab-hands/issues/29",
           "title": "[Formal] Bridge scalar witness gap in LabHandsLean with continuous C-space swept-volume Lipschitz soundness proof",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -5546,7 +6108,7 @@
           "url": "https://github.com/yaniguan/lab-hands/issues/30",
           "title": "[Interop] Propagate measured path clearance and tactile insertion slip/force residuals over autolab-wire/v1 to lab-feet and lab-attrib",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -5560,7 +6122,7 @@
           "url": "https://github.com/yaniguan/lab-hands/issues/31",
           "title": "[Robotics] Enforce per-labware Z-rim and attached-tip vertical clearances and add 6-DOF SE(3) kinematic interface for tall blocks and tipracks",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "robotics",
           "severity": "medium",
           "files": [
@@ -5568,13 +6130,73 @@
             "lab_hands/trajectory.py#L225-L265",
             "lab_hands/labware.py#L179"
           ]
+        },
+        {
+          "index": 31,
+          "number": 34,
+          "url": "https://github.com/yaniguan/lab-hands/issues/34",
+          "title": "Take labware heights and tip lengths from the official Opentrons definitions",
+          "round": 3,
+          "state": "closed",
+          "category": "ci",
+          "severity": "high",
+          "files": [
+            "scripts/sync_opentrons_labware.py",
+            "lab_hands/data/opentrons_labware_v1.json",
+            "tests/test_phase2_audit_fixes.py"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 35,
+          "url": "https://github.com/yaniguan/lab-hands/issues/35",
+          "title": "Wire gate: plan to the requested clearance and halt on bad packet fields",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 36,
+          "url": "https://github.com/yaniguan/lab-hands/issues/36",
+          "title": "Audit LeRobot episodes with the recording robot's kinematics, not ArmSE3",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "meta/info.json",
+            "lab_hands/kinematics.py"
+          ]
+        },
+        {
+          "index": 34,
+          "number": 37,
+          "url": "https://github.com/yaniguan/lab-hands/issues/37",
+          "title": "Fix the slosh natural frequency formula and flag wells outside the model",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "lab_hands/trajectory.py",
+            "lab_hands/datasets.py",
+            "community_extensions/slosh_minimum_jerk.py"
+          ]
         }
       ]
     },
     "lab-feet": {
-      "count": 30,
+      "count": 34,
       "round1_count": 24,
       "round2_count": 6,
+      "round3_count": 4,
+      "closed_count": 34,
+      "open_count": 0,
       "items": [
         {
           "index": 1,
@@ -5901,7 +6523,7 @@
           "url": "https://github.com/yaniguan/lab-feet/issues/26",
           "title": "[Numerics] Dynamic activation outlier collapse in _quantize_activations_int8 and unquantized h_cal / alpha_min=0.70 floor in 4-bit scale clipping",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "numerics",
           "severity": "high",
           "files": [
@@ -5914,7 +6536,7 @@
           "url": "https://github.com/yaniguan/lab-feet/issues/27",
           "title": "[Bug] Odd-length 4-bit nibble padding truncation and missing payload-shape validation across pack_4bit, QuantizedLayer, LFT1, and DriftAbstainingInt4Classifier",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -5929,7 +6551,7 @@
           "url": "https://github.com/yaniguan/lab-feet/issues/28",
           "title": "[Bug] 32-bit fixed-point requantization multiply wraparound defeats int4 saturation clip detection and unguarded int32 accumulator bounds on wide layers",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "bug",
           "severity": "high",
           "files": [
@@ -5943,7 +6565,7 @@
           "url": "https://github.com/yaniguan/lab-feet/issues/29",
           "title": "[Formal] Formalize bit-exact saturating requantization, two's-complement nibble round-trip, rounding-mode parity, and signed 5-gate DriftAbstainMonitorCheck in LabFeetLean",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "formal",
           "severity": "high",
           "files": [
@@ -5958,7 +6580,7 @@
           "url": "https://github.com/yaniguan/lab-feet/issues/30",
           "title": "[Interop] Hot-load labbench-posttrain distilled student checkpoints in autolab-wire/v1 with SHA-256 calibration verification before emitting lab-attrib telemetry",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "interop",
           "severity": "medium",
           "files": [
@@ -5972,7 +6594,7 @@
           "url": "https://github.com/yaniguan/lab-feet/issues/31",
           "title": "[Hardware] Add freestanding C99 / CMSIS-NN / TFLite Micro header and ONNX Runtime (QLinearMatMul / MatMulNBits) export for MCU, Jetson, and Raspberry Pi bench nodes",
           "round": 2,
-          "state": "open",
+          "state": "closed",
           "category": "hardware",
           "severity": "low",
           "files": [
@@ -5980,6 +6602,60 @@
             "src/lab_feet/quantize.py",
             "demo/output.txt",
             "src/lab_feet/cli.py"
+          ]
+        },
+        {
+          "index": 31,
+          "number": 34,
+          "url": "https://github.com/yaniguan/lab-feet/issues/34",
+          "title": "Fix ONNX qlinear export: int8-clipped logits give chance-level accuracy",
+          "round": 3,
+          "state": "closed",
+          "category": "bug",
+          "severity": "high",
+          "files": [
+            "README.md"
+          ]
+        },
+        {
+          "index": 32,
+          "number": 35,
+          "url": "https://github.com/yaniguan/lab-feet/issues/35",
+          "title": "Wire node passes hot-loaded checkpoints it cannot check (fail-open)",
+          "round": 3,
+          "state": "closed",
+          "category": "interop",
+          "severity": "high",
+          "files": [
+            "autolab_wire.py",
+            "tests/test_autolab_wire.py"
+          ]
+        },
+        {
+          "index": 33,
+          "number": 36,
+          "url": "https://github.com/yaniguan/lab-feet/issues/36",
+          "title": "Test SAFE_HOLD on real gas-sensor drift against MSP and energy baselines",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "community_extensions/drift_abstaining_int4.py"
+          ]
+        },
+        {
+          "index": 34,
+          "number": 37,
+          "url": "https://github.com/yaniguan/lab-feet/issues/37",
+          "title": "Compare KL+CE distillation with a same-trainer CE control over 10 seeds",
+          "round": 3,
+          "state": "closed",
+          "category": "benchmark",
+          "severity": "high",
+          "files": [
+            "demo/distill_quantize.py",
+            "schema/benchmark_report.schema.json"
           ]
         }
       ]

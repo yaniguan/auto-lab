@@ -103,9 +103,17 @@ def test_catalog_and_issues_integrity_when_built() -> None:
         assert r["commit_head"] == m_entry["head_sha"], f"SHA drift for {r['repo']}: {r['commit_head']} vs {m_entry['head_sha']}"
 
     issues = load_issues_index()
-    assert issues["total_issues"] >= 416
+    assert issues["total_issues"] >= 461
     assert issues.get("round1_issues") == 322
-    assert issues.get("round2_issues") >= 94
+    assert issues.get("round2_issues") >= 95
+    assert issues.get("round3_issues") >= 44
+    assert issues.get("closed_issues") >= 458
+    assert issues.get("open_issues") == 3
+    assert issues.get("open_pending_gpu_issues") == [
+        "labfill#35",
+        "labbench-posttrain#49",
+        "labbench-posttrain#18",
+    ]
     for name in CORE_REPO_NAMES:
         if name == "lab-attrib":
             assert issues["repos"][name]["count"] >= 10
@@ -548,6 +556,11 @@ def test_fifteen_repo_full_wire_pipeline() -> None:
     assert set(recorded["repos"]) == set(CORE_REPO_NAMES)
     assert recorded["scenario_count"] == 6
     assert recorded["all_passed"] is True
+    rec_s1 = recorded["scenarios"]["1_full_happy_path_and_round2_recalibration"]
+    assert rec_s1["distance_source"] == "fitted_esol_model"
+    assert rec_s1["round1_effective_n_calib"] == 169 and rec_s1["round2_effective_n_calib"] == 170
+    assert recorded["scenarios"]["4_l1_lean_mcp_stale_epoch_block"]["dev_secret_rejected"] is True
+    assert recorded["scenarios"]["6_l3_splitguard_canary_block"]["strict_allowlist_enforced"] is True
 
     wire_script = REPO_ROOT / "benchmarks" / "fifteen_repo_wire_check.py"
     spec = importlib.util.spec_from_file_location("_autolab_fifteen_repo_wire_check", wire_script)
@@ -571,8 +584,10 @@ def test_fifteen_repo_full_wire_pipeline() -> None:
     assert s1["executed_epoch"] == 1 and s1["next_deck_epoch"] == 2
     assert s1["attribution_outcome"] == "CERTIFIED_POSITIVE"
     assert s1["gated_reward"] == 1.0 and s1["admitted_to_sft_rlvr"] is True
-    assert s1["round1_effective_n_calib"] == 226 and s1["round2_effective_n_calib"] == 227
-    assert s1["round1_effective_threshold"] == 0.758 and s1["round2_effective_threshold"] == 0.778
+    assert s1["round1_effective_n_calib"] == 169 and s1["round2_effective_n_calib"] == 170
+    assert s1["round1_effective_threshold"] == pytest.approx(0.675015, abs=1e-5)
+    assert s1["round2_effective_threshold"] == pytest.approx(0.682118, abs=1e-5)
+    assert s1["round2_effective_threshold"] > s1["round1_effective_threshold"]
 
     assert live["scenarios"]["2_l6_ood_abstention"]["halt_reason"] == "L6_ABSTAIN"
     assert live["scenarios"]["2_l6_ood_abstention"]["gated_reward"] == 0.25

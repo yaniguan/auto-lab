@@ -10,13 +10,14 @@
   let page = 1;
 
   async function fetchFreshSiteData() {
-    const res = await fetch('../assets/autolab-data.json?v=13');
+    const res = await fetch('../assets/autolab-data.json?v=14');
     if (!res.ok) throw new Error(`Failed loading autolab-data.json (${res.status})`);
     return res.json();
   }
 
   function filteredIssues() {
     const round = document.getElementById('filter-round')?.value || 'ALL';
+    const state = document.getElementById('filter-state')?.value || 'ALL';
     const repo = document.getElementById('filter-repo')?.value || 'ALL';
     const cat = document.getElementById('filter-cat')?.value || 'ALL';
     const sev = document.getElementById('filter-sev')?.value || 'ALL';
@@ -24,6 +25,7 @@
 
     return ALL_ISSUES.filter(it => {
       if (round !== 'ALL' && String(it.round) !== round) return false;
+      if (state !== 'ALL' && String(it.state || 'closed') !== state) return false;
       if (repo !== 'ALL' && it.repo !== repo) return false;
       if (cat !== 'ALL' && it.category !== cat) return false;
       if (sev !== 'ALL') {
@@ -34,7 +36,8 @@
         }
       }
       if (q) {
-        const hay = `${it.repo} #${it.number || ''} r${it.round} ${it.state || ''} ${it.title} ${(it.files || []).join(' ')} ${it.category}`.toLowerCase();
+        const gpuTag = it.pending_gpu ? 'pending_gpu' : '';
+        const hay = `${it.repo} #${it.number || ''} r${it.round} ${it.state || ''} ${gpuTag} ${it.title} ${(it.files || []).join(' ')} ${it.category}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
@@ -42,16 +45,22 @@
   }
 
   function updateKpis(list) {
-    let high = 0, medium = 0, low = 0;
+    let high = 0, medium = 0, low = 0, closedCnt = 0, openCnt = 0;
     for (const it of list) {
       if (it.severity === 'high' || it.severity === 'critical') high++;
       else if (it.severity === 'low') low++;
       else medium++;
+      if (it.state === 'open') openCnt++;
+      else closedCnt++;
     }
     document.getElementById('kpi-total').textContent = String(list.length);
     document.getElementById('kpi-high').textContent = String(high);
     document.getElementById('kpi-medium').textContent = String(medium);
     document.getElementById('kpi-low').textContent = String(low);
+    const closedEl = document.getElementById('kpi-closed');
+    const openEl = document.getElementById('kpi-open');
+    if (closedEl) closedEl.textContent = String(closedCnt);
+    if (openEl) openEl.textContent = String(openCnt);
   }
 
   function renderRepoPills() {
@@ -64,8 +73,12 @@
       const isSel = curRepo === name;
       const r1 = info.round1_count ?? (info.items || []).filter(x => (x.round || 1) === 1).length;
       const r2 = info.round2_count ?? (info.items || []).filter(x => x.round === 2).length;
-      let countLabel = `${info.count} issues · ${r2} R2`;
-      if (curRound === '2') countLabel = `${r2} R2 issues`;
+      const r3 = info.round3_count ?? (info.items || []).filter(x => x.round === 3).length;
+      const openCnt = info.open_count ?? (info.items || []).filter(x => x.state === 'open').length;
+      const openTag = openCnt > 0 ? ` · ${openCnt} GPU` : ' · 0 open';
+      let countLabel = `${info.count} issues${openTag}`;
+      if (curRound === '3') countLabel = `${r3} R3 issues`;
+      else if (curRound === '2') countLabel = `${r2} R2 issues`;
       else if (curRound === '1') countLabel = `${r1} R1 issues`;
 
       return `
@@ -133,16 +146,22 @@
       const num = it.number ? `#${it.number}` : 'Open ↗';
       const files = (it.files || []).slice(0, 4).map(f => `<code>${esc(f)}</code>`).join(' ');
       const sevClass = it.severity === 'critical' ? 'high' : it.severity;
-      const isR2 = Number(it.round) === 2;
-      const roundBadge = isR2
-        ? `<span class="pill pass" title="Round 2 · Lean 4, Wire & Attribution (${esc(it.state || 'open')})">R2</span>`
+      const rnd = Number(it.round || 1);
+      const roundBadge = rnd === 3
+        ? `<span class="pill pass" title="Round 3 · Wave 1–2 Frontier & Wire Hardening (${esc(it.state || 'closed')})">R3</span>`
+        : rnd === 2
+        ? `<span class="pill pass" title="Round 2 · Lean 4, Wire & Attribution (${esc(it.state || 'closed')})">R2</span>`
         : `<span class="pill" style="background:var(--surface2);color:var(--muted);border:1px solid var(--line);" title="Round 1 · Initial Audit (${esc(it.state || 'closed')})">R1</span>`;
+      const stateBadge = it.state === 'open'
+        ? `<span class="pill hold" title="Awaiting physical multi-GPU / A100 hardware execution">OPEN · GPU</span>`
+        : `<span class="pill" style="background:var(--surface2);color:var(--muted);border:1px solid var(--line);">closed</span>`;
 
       return `
         <tr>
           <td><strong><a class="table-link" href="https://github.com/yaniguan/${encodeURIComponent(it.repo)}/issues" target="_blank" rel="noopener">${esc(it.repo)}</a></strong></td>
           <td><a class="table-link" href="${esc(url)}" target="_blank" rel="noopener">${esc(num)}</a></td>
           <td>${roundBadge}</td>
+          <td>${stateBadge}</td>
           <td><span class="pill ${esc(sevClass)}">${esc(it.severity)}</span></td>
           <td><code>${esc(it.category)}</code></td>
           <td>
@@ -171,8 +190,12 @@
 
     const repoSelect = document.getElementById('filter-repo');
     const roundSelect = document.getElementById('filter-round');
+    const stateSelect = document.getElementById('filter-state');
     let r1Total = 0;
     let r2Total = 0;
+    let r3Total = 0;
+    let openTotal = 0;
+    let closedTotal = 0;
 
     for (const [repoName, info] of Object.entries(BY_REPO)) {
       const opt = document.createElement('option');
@@ -184,17 +207,29 @@
         const sev = (it.severity || 'medium').toLowerCase();
         const cat = (it.category || 'bug').toLowerCase();
         const rnd = Number(it.round || 1);
-        if (rnd === 2) r2Total++;
+        const st = (it.state || 'closed').toLowerCase();
+        if (rnd === 3) r3Total++;
+        else if (rnd === 2) r2Total++;
         else r1Total++;
-        ALL_ISSUES.push({ repo: repoName, ...it, round: rnd, category: cat, severity: sev });
+        if (st === 'open') openTotal++;
+        else closedTotal++;
+        ALL_ISSUES.push({ repo: repoName, ...it, round: rnd, state: st, category: cat, severity: sev });
       }
     }
 
     if (roundSelect) {
       roundSelect.innerHTML = `
         <option value="ALL">All Rounds (${ALL_ISSUES.length})</option>
+        <option value="3">Round 3 · Wave 1–2 Frontier &amp; Wire (${r3Total})</option>
         <option value="2">Round 2 · Lean, Wire &amp; Attribution (${r2Total})</option>
         <option value="1">Round 1 · Initial Audit (${r1Total})</option>
+      `;
+    }
+    if (stateSelect) {
+      stateSelect.innerHTML = `
+        <option value="ALL">All States (${ALL_ISSUES.length})</option>
+        <option value="open">Open · PENDING_GPU (${openTotal})</option>
+        <option value="closed">Closed (${closedTotal})</option>
       `;
     }
 
@@ -206,8 +241,12 @@
       repoSelect.value = qRepo;
     }
     const qRound = params.get('round');
-    if (qRound === '1' || qRound === '2') {
+    if (qRound === '1' || qRound === '2' || qRound === '3') {
       roundSelect.value = qRound;
+    }
+    const qState = params.get('state');
+    if (stateSelect && (qState === 'open' || qState === 'closed')) {
+      stateSelect.value = qState;
     }
     const qCat = params.get('cat');
     if (qCat) {
@@ -219,6 +258,7 @@
 
     const onFilter = () => { page = 1; render(); };
     roundSelect.addEventListener('change', onFilter);
+    stateSelect?.addEventListener('change', onFilter);
     repoSelect.addEventListener('change', onFilter);
     document.getElementById('filter-cat').addEventListener('change', onFilter);
     document.getElementById('filter-sev').addEventListener('change', onFilter);
@@ -226,6 +266,7 @@
 
     document.getElementById('btn-reset-filters').addEventListener('click', () => {
       roundSelect.value = 'ALL';
+      if (stateSelect) stateSelect.value = 'ALL';
       repoSelect.value = 'ALL';
       document.getElementById('filter-cat').value = 'ALL';
       document.getElementById('filter-sev').value = 'ALL';

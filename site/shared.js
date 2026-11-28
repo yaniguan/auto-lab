@@ -82,7 +82,7 @@
   }
 
   async function loadData(basePrefix = '') {
-    const res = await fetch(`${basePrefix}assets/autolab-data.json?v=5`);
+    const res = await fetch(`${basePrefix}assets/autolab-data.json?v=6`);
     if (!res.ok) throw new Error(`Failed loading autolab-data.json (${res.status})`);
     return res.json();
   }
