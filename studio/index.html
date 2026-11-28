@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8fafc">
+  <title>Interactive Lab Workbench — Auto-Lab</title>
+  <meta name="description" content="Simulate Auto-Lab closed-loop default-deny safety gates, inspect LabFill sequence-packed BF16 throughput, and explore ESOL conformal calibration and CP-SAT multi-instrument schedules.">
+  <link rel="canonical" href="https://yaniguan.github.io/auto-lab/studio/">
+  <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css?v=12">
+  <script defer src="../shared.js?v=12"></script>
+  <script defer src="studio.js?v=12"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Auto-Lab home">
+      <img src="../assets/autolab-animated.svg" width="52" height="26" alt="">
+      <span>Auto-Lab <small>Workbench</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a class="nav-link" href="../">Overview</a>
+      <a class="nav-link" href="../trust/">Trust Regime</a>
+      <a class="nav-link active" href="./">Interactive Lab</a>
+      <a class="nav-link" href="../repos/">15 Repos</a>
+      <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
+      <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="subpage-hero">
+      <div class="wrap">
+        <p class="eyebrow"><span class="status-dot"></span> Interactive Workbench · Measured CPU Traces</p>
+        <h1>Safety Gates, GPU Packing &amp; Scheduling</h1>
+        <p>
+          Step through closed-loop gate verdicts, 5.42x sequence-packed BF16 throughput, and CP-SAT Gantt schedules.
+        </p>
+      </div>
+    </section>
+
+    <section class="section wrap" style="padding-top:40px;">
+      <div class="tabs-bar" role="tablist" aria-label="Workbench tools">
+        <button type="button" class="tab-btn active" data-tab="loop">1 · 7-Layer Closed-Loop Gate Simulator</button>
+        <button type="button" class="tab-btn" data-tab="posttrain">2 · L3 Post-Training &amp; LabFill Packing</button>
+        <button type="button" class="tab-btn" data-tab="decide">3 · L6 Conformal Trust &amp; L5 CP-SAT Schedule</button>
+      </div>
+
+      <!-- Tab 1: Closed-Loop Gate Simulator -->
+      <div class="tab-pane active" id="pane-loop">
+        <div class="sandbox-card">
+          <div class="toolbar">
+            <div class="seg-group">
+              <span>Scenario</span>
+              <div class="seg-pills" id="scenario-pills">
+                <button type="button" data-scenario="serial_dilution" class="active">Serial Dilution (GO)</button>
+                <button type="button" data-scenario="broken_tip_reuse">Tip Reuse (L4 BLOCK)</button>
+                <button type="button" data-scenario="precursor_ghost_peak">Ghost XRD Peak (lab-attrib BLOCK)</button>
+                <button type="button" data-scenario="uncalibrated_molecule">OOD Macrocycle (L6 ABSTAIN)</button>
+                <button type="button" data-scenario="over_budget_analog">2-Step Analog (L5 MAKE)</button>
+              </div>
+            </div>
+            <div class="seg-group" style="gap:16px;">
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;">
+                <input type="checkbox" id="chk-strict" checked style="accent-color:var(--accent);"> Default-Deny Gate
+              </label>
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;">
+                <input type="checkbox" id="chk-recall" checked style="accent-color:var(--accent);"> Episodic Recall
+              </label>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="sub-panel">
+              <h4>
+                <span>Layer-by-Layer Execution &amp; Gate Verdicts</span>
+                <span id="loop-status-pill" class="pill pass">EXECUTED_AND_WRITTEN_BACK</span>
+              </h4>
+              <ul class="trace-list" id="loop-trace-list"></ul>
+            </div>
+            <div>
+              <div class="kpi-strip" id="loop-kpis" style="margin-bottom:16px;"></div>
+              <div class="sub-panel">
+                <h4>
+                  <span><code>autolab loop --json</code> Output</span>
+                  <span style="font-size:12px;color:var(--muted);">autolab/loop_demo.py</span>
+                </h4>
+                <pre class="code-block" id="loop-json-pre" style="max-height:330px;"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Post-Training & LabFill -->
+      <div class="tab-pane" id="pane-posttrain">
+        <div class="sandbox-card">
+          <div class="toolbar">
+            <div class="seg-group">
+              <span>RLVR Domain</span>
+              <div class="seg-pills" id="pt-domain-pills">
+                <button type="button" data-domain="calisol" class="active">CALiSol-23 Conductivity</button>
+                <button type="button" data-domain="bioprobench">BioProBench (PQA / ORD / ERR / GEN)</button>
+                <button type="button" data-domain="operator">Operator Action &amp; World Model</button>
+              </div>
+            </div>
+            <div class="seg-group">
+              <span>Batch Strategy</span>
+              <div class="seg-pills" id="pt-pack-pills">
+                <button type="button" data-pack="padded">Padded FP32</button>
+                <button type="button" data-pack="bucketed">Bucketed</button>
+                <button type="button" data-pack="packed">Packed FP32</button>
+                <button type="button" data-pack="packed_bf16" class="active">Packed + BF16 (5.42x)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="sub-panel">
+              <h4>
+                <span>LabFill Recipe 4 Measured CPU Throughput (1 Thread)</span>
+                <span class="pill pass">92.1% useful tokens</span>
+              </h4>
+              <div id="packing-chart-host"></div>
+              <p style="font-size:12.4px;color:var(--muted);margin-top:10px;">
+                Measured on Intel Xeon (AMX-BF16), 1 thread (<code>labfill</code>). GPU throughput columns remain marked <code>not yet measured</code>.
+              </p>
+            </div>
+            <div>
+              <div class="kpi-strip" id="pt-kpis" style="margin-bottom:16px;"></div>
+              <div class="sub-panel">
+                <h4>
+                  <span><code>labrl recipe</code> Specification</span>
+                  <span style="font-size:12px;color:var(--muted);">labbench-posttrain</span>
+                </h4>
+                <pre class="code-block" id="pt-recipe-pre" style="max-height:280px;"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Conformal Trust & CP-SAT -->
+      <div class="tab-pane" id="pane-decide">
+        <div class="sandbox-card">
+          <div class="toolbar">
+            <div class="seg-group">
+              <span>ESOL Active Expansion Round (<code>lab-decide</code>)</span>
+              <div class="seg-pills" id="round-pills">
+                <button type="button" data-round="0" class="active">Round 0 (79.6% answered)</button>
+                <button type="button" data-round="1">Round 1 (85.4% answered)</button>
+                <button type="button" data-round="2">Round 2 (94.6% answered)</button>
+                <button type="button" data-round="3">Round 3 (100% answered)</button>
+              </div>
+            </div>
+            <span class="pill pass">CP-SAT 30/30 Feasible vs Greedy 24/30</span>
+          </div>
+
+          <div class="grid-2">
+            <div class="sub-panel">
+              <h4>
+                <span>Split Conformal Coverage on ESOL (Target 90%)</span>
+                <span style="font-size:12px;color:var(--muted);">lab-decide</span>
+              </h4>
+              <div id="trust-chart-host"></div>
+              <div class="kpi-strip" id="decide-kpis" style="margin-top:12px;"></div>
+            </div>
+            <div class="sub-panel">
+              <h4>
+                <span>Optimal Multi-Instrument Schedule (<code>small_00</code>, 105m)</span>
+                <span style="font-size:12px;color:var(--muted);">labshift CP-SAT</span>
+              </h4>
+              <div id="gantt-chart-host"></div>
+              <p style="font-size:12.4px;color:var(--muted);margin-top:10px;">
+                Instrument pools: <code>[L] liquid_handler</code>, <code>[I] incubator</code>, <code>[R] plate_reader</code>, <code>[C] centrifuge</code>, <code>[W] washer</code>. Across all 30 benchmark instances, CP-SAT lowers mean makespan from <code>129.8m</code> to <code>116.7m</code> with zero window violations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <a class="brand" href="../">
+      <img src="../assets/autolab-static.svg" width="44" height="22" alt="">
+      <span>Auto-Lab</span>
+    </a>
+    <p>Interactive Lab Workbench · Pure Static Browser Execution</p>
+    <div style="display:flex;gap:16px;">
+      <a href="../">Overview</a>
+      <a href="../repos/">15 Repos</a>
+      <a href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </footer>
+</body>
+</html>

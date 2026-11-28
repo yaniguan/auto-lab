@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8fafc">
+  <title>Auto-Lab — Embodied Brain, Safety Gate &amp; Post-Training</title>
+  <meta name="description" content="Fifteen modular repositories giving a wet-lab robot a calibrated brain, a default-deny safety gate, causal negative-result attribution, ears, hands, edge feet, and verifiable RL post-training.">
+  <link rel="canonical" href="https://yaniguan.github.io/auto-lab/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Auto-Lab — Embodied Lab Brain &amp; Post-Training">
+  <meta property="og:description" content="7 layers, 15 repositories, default-deny gates, Lean 4 Trust Regime, and RLVR post-training.">
+  <meta property="og:url" content="https://yaniguan.github.io/auto-lab/">
+  <meta property="og:image" content="https://yaniguan.github.io/auto-lab/assets/autolab-poster.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/autolab-static.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=15">
+  <script defer src="shared.js?v=15"></script>
+  <script defer src="scheme_icons.js?v=15"></script>
+  <script defer src="repo_stories.js?v=16"></script>
+  <script defer src="home.js?v=15"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Auto-Lab home">
+      <img src="assets/autolab-animated.svg" width="52" height="26" alt="">
+      <span>Auto-Lab</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a class="nav-link active" href="./">Overview</a>
+      <a class="nav-link" href="trust/">Trust Regime</a>
+      <a class="nav-link" href="studio/">Interactive Lab</a>
+      <a class="nav-link" href="repos/">15 Repos</a>
+      <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
+      <a class="nav-cta" href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero wrap">
+      <p class="eyebrow"><span class="status-dot"></span> Embodied Brain · Default-Deny Safety · Post-Training</p>
+      <h1>
+        <span class="hero-name"><span class="hero-accent">Auto</span>-Lab</span>
+        <span class="hero-title">Give a Lab Robot a Calibrated Brain, a Safety Gate, Hands, Ears, and Feet</span>
+      </h1>
+      <p class="hero-deck">
+        Fifteen small, checkable repositories—linked from high-level scientific reasoning (<code>L6</code>) and causal post-run blame attribution (<code>L4</code>) down to edge quantized boards (<code>L0</code>) and verifiable RL post-training (<code>L3</code>).
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="#brain-stack">Explore Agent &amp; Repo Map ↓</a>
+        <a class="button secondary" href="trust/">Lean 4 Trust Regime →</a>
+        <a class="button secondary" href="repos/#lab-attrib">New: lab-attrib (15th Repo) →</a>
+      </div>
+      <div class="meta-strip">
+        <span><strong>Yani Guan</strong></span>
+        <span>·</span>
+        <span>MIT</span>
+        <span>·</span>
+        <span>Google Antigravity for Science</span>
+        <span>·</span>
+        <span>Companions: <a href="https://yaniguan.github.io/YLM/" target="_blank" rel="noopener">YLM</a>, <a href="https://yaniguan.github.io/WignerFlow/" target="_blank" rel="noopener">WignerFlow</a>, <a href="https://yaniguan.github.io/ouroboros-ocsr/" target="_blank" rel="noopener">Ouroboros</a>, <a href="https://github.com/yaniguan/assayfold" target="_blank" rel="noopener">assayfold</a></span>
+      </div>
+    </section>
+
+    <!-- 4-Card Headline Metrics -->
+    <section class="wrap" aria-label="Measured highlights">
+      <div class="metric-strip">
+        <a class="metric-card" href="#brain-stack">
+          <span class="small-label purple">Architecture</span>
+          <div class="metric-big"><strong>7</strong> <span>layers · 15 repos</span></div>
+          <p>Brain (L6) to edge boards (L0).</p>
+        </a>
+        <a class="metric-card" href="studio/#posttrain">
+          <span class="small-label amber">Post-Training</span>
+          <div class="metric-big"><strong>49,139</strong> <span>records · 0 leak</span></div>
+          <p>20 sources under <code>SplitGuard</code>.</p>
+        </a>
+        <a class="metric-card" href="studio/">
+          <span class="small-label teal">Safety Gates</span>
+          <div class="metric-big"><strong>22 / 22</strong> <span>&amp; 30 / 30</span></div>
+          <p>SQL gate &amp; CP-SAT schedules.</p>
+        </a>
+        <a class="metric-card" href="studio/#posttrain">
+          <span class="small-label blue">Throughput &amp; Edge</span>
+          <div class="metric-big"><strong>5.42x</strong> <span>&amp; 35x smaller</span></div>
+          <p>BF16 packing &amp; int8/4-bit edge.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- 01 / Synchronized Line-Art Agent Sketch + Scheme-Icon Repo Relationship Map -->
+    <section class="section wrap" id="brain-stack">
+      <div class="section-heading" style="margin-bottom:20px;">
+        <p class="eyebrow">01 / Anatomy &amp; Repository Connections</p>
+        <h2>One agent, fifteen parts—click or hover any icon to trace how they connect.</h2>
+      </div>
+
+      <!-- Sketch Figure A: Two-Armed Lab Agent Line Drawing -->
+      <figure class="sketch-frame">
+        <div class="sketch-head">
+          <h3>Part I · Where Each Repo Lives on the Lab Agent</h3>
+          <span class="sketch-hint">Tap an organ or callout box to highlight its connected repos below</span>
+        </div>
+        <div class="sketch-svg-wrap" id="robot-sketch-host" aria-label="Line-art drawing of a two-armed lab robot mapped to Auto-Lab repositories"></div>
+      </figure>
+
+      <!-- Sketch Figure B: 19-Repo Scheme-Icon Relationship & Dataflow Map -->
+      <figure class="sketch-frame">
+        <div class="sketch-head">
+          <h3>Part II · How All 15 Core + 4 Companion Repositories Connect</h3>
+          <span class="sketch-hint">Teal = perception, gating &amp; execution · Amber = attribution &amp; post-training flywheel ↺</span>
+        </div>
+        <div class="sketch-svg-wrap" id="repo-network-host" aria-label="Scheme-icon relationship diagram connecting all Auto-Lab repositories"></div>
+        <div class="conn-bar" id="conn-trace-bar"></div>
+      </figure>
+
+      <!-- Compact Selected-Module Story Bar -->
+      <div class="organ-bar" id="organ-inspector">
+        <div style="min-width:0;">
+          <span class="small-label" id="insp-badge">L4 · TWIN &amp; GATE</span>
+          <div style="display:flex;align-items:center;gap:9px;margin:4px 0 6px;">
+            <span id="insp-icon" style="color:var(--accent);display:inline-flex;"></span>
+            <h3 id="insp-name" style="font-size:21px;font-weight:760;margin:0;">lab-rehearsal</h3>
+          </div>
+          <p id="insp-hook" style="font-size:14px;color:var(--text);font-weight:560;line-height:1.48;">Loading…</p>
+          <p id="insp-why" style="font-size:12.8px;color:var(--muted);line-height:1.5;margin-top:6px;"></p>
+        </div>
+        <div id="insp-story-preview" style="min-width:0;"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:154px;">
+          <a class="button primary" id="insp-dossier-link" href="repos/#lab-rehearsal">Interactive Card →</a>
+          <a class="button secondary" id="insp-github-link" href="https://github.com/yaniguan/lab-rehearsal" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 / Two Clean Loops & Subpages -->
+    <section class="section alt-section" id="loop">
+      <div class="wrap">
+        <div class="section-heading" style="margin-bottom:24px;">
+          <p class="eyebrow">02 / Core Loops</p>
+          <h2>Rehearse before running. Verify before training.</h2>
+        </div>
+
+        <div class="dual-loops">
+          <article class="loop-box">
+            <span class="small-label teal">Before &amp; After Every Bench Run · L4</span>
+            <h3>Pre-Run Gate &amp; Post-Run Blame Loop</h3>
+            <div class="step-chain">
+              <span class="step-chip">Recall</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Rehearse</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Lean-MCP gate</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Run</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Blame (<code>lab-attrib</code>)</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">SHA-256 ledger</span>
+            </div>
+          </article>
+
+          <article class="loop-box">
+            <span class="small-label amber">After Every Run · L3</span>
+            <h3>Post-Training Flywheel</h3>
+            <div class="step-chain">
+              <span class="step-chip">Seed error twins</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Pack BF16 (5.42x)</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">SFT · MPO · GDPO</span>
+              <span class="step-sep">→</span>
+              <span class="step-chip">Distill to edge</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="portal-grid">
+          <a class="portal-card" href="trust/">
+            <span class="small-label amber">Subpage 01 · Lean 4.36.0</span>
+            <h3>Formal Trust Regime &amp; Memory</h3>
+            <p>50 machine-checked Lean 4 theorems (0 <code>sorry</code>), 4-layer Undergrad Memory + Dreaming, and LaTeX preprint.</p>
+            <span class="portal-cta">Explore Theorems &amp; Paper →</span>
+          </a>
+          <a class="portal-card" href="studio/">
+            <span class="small-label teal">Subpage 02 · Simulators</span>
+            <h3>Interactive Lab</h3>
+            <p>Test default-deny blocks, BF16 sequence packing, conformal coverage, and CP-SAT Gantt schedules live.</p>
+            <span class="portal-cta">Open Workbench →</span>
+          </a>
+          <a class="portal-card" href="repos/">
+            <span class="small-label purple">Subpage 03 · 15 Modules</span>
+            <h3>15 Interactive Repo Guides</h3>
+            <p>Plain-English problem stories, clickable real-world examples, and under-the-hood tabs for every repository.</p>
+            <span class="portal-cta">Browse Repo Stories →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 / Clean 15-Repository Directory Table -->
+    <section class="section wrap" id="directory">
+      <div class="section-heading" style="margin-bottom:22px;">
+        <p class="eyebrow">03 / All 15 Repositories</p>
+        <h2>One line per repo.</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Repo</th>
+              <th>What it does</th>
+              <th>Key result</th>
+              <th>Links</th>
+            </tr>
+          </thead>
+          <tbody id="home-directory-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 04 / Quickstart & Citation -->
+    <section class="section alt-section" id="quickstart">
+      <div class="wrap">
+        <div class="section-heading" style="margin-bottom:20px;">
+          <p class="eyebrow">04 / Quickstart</p>
+          <h2>Pull and inspect all 15 repos.</h2>
+        </div>
+
+        <pre class="code-block">git clone https://github.com/yaniguan/auto-lab.git &amp;&amp; cd auto-lab
+pip install -e ".[dev]"
+python scripts/sync_all.py --action clone-or-fetch
+autolab loop --scenario broken_tip_reuse</pre>
+
+        <div class="citation-box">
+          <div class="citation-top">
+            <span>BibTeX</span>
+            <button type="button" id="copy-citation">Copy citation</button>
+            <span id="copy-status" role="status" aria-live="polite"></span>
+          </div>
+          <pre class="code-block" id="bibtex" style="border:0;border-radius:0;">@misc{guan2026autolab,
+  title  = {Auto-Lab: A Multi-Layer Embodied Brain, Default-Deny Safety Harness, and Verifiable Post-Training Stack for Autonomous Wet Laboratories},
+  author = {Guan, Yani},
+  year   = {2026},
+  url    = {https://github.com/yaniguan/auto-lab},
+  note   = {https://yaniguan.github.io/auto-lab/}
+}</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <a class="brand" href="./">
+      <img src="assets/autolab-static.svg" width="44" height="22" alt="">
+      <span>Auto-Lab</span>
+    </a>
+    <p>7 Layers · 15 Core Repositories · MIT</p>
+    <div style="display:flex;gap:16px;">
+      <a href="studio/">Interactive Lab</a>
+      <a href="repos/">15 Repos</a>
+      <a href="https://github.com/yaniguan/auto-lab" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="audit/" style="opacity:0.55;" title="Internal maintainer issue backlog">Backlog</a>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8fafc">
+  <title>Lean 4 Trust Regime &amp; Agent Memory — Auto-Lab</title>
+  <meta name="description" content="Machine-checked Lean 4 Trust Regime (AutoLabLean: 50 theorems, 0 sorry), 4-Layer Undergraduate Agent Memory with Bottom Reasoning Traces & Dreaming, and 20 community-synthesized sub-repo extensions.">
+  <link rel="canonical" href="https://yaniguan.github.io/auto-lab/trust/">
+  <link rel="icon" href="../assets/autolab-static.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css?v=12">
+  <script defer src="../shared.js?v=12"></script>
+  <script defer src="../scheme_icons.js?v=12"></script>
+  <script defer src="trust.js?v=12"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Auto-Lab home">
+      <img src="../assets/autolab-animated.svg" width="52" height="26" alt="">
+      <span>Auto-Lab <small>Trust Regime</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a class="nav-link" href="../">Overview</a>
+      <a class="nav-link active" href="./">Trust Regime</a>
+      <a class="nav-link" href="../studio/">Interactive Lab</a>
+      <a class="nav-link" href="../repos/">15 Repos</a>
+      <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle color theme">☾ Dark</button>
+      <a class="nav-cta" href="https://github.com/yaniguan/auto-lab/tree/main/lean" target="_blank" rel="noopener">Lean Source ↗</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="subpage-hero">
+      <div class="wrap">
+        <p class="eyebrow"><span class="status-dot"></span> Formal Verification · Lean 4.36.0 · Zero <code>sorry</code></p>
+        <h1>The Auto-Lab Trust Regime</h1>
+        <p style="max-width:820px;">
+          Hard boundaries proved in Lean 4 across all 15 repositories—paired with a 4-layer <strong>Undergraduate Agent Memory</strong> (Bottom Reasoning Traces + sleep-time Dreaming), zero-trust <code>lean-mcp/v1</code> hardware envelopes, and two arXiv technical monographs.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+          <a class="button primary" href="../assets/autolab_preprint.pdf" target="_blank" rel="noopener">Main Preprint PDF ↗</a>
+          <a class="button secondary" href="../assets/lab_attrib_preprint.pdf" target="_blank" rel="noopener">lab-attrib Monograph PDF ↗</a>
+          <a class="button secondary" href="#undergrad-memory">4-Layer Agent Memory ↓</a>
+          <a class="button secondary" href="https://github.com/yaniguan/auto-lab/tree/main/paper" target="_blank" rel="noopener">LaTeX Source ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 Headline Formal + Empirical Metrics -->
+    <section class="wrap" style="margin-top:28px;" aria-label="Trust Regime highlights">
+      <div class="metric-strip">
+        <a class="metric-card" href="#lean-explorer">
+          <span class="small-label purple">Lean 4.36.0 Kernel</span>
+          <div class="metric-big"><strong>50</strong> <span>theorems · 0 sorry</span></div>
+          <p>Hub (50) + 15 repo <code>lean/</code> + <code>lab-attrib</code> (25) · 0 <code>sorry</code>.</p>
+        </a>
+        <a class="metric-card" href="#performance-lift">
+          <span class="small-label teal">Molecular Campaign</span>
+          <div class="metric-big"><strong>2.49x</strong> <span>lower MAE · 0% OOD</span></div>
+          <p><code>0.978 → 0.393</code> MAE on real Delaney ESOL.</p>
+        </a>
+        <a class="metric-card" href="#performance-lift">
+          <span class="small-label blue">Protocol Synthesis</span>
+          <div class="metric-big"><strong>97.5%</strong> <span>valid (vs 22.0%)</span></div>
+          <p><code>0.0%</code> hardware faults @ 30k checks/s.</p>
+        </a>
+        <a class="metric-card" href="#performance-lift">
+          <span class="small-label amber">Anti-Hack RLVR</span>
+          <div class="metric-big"><strong>98.4%</strong> <span>verified (vs 0.4%)</span></div>
+          <p>Blocks <code>&lt;think&gt;</code> &amp; shortcut reward hacks.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- 01 / Monoline Bounded Autonomy Diagram -->
+    <section class="section wrap" style="padding-top:34px;padding-bottom:48px;">
+      <div class="section-heading" style="margin-bottom:18px;">
+        <p class="eyebrow">01 / Bounded Autonomy Principle</p>
+        <h2>Never cross the wall. Explore freely inside it.</h2>
+      </div>
+
+      <figure class="sketch-frame">
+        <div class="sketch-head">
+          <h3>Architecture of <code>AutoLabLean</code> Shielded Discovery</h3>
+          <span class="sketch-hint">Inductive theorem <code>shieldedTrajectory_never_crosses_boundary</code> holds for arbitrary black-box policies</span>
+        </div>
+        <div class="sketch-svg-wrap" id="trust-sketch-host" aria-label="Monoline diagram of the Lean 4 Trust Regime wall between untrusted AI proposals and certified wet-lab execution"></div>
+      </figure>
+    </section>
+
+    <!-- 02 / Interactive 5-Task Empirical Performance Study -->
+    <section class="section alt-section" id="performance-lift" style="padding-block:54px;">
+      <div class="wrap">
+        <div class="section-heading" style="margin-bottom:20px;">
+          <p class="eyebrow">02 / Measured Performance Lift</p>
+          <h2>Strict boundaries don’t just prevent accidents—they make the agent sharper.</h2>
+          <p class="section-intro">
+            Switch across five CPU-reproducible benchmarks invoking the compiled <code>autolab-lean</code> binary directly. By pruning uncalibrated extrapolations, subtle protocol corruptions, and reward-hacked rollouts, the Trust Regime concentrates search and gradient updates inside valid science.
+          </p>
+        </div>
+
+        <div class="tabs-bar" id="exp-tabs" role="tablist" aria-label="Empirical experiments"></div>
+        <div class="sandbox-card" id="exp-stage">
+          <p style="color:var(--muted);">Loading measured results…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 / Interactive 15-Repo Lean 4 Guardrail & Theorem Explorer -->
+    <section class="section wrap" id="lean-explorer" style="padding-block:56px;">
+      <div class="section-heading" style="margin-bottom:22px;">
+        <p class="eyebrow">03 / All 15 Repositories in Lean 4</p>
+        <h2>Inspect every guardrail, theorem, and live counterexample.</h2>
+      </div>
+
+      <div class="catalog-layout">
+        <aside class="catalog-sidebar" aria-label="15-repository Lean modules">
+          <div id="lean-sidebar-groups"></div>
+        </aside>
+        <article class="dossier-sheet" id="lean-card-host">
+          <p style="color:var(--muted);">Loading formal specification…</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 04 / Next-Gen Frontier Directions (NovelDirections.lean) -->
+    <section class="section alt-section" id="novel-directions" style="padding-block:56px;">
+      <div class="wrap">
+        <div class="section-heading" style="margin-bottom:20px;">
+          <p class="eyebrow">04 / Next-Gen Frontier Directions</p>
+          <h2>Beyond static pre-gates: 4 novel mechanisms proved &amp; benchmarked.</h2>
+          <p class="section-intro">
+            Synthesized from 2025–2026 autonomous-lab debates (<code>A-Lab</code> XRD phase ambiguity, <code>Sakana v2</code> negative-result attribution, <code>plr-mcp</code>/<code>OpenLabAI</code> hardware approval bottlenecks, and <code>Lean4Agent</code> co-evolution) and formalized in <code>AutoLabLean/NovelDirections.lean</code>.
+          </p>
+        </div>
+
+        <div class="tabs-bar" id="novel-tabs" role="tablist" aria-label="Novel research directions"></div>
+        <div class="sandbox-card" id="novel-stage">
+          <p style="color:var(--muted);">Loading frontier benchmarks…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 / 4-Layer "Undergrad" Agent Memory & Bottom Reasoning Traces -->
+    <section class="section wrap" id="undergrad-memory" style="padding-block:56px;">
+      <div class="section-heading" style="margin-bottom:20px;">
+        <p class="eyebrow">05 / 4-Layer "Undergraduate" Agent Memory &amp; Dreaming</p>
+        <h2>Rapid re-onboarding on rusty SOPs and zero-shot mastery of novel assays.</h2>
+        <p class="section-intro">
+          Modeled on Anthropic’s <em>Components of Agent Memory</em> and a well-trained senior undergraduate: Layer-0 causal <strong>Bottom Reasoning Traces</strong> restore first-principles equations rather than brittle magic numbers, while sleep-time <strong>Dreaming</strong> enforces a <code>180x</code> leaner prompt footprint (<code>AutoLabLean/AgentMemory.lean</code>).
+        </p>
+      </div>
+      <div class="sandbox-card" id="memory-stage">
+        <p style="color:var(--muted);">Loading undergraduate memory benchmarks…</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <a class="brand" href="../">
+      <img src="../assets/autolab-static.svg" width="44" height="22" alt="">
+      <span>Auto-Lab</span>
+    </a>
+    <p>AutoLabLean · Lean 4.36.0 · 50 Theorems · 0 <code>sorry</code></p>
+    <div style="display:flex;gap:16px;">
+      <a href="../">Overview</a>
+      <a href="../studio/">Interactive Lab</a>
+      <a href="../repos/">15 Repos</a>
+      <a href="https://github.com/yaniguan/auto-lab/tree/main/lean" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </footer>
+</body>
+</html>
