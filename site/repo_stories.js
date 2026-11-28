@@ -12,9 +12,9 @@
       headline: 'When two papers or labmates disagree, surface the evidence behind each claim and name the experiment that settles it.',
       why: 'Most AI co-scientists rush to pick a winner. In real research, prematurely crowning one hypothesis hides the assumptions that actually need testing at the bench.',
       metrics: [
-        ['78.9%', 'gold rationale in top-3'],
-        ['188', 'SciFact claims tested'],
-        ['Symmetric', 'support & contradict'],
+        ['90.9%', 'gold rationale hit@3'],
+        ['90.7%', 'conformal stance cov'],
+        ['100%', 'ConflictBank detected'],
       ],
       playgroundPrompt: 'Pick a real scientific claim to see retrieved evidence & Socratic questions:',
       demos: [
@@ -46,9 +46,9 @@ Ask-Why Experiment Prompt:
         },
       ],
       tabs: {
-        how: 'Ranks every sentence in candidate abstracts against the claim using a zero-dependency NumPy BM25 scorer on the SciFact corpus (188 claims, 209 claim-abstract pairs), then pairs the top evidence spans with structured questions probing evidence, hidden assumptions, and mind-changing results.',
-        guarantee: 'Treats supporting claims (79.7% top-3 recall) and contradicting claims (77.5% top-3 recall) equally instead of confirming the user’s phrasing. Current baseline retrieves inside gold abstracts; multi-paper open retrieval is the next step.',
-        status: 'Merged on `main` (`b8a9d51`, 70 passing tests): SciFact dev baseline plus 14-dataset 2019-2026 claim/conflict registry (`LABBench2`, `PeerQA-XT`, `SciVer`, `ConflictBank`, `ChemBench`) with `eval_only` canary guards.',
+        how: 'Combines a two-stage `FrontierHybridVerifier` (`Reciprocal Rank Fusion` of biomedical `BM25` + 96-dim subword LSA + `EntityNumericNegationIndex` followed by a 26-feature `CrossFeatureReranker` and `SplitConformalStanceClassifier`) with structured Socratic `why_questions` and control-well synthesis.',
+        guarantee: 'Trained strictly on `SciFact` `train` (`0` dev overlap, eval docs excluded from IDF): lifts dev `hit@3` `0.818 -> 0.909`, reaches `90.7%` 3-way conformal coverage and `100.0%` `ConflictBank` detection, and fails closed on malformed negative certificates.',
+        status: 'Merged on `main` (`6f4887a` + `LabAskWhyLean` CI): 8-corpus SHA-256-verified real benchmark (`SciFact`, `PubMedQA`, `ConflictBank`, `FaithEval-Inconsistent`, `CLAIMCHECK`, `SciVer`, `ChemBench`, `LitQA2`) and 14-dataset registry.',
       },
     },
 
@@ -56,9 +56,9 @@ Ask-Why Experiment Prompt:
       headline: 'Give calibrated error bars when a molecule is in familiar territory—and explicitly say "I don’t know" when it isn’t.',
       why: 'Standard regression models happily output confident solubility or yield numbers on chemistry completely outside their training set, wasting expensive bench runs.',
       metrics: [
-        ['92.2%', 'coverage inside trust zone'],
-        ['0.66 vs 0.89', 'MAE inside vs outside'],
-        ['20.4%', 'out-of-domain abstained'],
+        ['92.4%', '20-seed ESOL cov_in'],
+        ['11 / 11', 'informative real gates'],
+        ['0.000', 'campaign OOD picks'],
       ],
       playgroundPrompt: 'Query a candidate molecule against the calibrated ESOL trust gate:',
       demos: [
@@ -97,9 +97,9 @@ Round 3 : Calibration holds near ≥90% target while in-region MAE stays ~0.64.`
         },
       ],
       tabs: {
-        how: 'Trains a gradient-boosted regressor on six molecular descriptors from Delaney’s 1,128-compound ESOL dataset (ignoring the file’s own linear ESOL column), calibrates ±q intervals on a held-out split at 90% nominal coverage, and gates answers by 5-nearest-neighbor distance.',
-        guarantee: 'Never silently extrapolates outside its distance threshold, and reports inside vs outside accuracy separately so coverage gains from shrinking the test pool are never misread as generalization.',
-        status: 'Merged on `main` (`e37de97`, 68 passing tests): Delaney ESOL plus 10 open calibration datasets (`BigSolDB v2.2`, `AqSolDB`, `CALiSol-23`, `FreeSolv`, `Biogen ADME`, `BH-HTE-OOD 2026`) with strict leakage-column exclusion.',
+        how: 'Pairs Huber GBDT and `LightGBM` surrogates with Mondrian `cqr_r` intervals, `onehot_morgan` HTE encodings, train-only `ensemble_mahalanobis` kNN gating, deterministic balanced group-packing splits (`<= 0.67` pp error), and 6-round sequential BO campaigns (`tr_conformal_ucb`, `lightgbm_cqr_tr_ucb`).',
+        guarantee: 'Achieves `11/11` `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`) across all 11 real CSV benchmarks, scores `autolab_wire` candidates with the frozen SHA-pinned ESOL model (`n_calib = 169`, `thr = 0.6750`), and never widens `tau` on high-residual entries.',
+        status: 'Merged on `main` (`f72af29`, 23 Lean 4.36.0 `#print axioms` theorems): 20-seed ESOL (`92.4%` inside cov), 11-dataset real-CSV benchmark, and 10-seed BO campaigns (`0.000` OOD picks, `0.10` Doyle B-H regret).',
       },
     },
 
@@ -107,8 +107,8 @@ Round 3 : Calibration holds near ≥90% target while in-region MAE stays ~0.64.`
       headline: 'Before planning a synthesis, check if you can simply buy the molecule—or make it in two steps from cheap catalog building blocks.',
       why: 'An autonomous lab shouldn’t spend two days synthesizing a compound sold for $15, nor trust hallucinated vendor prices when public catalogs omit pricing.',
       metrics: [
-        ['5 ms', 'cached check / molecule'],
-        ['14', '2-step retro templates'],
+        ['69.2%', 'Retro* 5-step solve'],
+        ['43.0%', 'USPTO-50K top-10'],
         ['Strict null', 'never invents prices'],
       ],
       playgroundPrompt: 'Test how candidate molecules are triaged:',
@@ -148,9 +148,9 @@ Guarantee   : Unverified molecules stay "unknown" or "invalid"—never guessed a
         },
       ],
       tabs: {
-        how: 'Queries live PubChem Chemical Vendors (rate-limited with SQLite caching) and local stock files (ZINC, eMolecules, Mcule, Enamine), scores synthetic complexity with RDKit SA_Score and MIT SCScore, and searches 2-step RDKit SMARTS disconnections (or optional AiZynthFinder MCTS).',
-        guarantee: 'Strictly separates vendor existence from price: missing catalog prices stay null, mixed currencies or incompatible pack units are never compared, and every external data source carries an explicit commercial/redistribution license record aligned with assayfold.',
-        status: 'Merged on `main` (`3be1f4a`, 65 passing tests): 19 SPDX-audited sources (`PaRoutes 2.0`, `ChEMBL 37`, `SureChEMBL`, `COCONUT 2.0`, `ORDerly`, `Syntheseus USPTO-50K`, `SynPlanner`), 5 JSON Schemas, and 20-molecule CPU benchmark.',
+        how: 'Combines SQLite-cached PubChem/local vendor stock lookup with a `Retro*` best-first AND-OR multi-step planner (`44` atom-balanced acyclic/unimolecular SMARTS templates + train/val `USPTO-50K` lookup), unit-aware `USD/g` & MOQ cost bounds, and `SAscore`/`SCScore`.',
+        guarantee: 'Missing catalog prices stay `null`, `USPTO-50K` test reactions have `0` index leakage, `BuyOrMakeLean` Lean 4.36.0 theorems audit stoichiometry and budget soundness in CI, and wire outputs stamp explicit `data_source` provenance.',
+        status: 'Merged on `main` (`ec33997` + `BuyOrMakeLean` CI): `Retro*` lifts 240-target `PaRoutes n1/n5` + `SynPlanner` solve rate `2.1% -> 69.2%` (`10/10` convergent) and 500-target `USPTO-50K` top-10 `16.6% -> 43.0%` across 19 SPDX-gated sources.',
       },
     },
 
@@ -198,9 +198,9 @@ job_01 Gantt   : L[0–18] -> L[18–28] -> I[29–56] -> R[58–62]  (all min/m
       headline: 'Keep a clean, link-checked map of real liquid handlers, cloud labs, open protocol languages, and benchmarks.',
       why: 'Lab automation standards are fragmented across vendor silos and academic formats; this index maps what already exists so we build adapters instead of reinventing formats.',
       metrics: [
-        ['4', 'curated reference tables'],
-        ['27+', 'verified platforms & DSLs'],
-        ['Weekly', 'automated link health'],
+        ['84', 'typed entries (7 cats)'],
+        ['335', 'Lean #eval parity'],
+        ['Weekly', 'DNS-pinned SSRF check'],
       ],
       playgroundPrompt: 'Browse the four layers of the open automation ecosystem:',
       demos: [
@@ -236,9 +236,9 @@ Benchmarks : LAB-Bench (CC-BY-SA-4.0, eval-only) · BioProBench (non-commercial)
         },
       ],
       tabs: {
-        how: 'Curates four concise Markdown tables linking hardware vendors, remote cloud labs, open-source software stacks, and protocol datasets, backed by a scheduled link-checking script in `.github/workflows/`.',
-        guarantee: 'Strictly pointer-only: copies zero external data, claims no vendor partnerships or rankings, and reminds callers to verify per-dataset licenses before training.',
-        status: 'Merged on `main` (`3b7d259`, 123 passing tests): 70-entry `atlas.json` (17 open datasets including `FineBio`, `ChemBench`, `BixBench`, `MassSpecGym`, `COD/ROD`, `OMAT24`, `DROID`) across 160 live-checked HTTPS links.',
+        how: 'Resolves hardware capability profiles and protocol IRs from an 84-entry `atlas.json` across 7 categories, evaluates compound SPDX (`AND`/`OR`/`WITH`) + `parent_licenses` lineage in 1-to-1 parity with `LabAtlasLean`, and runs DNS-pinned HTTPS SSRF link audits.',
+        guarantee: 'Strictly pointer-only (`0` redistributed data, `0` vendor rankings), blocking `eval_only`, non-commercial, and non-canonical IPv4/IPv6 URLs before training or autonomous ingestion.',
+        status: 'Merged on `main` (`b6455d9` + `LabAtlasLean` `#print axioms` & 335-case `#eval` parity CI): 84 verified entries across liquid handlers, cloud foundries, protocol IRs, `PyJobShop`/`LeRobot` solvers, procurement, and 2024-2026 open datasets.',
       },
     },
 
@@ -290,9 +290,9 @@ RUN      : BLOCKED by verify gate — 0 commands sent · logged to runs.jsonl`,
         },
       ],
       tabs: {
-        how: 'Simulates a virtual deck (96-well plate, 12-column reservoir, 96-tip rack, 20–300 uL pipette), hashes each incoming JSON protocol to recall prior outcomes from `runs.jsonl`, checks physical bookkeeping invariants, and writes every pass or failure back to memory.',
-        guarantee: 'Enforces a hard pre-execution barrier: broken runs (empty aspiration, out-of-range pipette volume, well overflow, tip cross-contamination) never emit hardware commands, and repeat submissions trigger immediate recall warnings.',
-        status: 'Merged on `main` (`4013323`, 64 passing tests): CPU 96-well bookkeeping twin plus 14-dataset 2024-2026 protocol catalog & converters (`Opentrons v6-v8`, `FineBio`, `BioPlanner`, `BioProBench`, `Matterix`, `WETOP-Bench`).',
+        how: 'Simulates 1- and 8-channel 96-well pipetting plus thermal evaporation (`incubate`/`seal`/`thaw`), hashes exact and skeleton trajectories against `runs.jsonl`, re-rehearses compiled `stepbot` IR via `from_stepbot`, and checks parity with the compiled Lean 4 `lab-rehearsal-check` binary.',
+        guarantee: 'Never silently caps over-capacity volumes (`requested_volume_not_rehearsable`), blocks any `from_stepbot` round-trip volume/tip mismatch, and preserves distinct deck slots on multi-labware Opentrons fixtures.',
+        status: 'Merged on `main` (`a889b23` + live `lab-rehearsal-check` Lean 4.36.0 differential CI): 6 bundled fixtures (`5/5` fault classes blocked), 12-run episodic ledger, and 14-dataset 2024-2026 protocol twin converters.',
       },
     },
 
@@ -300,9 +300,9 @@ RUN      : BLOCKED by verify gate — 0 commands sent · logged to runs.jsonl`,
       headline: 'Put a strict default-deny checker in front of model-generated SQL, Lean proofs, and lab protocols.',
       why: 'Half of plausible-looking wrong SQL queries parse cleanly, are read-only, and use valid table names—yet still return the wrong scientific answer.',
       metrics: [
-        ['22 / 22', 'verdicts match ground truth'],
-        ['0 / 14', 'wrong queries slipped through'],
-        ['7 of 14', 'caught only at Layer 4'],
+        ['22 / 22', 'lab SQL agreement'],
+        ['931 + 232', 'real EHRSQL-2024'],
+        ['0', 'custom Lean axioms'],
       ],
       playgroundPrompt: 'Send a model-generated SQL query through the 4-layer gate:',
       demos: [
@@ -341,9 +341,9 @@ Key lesson: Syntax + schema gates alone let 7/14 wrong queries through; executio
         },
       ],
       tabs: {
-        how: 'Runs candidate SQL queries against a synthetic lab SQLite database (experiments, samples, instruments) through four sequential gates—`sqlglot` syntax parsing, AST read-only enforcement, table/column schema validation, and execution result verification—and links to the Lean 4 `LabLean` protocol checker in `YLM`.',
-        guarantee: 'Default-deny posture: anything unparsed, mutating (`DELETE`/`UPDATE`/`DROP`), schema-invalid, or failing behavioral checks is rejected with the exact first failing layer.',
-        status: 'Merged on `main` (`0c29ffc`, 106 passing tests): 22-candidate SQL gate + `lean-mcp/v1` runtime verifier + 16-benchmark 2024-2026 SQL & Lean 4 adapters (`Spider 2.0-Lite`, `BIRD`, `EHRSQL-2024`, `PutnamBench`, `ProofNet-Lean4`).',
+        how: 'Runs candidate SQL through a 4-layer gate (`sqlglot` parse, AST + authorizer read-only, schema/join check, and Hopcroft-Karp float multiset + tie-aware `ORDER BY`), compiles Lean 4 proofs under `#print axioms`, and mints/verifies Ed25519/HMAC `lean-mcp/v1` capability envelopes.',
+        guarantee: 'Rejects `"lean-mcp-dev-secret-v1"` by default, requires role-separated cryptographic supervisor co-signatures for frontier exceptions, and verifies NULL/date safety across 3 counterexample mutant DBs.',
+        status: 'Merged on `main` (`a286050` + Lean 4.36.0 `#print axioms` CI): `22/22` lab SQL agreement, `931/931` answerable + `232/232` unanswerable abstentions on 317,875-row MIMIC-IV `EHRSQL-2024`, and 16 open SQL/Lean adapters.',
       },
     },
 
@@ -391,9 +391,9 @@ Operator constraints     : Scores workspace AABB, joint limits & swept-point obs
         },
       ],
       tabs: {
-        how: 'Combines two tracks—Scientist (multimodal evidence QA, CALiSol-23 conductivity, BioProBench PQA/ORD/ERR/GEN) and Operator (JSON-Schema instrument calls, behavioral cloning, world model, spatial constraint checking)—packaged into the installable `labrl` library with `TorchLocalEngine` (CPU/1xGPU) and `NeMoRLEngine` (8xA100 recipes).',
-        guarantee: 'Strict scientific honesty: CPU smoke runs verify end-to-end training loops and reward audits today, while full A100/H100 training metrics remain explicitly marked `PENDING` until executed; `LAB-Bench` is strictly evaluation-only.',
-        status: 'Merged on `main` (`fbdd731`, 177 passing tests): Scientist & Operator benchmarks, CALiSol-23 RLVR suite, `labrl` CLI, 8 anti-hack templates, and 9-corpus 2024-2026 Open Science registry (`MassSpecGym`, `SMolInstruct`, `ORD`, `BixBench`).',
+        how: 'Unifies Scientist and Operator post-training inside `labrl` (`TorchLocalEngine` + pinned `yaniguan/RL` `NeMoRLEngine`) with per-token `k3` and `sequence_exact` Reverse-KL SFT anchoring, 8 `VerifiedRewardTemplate` classes, and `LabPostTrainLean` GDPO/KL checks.',
+        guarantee: 'Zero `cid|` fallbacks and zero cross-split scaffold/DOI leaks across 49,139 records, fail-closed `L3_WIRE_SCHEMA_REJECT` wire validation separating `CERTIFIED_POSITIVE` SFT from `CERTIFIED_NEGATIVE` DPO/MPO disproofs, and explicit `PENDING` status on A100/H100 runs (`#49`, `#18`).',
+        status: 'Merged on `main` (`8dd44de` + `LabPostTrainLean` CI): 15/15 CPU smoke jobs, PubChem-resolved Lab v0 splits, pinned `yaniguan/RL` launch contract, `sequence_exact` Reverse-KL, and 9-corpus 2026 Open Science registry.',
       },
     },
 
@@ -498,9 +498,9 @@ Intent-safe repair  : Repairs wrong_pipette, missing_tip, skip_thaw, sealed_plat
       headline: 'Read numbers cleanly out of protocol prose—and hear when a benchtop centrifuge or pump starts sounding wrong.',
       why: 'Instructions arrive as messy text ("spin at 12,000 rpm for 5 min at 4 °C"), while worn bearings or unbalanced rotors often hum abnormally before an instrument fails.',
       metrics: [
-        ['0.75–0.91', 'F1 on WLP protocol slots'],
-        ['< 20 ms', 'latency per 10 s audio clip'],
-        ['300–3400 Hz', 'human speech band dropped'],
+        ['0.876', 'WLP BIOES micro-F1'],
+        ['< 20 ms', 'latency per 10 s clip'],
+        ['300–3400 Hz', 'speech band dropped'],
       ],
       playgroundPrompt: 'Switch between the written-protocol channel and the machine-audio channel:',
       demos: [
@@ -529,9 +529,9 @@ Speed       : "12,000 x g"    (test F1 = 0.748 across 155 gold spans)`,
         },
       ],
       tabs: {
-        how: 'Provides a zero-learning regex span baseline evaluated on 125 BRAT-annotated test protocols from the MIT Wet Lab Protocols corpus (`main`), plus an unsupervised machine condition monitor (`Gaussian`, `kNN`, and dense `Autoencoder` over 64-bin log-mel spectrograms on DCASE 2023 fan/valve/bearing clips in PR #2).',
-        guarantee: 'Privacy by default in lab rooms: raw audio is never saved to disk, and `drop_speech_band=True` strips the 300–3400 Hz voice band while emitting step-linked JSONL alerts that can pause a run.',
-        status: 'Merged on `main` (`079b9bb`, 65 passing tests): WLP protocol parser, DCASE 2023 acoustic detectors, and 12-dataset 2024-2026 sensory & protocol registry (`DCASE 2024-2026`, `IMAD-DS 2024`, `MIMII`, `ChemBench`, `BioProBench`, `ProtoAct`).',
+        how: 'Pairs a zero-leakage 17-state `PA-II` `BIOES` sequence tagger (`0.876` exact / `0.897` overlap test micro-F1; `0.875` on SHA-unseen protocols) and regex baseline on WLP with window-matched `2 s` streaming `Gaussian`/`kNN`/`Autoencoder` detectors and harmonic-speech-rejecting cavitation interlocks.',
+        guarantee: 'Fail-closed `L2_SPEECH_PRIVACY_BLOCK` wire gate rejecting any attached acoustic or interlock event lacking `speech_band_dropped: True`, `raw_audio_saved: False`, and `retained_bands_hz: [[0, 255], [3464, 8000]]`.',
+        status: 'Merged on `main` (`eab305f` + `LabEarsLean` CI): zero-leakage WLP `BIOES` tagger, window-matched streaming calibration, harmonic-speech interlock rejection, and 12-dataset 2024-2026 sensory registry.',
       },
     },
 
@@ -665,9 +665,9 @@ Honest caveat   : NumPy dequantizes before matmul—storage drops 250x; real run
       headline: 'After a wet-lab run finishes, separate robot glitches and unreacted precursor peaks from proof-carrying scientific truth.',
       why: 'Pre-execution gates keep a robot from crashing, but raw readouts still lie: a dry pipette draw looks like a negative biochemical result, and overlapping precursor peaks look like a brand-new crystal phase.',
       metrics: [
-        ['25', 'Lean 4 theorems (0 sorry)'],
-        ['0.0%', 'false discovery rate'],
-        ['+44.9%', 'verified multi-ring hits'],
+        ['30', 'Lean 4 theorems (0 sorry)'],
+        ['51', 'pinned real spectra'],
+        ['0.0%', 'A-Lab & Raman FDR'],
       ],
       playgroundPrompt: 'Inspect how lab-attrib classifies post-run telemetry and spectra before touching scientific memory:',
       demos: [
@@ -695,9 +695,9 @@ Ledger   : Appended with SHA-256 chain receipt -> safe constraint for BO & RLVR.
         },
       ],
       tabs: {
-        how: 'Combines a 25-theorem Lean 4.36.0 blame calculus (`LabAttribLean`) with dual-backend projected-coordinate-descent NNLS spectral deconvolution, Expected Value of Information (`EVOI`) orthogonal assay routing, and SHA-256 hash-chained ledgers.',
-        guarantee: 'Proves `corrupted_run_never_poisons_memory`, `unidentifiable_spectrum_never_certified`, and `valid_tau_expansion_requires_certified_micro_probe`—preserving 96.4% conformal coverage across 9-round ESOL stepping-stone campaigns.',
-        status: 'Merged on `main` (`b8df8ef`, 75 unit tests): 15th Core Repository with 25 Lean 4 theorems, 5-page LaTeX monograph (`paper/main.pdf`), 11-phase XRD/Raman panel, and 9 open characterization datasets (`RRUFF`, `COD`, `MP-20`, `A-Lab GPSS`, `MassSpecGym`).',
+        how: 'Combines a 30-theorem Lean 4.36.0 blame calculus (`LabAttribLean`, `#print axioms` audited) with shift-tolerant Golden-Section + Pseudo-Voigt `L1-NNLS` XRD/Raman deconvolution, MS/MS Spectral Entropy + 2-component chimera detection, `EVOI` routing, and SHA-256 `CertifiedLedger` chains.',
+        guarantee: 'Benchmarked on 51 SHA-256-pinned real spectra (`A-Lab GPSS` XRD `0.0%` FDR & `75.0%` recall, `RRUFF/ROD` Raman `0.0%` FDR, `MassSpecGym` `82.4%` Top-1), while failing closed (`L4_ATTRIB_SCHEMA_REJECT`) on malformed wire telemetry.',
+        status: 'Merged on `main` (`9a4b119` + 30-theorem `LabAttribLean` CI): 51-asset real spectra benchmark, 9-round ESOL stepping-stone campaigns, 5-page LaTeX monograph (`paper/main.pdf`), and 9 open characterization datasets.',
       },
     },
   };

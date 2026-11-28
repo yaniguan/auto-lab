@@ -82,7 +82,7 @@
       headline: 'Unify scattered open chemistry, reaction, and wet-lab datasets under one SHA-256-sealed, license-gated schema.',
       why: 'Mixing incompatible units (`uM` vs `mol/L`) or non-commercial benchmarks into training pipelines causes silent errors and license breaches.',
       metrics: [
-        ['8', 'open lab corpora unified'],
+        ['27', 'open lab sources unified'],
         ['UCUM', 'strict unit normalizer'],
         ['SHA-256', 'license & split seal'],
       ],
