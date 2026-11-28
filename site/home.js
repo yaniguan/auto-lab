@@ -80,18 +80,18 @@
     },
     assayfold: {
       headline: 'Unify scattered open chemistry, reaction, and wet-lab datasets under one SHA-256-sealed, license-gated schema.',
-      why: 'Mixing incompatible units (`uM` vs `mol/L`) or non-commercial benchmarks into training pipelines causes silent errors and license breaches.',
+      why: 'Mixing incompatible units (`U` vs `u`, `mS` vs `ms`), cross-source duplicates, or `eval_only` benchmarks into RAG and training pipelines causes silent errors and contamination.',
       metrics: [
         ['27', 'open lab sources unified'],
-        ['UCUM', 'strict unit normalizer'],
-        ['SHA-256', 'license & split seal'],
+        ['UCUM', 'case-sensitive normalizer'],
+        ['SHA-256', 'rag/train & canary seal'],
       ],
       demos: [
         {
-          tab: 'Commercial Export Gate',
-          verdict: 'BLOCKED · Non-Commercial',
+          tab: 'RAG & Commercial Gate',
+          verdict: 'BLOCKED · Eval-Only / NC',
           verdictTone: 'fail',
-          output: 'Pydantic extra=forbid schema blocks eval_only and non-commercial records before export to downstream post-training.',
+          output: 'Blocks unsealed records, non-commercial sources, and eval_only benchmarks from train & RAG exports while preserving benchmark canaries (`scan-contamination`).',
         },
       ],
     },

@@ -6,17 +6,17 @@
       "url": "https://github.com/yaniguan/lab-ask-why",
       "layer": "L6",
       "layer_name": "Metacognitive & Epistemic Brain",
-      "tagline": "Socratic co-scientist combining two-stage hybrid RRF + 26-feature cross-feature reranking, 90% split-conformal 3-way stance verification, and structured control-well synthesis across 8 real corpora.",
+      "tagline": "Socratic co-scientist combining < 1.5 GB pure-NumPy Sparse Hybrid RRF + 26-feature reranking, optional CPU BGE + DeBERTa-v3 NLI verification, negative-control-audited bilateral conflict scoring, 90% Mondrian conformal stance sets, and fail-closed wire abstention across 8 real corpora.",
       "object": "Epistemic disagreement and rationale-probing module (`L6`) for the Auto-Lab brain: rather than collapsing scientific uncertainty into a binary verdict, it retrieves verbatim evidence sentences on each side of a claim, surfaces necessary assumptions, and frames the discriminating experimental result that would resolve the disagreement.",
-      "data": "Evaluates on SHA-256-verified SciFact (`809` train claims split `607` fit / `202` cal, `300` held-out dev claims with `0` claim-ID overlap, `209` evidence pairs across `5,183` abstracts; CC BY-NC 2.0, gitignored `data/`), an 8-corpus real downloaded benchmark (`results/open_benchmarks_2026.json`: `SciFact`, `PubMedQA`, `ConflictBank`, `FaithEval-Inconsistent`, `CLAIMCHECK`, `SciVer`, `ChemBench`, `LitQA2`), and a 14-dataset `OpenDatasetSpec` registry (`src/lab_ask_why/datasets.py`) with strict `eval_only` canary/training guards.",
-      "model": "Zero-parameter biomedical Okapi `BM25` baseline plus a 2-stage `FrontierHybridVerifier` (`Reciprocal Rank Fusion` of `BM25` + 96-dim subword TF-IDF Truncated-SVD `LSA` + `EntityNumericNegationIndex`, followed by a 26-feature `CrossFeatureReranker` and `SplitConformalStanceClassifier` over `{SUPPORT, CONTRADICT, NEI}`), paired with Socratic `why_questions` and falsifiable `synthesize_control_wells`.",
-      "training": "Trained strictly on `SciFact` `train_fit` (`607` claims) and calibrated on `train_calib` (`202` claims) with eval-abstract IDF exclusion (`93` dev docs excluded). Lifts held-out `SciFact` dev oracle rationale `hit@3` from `0.818` (`BM25`) and `0.528` (20-seed random) to `0.909` (`rationale_set_recall@3 = 0.876`, `hit@1 = 0.660`), achieves `0.907` empirical 90% split-conformal stance coverage, and reaches `100.0%` conflict detection on `ConflictBank` (`96.7%` on `FaithEval-Inconsistent`).",
-      "history": "Initialized in `6236123` (2026-11-18: SciFact `BM25` probe) -> `40af81d` (Phase-2 Lean 4 & `autolab-wire/v1`) -> `b8a9d51` (PR #31: 14-dataset 2024-2026 registry) -> `6f4887a` (PR #32: 2-stage hybrid reranker, split-conformal stance verifier, 8-corpus real benchmark, control-well synthesis, and Lean 4.36.0 parity CI).",
+      "data": "Evaluates on SHA-256-verified SciFact (`809` train claims split `607` fit / `202` cal, `300` held-out dev claims with `0` claim-ID overlap, `209` evidence pairs across `5,183` abstracts with `181` dev/cal abstracts excluded from Stage-1 IDF/SVD; CC BY-NC 2.0, gitignored `data/`), an 8-corpus real downloaded benchmark (`results/open_benchmarks_2026.json`: `SciFact`, `PubMedQA`, `ConflictBank`, `FaithEval-Inconsistent`, `CLAIMCHECK`, `SciVer`, `ChemBench`, `LitQA2`) with matched single-passage negative controls and majority/chance baselines, and a 14-dataset `OpenDatasetSpec` registry (`src/lab_ask_why/datasets.py`) with strict `eval_only` canary guards.",
+      "model": "Three-tier auditable stack: (1) zero-parameter biomedical Okapi `BM25`, (2) `< 1.5 GB` RSS pure-NumPy CSR `FrontierHybridVerifier` (`Reciprocal Rank Fusion` of `BM25` + 96-dim subword TF-IDF Truncated-SVD `LSA` + `EntityNumericNegationIndex`, 26-feature `CrossFeatureReranker`, Mondrian `SplitConformalStanceClassifier` over `{SUPPORT, CONTRADICT, NEI}`, and bilateral cross-passage conflict scorer), and (3) optional CPU `NeuralBiEncoderNliVerifier` (`BAAI/bge-small-en-v1.5` + `cross-encoder/nli-deberta-v3-small` NLI), paired with Socratic `why_questions` and `synthesize_control_wells`.",
+      "training": "Fit and calibrated strictly once on `SciFact train` (`607` fit / `202` cal; `181` dev/cal docs excluded from IDF/SVD). `FrontierHybridVerifier` lifts held-out `SciFact dev` oracle rationale `hit@3` to `0.909` (`hit@1 = 0.660`, `MRR = 0.793`, `set_recall@3 = 0.880`, Official Wadden Abstract F1 `0.340`, `91.7%` 90% Mondrian coverage) and achieves `0.000` single-passage negative-control FPR (`0.550` TPR, `0.975` AUROC on `ConflictBank CB_qa`; `0.840` AUROC on `FaithEval-Inconsistent`), while `NeuralBiEncoderNliVerifier` reaches `0.900` open-corpus `doc_recall@5` and `0.590` 3-way Stance Macro-F1 (`0.782` `ConflictBank` pairs, `0.657` `SciVer`, `0.593` `LitQA2`, `90.3%` Mondrian coverage).",
+      "history": "Initialized in `6236123` (2026-11-18: SciFact `BM25` probe) -> `40af81d` (Lean 4 & `autolab-wire/v1`) -> `b8a9d51` (PR #31: 14-dataset registry) -> `6f4887a` (PR #32: hybrid reranker & 8-corpus benchmark) -> `7f945fa` (PR #37: `check_ask_why_permille` wire abstention with zero silent aspirin fallback, negative-control bilateral conflict scoring, `< 1.5 GB` pure-NumPy CSR SVD, Official SciFact metrics, and `NeuralBiEncoderNliVerifier`).",
       "unique_properties": [
-        "Two-stage Hybrid RRF + 26-feature `CrossFeatureReranker` lifting held-out SciFact dev `hit@3` to `0.909` (`0.876` full rationale-set recall@3) with zero LLM API calls.",
-        "Split-conformal 3-way stance sets (`{SUPPORT, CONTRADICT, NEI}`, `90.7%` empirical dev coverage at `alpha = 0.10`) detecting `100.0%` of conflicting `ConflictBank` contexts vs `0.0%` forced-binary collapse.",
-        "Fail-closed `autolab_wire.py` (`L6_MALFORMED_NEGATIVE_CERTIFICATE`) ingesting 64-hex SHA-256 `CERTIFIED_NEGATIVE` certificates from `lab-attrib` and synthesizing vehicle/precursor control wells.",
-        "Lean 4.36.0 `LabAskWhyLean` formal floor-permille & multi-claim consistency proofs verified in CI alongside strict `data_source` (`real_downloaded` vs opt-in `synthetic_fixture`) provenance."
+        "Negative-control-audited bilateral conflict scoring achieving `0.000` single-passage negative-control FPR (`0.550` TPR, `0.975` AUROC on `ConflictBank CB_qa`; `0.840` AUROC on `FaithEval-Inconsistent`) alongside majority/chance baselines and per-class Wilson CIs.",
+        "Chunked `< 1.5 GB` RSS pure-NumPy CSR `FrontierHybridVerifier` (`0.909` `hit@3`, `0.340` Official Abstract F1) paired with optional CPU `NeuralBiEncoderNliVerifier` (`0.900` `doc_recall@5`, `0.590` SciFact & `0.782` ConflictBank Macro-F1).",
+        "Fail-closed `autolab_wire.py` enforcing `check_ask_why_permille` (`>= 0.35` NOINFO floor + `>= 1` shared content word, zero silent aspirin fallback), `scifact_wire_calibrator.json` (`alpha = 0.10`), and `L6_MALFORMED_NEGATIVE_CERTIFICATE`.",
+        "21 Lean 4.36.0 `LabAskWhyLean` theorems (`0 sorryAx`, `160/160` `#eval` Python parity cases) audited in CI alongside live SciFact number checks."
       ],
       "io_contract": {
         "inputs": "Scientific claims (`claims_dev.jsonl`) and sentence-segmented literature abstracts (`corpus.jsonl`)",
@@ -24,51 +24,51 @@
       },
       "key_metrics": [
         {
-          "label": "Held-Out SciFact Dev Rationale Ranking",
-          "value": "0.909 hit@3 | 0.876 set recall@3 (hybrid)",
-          "note": "vs 0.818 hit@3 (BM25) and 0.528 (20-seed random) across 209 dev pairs (0 train/dev overlap)"
+          "label": "Held-Out SciFact Dev Retrieval & Official F1",
+          "value": "0.909 hit@3 | 0.900 doc_recall@5 | 0.340 Official F1",
+          "note": "Sparse Hybrid 0.660 hit@1, 0.793 MRR (<1.5 GB NumPy); Neural BGE+DeBERTa 0.590 Stance Macro-F1"
         },
         {
-          "label": "Split-Conformal 3-Way Stance & Conflict Detection",
-          "value": "90.7% SciFact cov | 100.0% ConflictBank",
-          "note": "96.7% multi-answer conflict detection on FaithEval-Inconsistent (vs 17.7% BM25 polarity)"
+          "label": "Negative-Control Conflict & Mondrian Conformal",
+          "value": "0.000 neg-ctrl FPR (0.975 AUROC) | 91.7% / 90.3% cov",
+          "note": "ConflictBank CB_qa 0.775 bal acc (0.000 FPR); Neural 0.782 ConflictBank pairs & 0.657 SciVer Macro-F1"
         },
         {
-          "label": "Verified Real Open-Corpus Suite",
-          "value": "8 SHA-256 corpora run | 14 registered",
+          "label": "Verified Real Open-Corpus Suite & Lean 4 CI",
+          "value": "8 SHA-256 corpora | 21 Lean theorems (160/160 parity)",
           "note": "SciFact, PubMedQA, ConflictBank, FaithEval, CLAIMCHECK, SciVer, ChemBench & LitQA2"
         }
       ],
-      "commit_head": "6f4887a",
-      "issue_count": 28,
+      "commit_head": "7f945fa",
+      "issue_count": 32,
       "concise": {
         "hook": "Does not pick a winner—surfaces opposing evidence, conformal stance sets, and mind-changing tests.",
         "flow": [
           "Claim + 5,183 abstracts",
-          "Hybrid RRF + 26-feat reranker",
+          "Sparse Hybrid / BGE+DeBERTa NLI",
           "Conformal stance + control wells"
         ],
         "kpis": [
           [
             "0.909",
-            "SciFact hit@3 (reranker)"
+            "SciFact hit@3 (hybrid)"
           ],
           [
-            "8 / 14",
-            "real / indexed corpora"
+            "0.000",
+            "neg-ctrl conflict FPR"
           ],
           [
-            "90.7%",
-            "conformal stance cov"
+            "0.900",
+            "BGE+NLI doc_recall@5"
           ]
         ],
         "short": {
           "object": "Surface supporting/contradicting rationales, conformal stance sets, and falsifiable control wells.",
-          "data": "SciFact (0 train/dev overlap) + 8 real SHA-256 benchmarks (ConflictBank, FaithEval, SciVer, LitQA2) & 14-corpus registry.",
-          "model": "2-stage Hybrid RRF (BM25 + 96d LSA + entity/negation) + 26-feature CrossFeatureReranker & SplitConformalStanceClassifier.",
-          "training": "SciFact train-only fit (607 fit / 202 cal): lifts dev hit@3 0.818 -> 0.909 (set recall@3 0.876) & ConflictBank 100%.",
-          "history": "6236123 SciFact BM25 -> b8a9d51 14-dataset registry -> 6f4887a hybrid reranker, conformal verifier & Lean 4 CI.",
-          "property": "90.7% 3-way conformal stance coverage, 100% ConflictBank detection, and fail-closed CERTIFIED_NEGATIVE wire ingest."
+          "data": "SciFact (0 train/dev overlap, 181 docs excluded) + 8 real SHA-256 benchmarks & 14-corpus registry.",
+          "model": "<1.5 GB NumPy FrontierHybridVerifier + bilateral conflict scorer + CPU NeuralBiEncoderNliVerifier (BGE + DeBERTa-v3).",
+          "training": "SciFact train-only fit (607/202): 0.909 hit@3 (0.340 Official F1), 0.900 neural doc_recall@5 & 0.000 neg-ctrl FPR.",
+          "history": "6236123 SciFact BM25 -> 6f4887a hybrid reranker -> 7f945fa checkAskWhy wire gate, neg-ctrl conflict & BGE+DeBERTa NLI.",
+          "property": "0.000 single-passage negative-control FPR (0.975 ConflictBank AUROC) and zero silent wire fallback."
         }
       }
     },
@@ -77,17 +77,17 @@
       "url": "https://github.com/yaniguan/lab-decide",
       "layer": "L6",
       "layer_name": "Metacognitive & Epistemic Brain",
-      "tagline": "Calibrated conformal decision gate & sequential BO campaign advisor with balanced group-packing splits, HTE Morgan+Mahalanobis CQR-r gating, and an ESOL-fitted autolab_wire node.",
+      "tagline": "Calibrated conformal decision gate & sequential BO advisor with 1,416-dim RDKit 2D+Morgan FrontierEnsembleRegressor (-38.5% MAE vs Delaney 2004), HTE CQR-r gating, and an ESOL-fitted autolab_wire node.",
       "object": "Epistemic decision and applicability-domain layer (`L6`) under the Auto-Lab brain: delivers distribution-free calibrated prediction intervals inside its trusted chemical/experimental manifold, emits explicit 'I don't know' abstentions outside it, and recalibrates as new laboratory measurements expand the boundary.",
-      "data": "Evaluates on SHA-256-pinned Delaney ESOL (`1,123` deduplicated compounds split `561` train / `224` pool / `169` cal / `169` test, excluding pre-fitted `ESOL predicted`) and commits `results/registry_benchmark.json` across all 11 real CSV datasets (`ESOL`, `AqSolDB` 9,982, `BigSolDB v2.2` 125,752, `CALiSol-23` 13,825, `FreeSolv` 642, `AstraZeneca Lipophilicity` 4,200, `Biogen ADME` 3,521, `Buchwald-Hartwig Doyle`, `Suzuki-Miyaura Perera`, `Direct Arylation Shields`, and `BH-HTE-OOD 2026`) with explicit `group_keys` and zero regex fallbacks.",
-      "model": "Huber `GradientBoostingRegressor` / `LightGBM` surrogates paired with finite-sample Mondrian Split Conformal and locally scaled `cqr_r` (`LabDecideLean.conformalRank`, 23 Lean 4.36.0 theorems with `#print axioms` CI), `onehot_morgan` HTE encodings + train-only sub-bagged `ensemble_mahalanobis` kNN gating, deterministic balanced group-packing splits (`<= 0.67` pp error), and multi-round sequential BO (`tr_conformal_ucb`, `lightgbm_cqr_tr_ucb`).",
-      "training": "Across 20 ESOL seeds, selective Mondrian conformal achieves `0.924 +- 0.028` inside coverage (`MAE_in 0.581 +- 0.040` vs `MAE_out 1.002 +- 0.161`; `seed=0` `0.936` inside cov, `MAE_in 0.640` vs `1.217`). Across all 11 real datasets, `11/11` achieve `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`). In 10-seed x 6-round BO campaigns (`results/campaign_benchmark.json`), trust-region conformal policies maintain `0.000` OOD picks and reach `0.10` simple regret on Doyle Buchwald-Hartwig (`0.00` on Shields Direct Arylation).",
-      "history": "Initialized in `41dae77` (2026-11-18: ESOL conformal demo) -> `6957f12` (Phase-2 Lean 4 & wire) -> `e37de97` (PR #31: 11-dataset registry) -> `f72af29` (PR #36: balanced group-packing splits, HTE `onehot_morgan` + `ensemble_mahalanobis` + `cqr_r` across 11 real CSVs, 10-seed sequential BO campaigns, frozen ESOL `autolab_wire`, and 23-theorem Lean CI).",
+      "data": "Evaluates on SHA-256-pinned Delaney ESOL (`1,123` deduplicated compounds split `561` train / `224` pool / `169` cal / `169` test under both `1,416`-dim `rdkit_2d_morgan` and no-RDKit `6`-descriptor modes, excluding pre-fitted `ESOL predicted` during training) and commits `results/registry_benchmark.json` across all 11 real CSV datasets (`ESOL`, `AqSolDB` 9,982, `BigSolDB v2.2` 117,043, `CALiSol-23` 13,222, `FreeSolv` 642, `AstraZeneca Lipophilicity` 4,200, `Biogen ADME` 3,087, `Buchwald-Hartwig Doyle`, `Suzuki-Miyaura Perera`, `Direct Arylation Shields`, and `BH-HTE-OOD 2026`) with explicit `group_keys` and zero regex fallbacks.",
+      "model": "Semiparametric `FrontierEnsembleRegressor` (out-of-fold stacked analytic SVD Ridge + multi-scale dual-space RBF/RQ + Tanimoto Kernel Ridge with Cholesky LOOCV + residual/direct LightGBM over `1,416`-dim `rdkit_2d_morgan`) and Huber `GBDT`/`LightGBM` surrogates paired with Mondrian Split Conformal & `cqr_r` (`LabDecideLean.conformalRank`, 23 Lean 4.36.0 `#print axioms` theorems), `tanimoto_mahalanobis` & `ensemble_mahalanobis` kNN gating, deterministic balanced group-packing splits (`<= 0.67` pp error), and 6-round sequential BO (`tr_conformal_ucb`, `lightgbm_cqr_tr_ucb`).",
+      "training": "Across 20 ESOL seeds (`results/registry_benchmark.json`), `rdkit_2d_morgan + frontier_ensemble` achieves random-split test `MAE_all 0.422 +- 0.028` (`RMSE 0.582`, `R^2 0.918 +- 0.013`), beating Delaney's (2004) 4-term linear formula (`0.686 +- 0.029`) by `38.5%` and 6-desc GBDT (`0.661`) by `36.1%`, with `cov_in 0.904 +- 0.030` and `MAE_in 0.378` vs `MAE_out 0.610` (`20/20` seeds `MAE_in < MAE_out`), and beats Delaney (2004) on 20-seed balanced scaffold splits (`0.808` vs `0.832` in-sample / `1.083` refitted OLS). Across all 11 real datasets, `11/11` achieve `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`), and 10-seed x 6-round BO campaigns maintain `0.000` OOD picks (`0.10` Doyle B-H regret).",
+      "history": "Initialized in `41dae77` (2026-11-18: ESOL conformal demo) -> `6957f12` (Lean 4 & wire) -> `e37de97` (PR #31: 11-dataset registry) -> `f72af29` (PR #36: balanced group-packing splits, HTE `onehot_morgan` + `cqr_r`, 10-seed BO, and 23-theorem Lean CI) -> `93db11e` (PR #37: 1,416-dim `rdkit_2d_morgan + FrontierEnsembleRegressor`, 20-seed Delaney-2004 random/scaffold head-to-head, 5-corpus single-molecule upgrades, and upgraded `autolab_wire` surrogate).",
       "unique_properties": [
-        "Achieves `11/11` `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`) across all 11 real solubility, solvation, ADME, and HTE reaction benchmarks via `onehot_morgan` + `ensemble_mahalanobis` + `cqr_r`.",
+        "1,416-dim `rdkit_2d_morgan + FrontierEnsembleRegressor` beating Delaney (2004) by `38.5%` on 20-seed ESOL random splits (`MAE_all 0.422`, `MAE_in 0.378`, `R^2 0.918`, `cov_in 90.4%`) and on 20-seed Bemis-Murcko scaffold splits (`0.808` vs `0.832` / `1.083`).",
+        "Achieves `11/11` `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`) across all 11 real solubility, solvation (`FreeSolv` `MAE_in 0.41`), ADME (`Biogen` `0.34`), and HTE reaction benchmarks.",
         "10-seed x 6-round sequential BO campaigns (`results/campaign_benchmark.json`) achieving `0.000` OOD picks and lowest Doyle B-H simple regret (`0.10 +- 0.16` vs `0.21` greedy & `3.29` GP-EI).",
-        "Deterministic balanced group-packing (`scaffold` & `group`) within `0.67` percentage points of target `50/20/15/15` split fractions across 20 ESOL seeds, plus `no-rdkit` & 23-theorem Lean `#print axioms` CI.",
-        "Frozen SHA-pinned ESOL `ConformalTrustModel` in `autolab_wire.py` (`n_calib = 169`, `thr = 0.6750`), scoring RDKit SMILES directly and expanding `tau` strictly on low-residual `(descriptors, measured_y)` ledger entries."
+        "Frozen SHA-pinned ESOL `ConformalTrustModel` in `autolab_wire.py` (`rdkit_2d_morgan + frontier_ensemble`, `n_calib = 169`, `thr = 0.6750`), expanding `tau` strictly on low-residual certified ledger entries."
       ],
       "io_contract": {
         "inputs": "6D molecular/experimental descriptor vectors (`Minimum Degree`, `Molecular Weight`, `H-Bond Donors`, `Rings`, `Rotatable Bonds`, `Polar Surface Area`) and measured log solubility targets (`delaney-processed.csv`)",
@@ -95,14 +95,14 @@
       },
       "key_metrics": [
         {
-          "label": "20-Seed ESOL Selective Conformal Gate",
-          "value": "0.924 +- 0.028 cov_in | 0.581 vs 1.002 MAE",
-          "note": "Seed-0 4-way split (561/224/169/169): 0.936 inside coverage, MAE_in 0.640 vs MAE_out 1.217"
+          "label": "20-Seed ESOL vs. Delaney (2004) Formula",
+          "value": "0.422 MAE_all (-38.5% vs 0.686) | 0.378 MAE_in | R^2 0.918",
+          "note": "90.4% inside coverage (width 1.633, 20/20 seeds MAE_in < MAE_out); scaffold MAE 0.808 vs 0.832 / 1.083"
         },
         {
           "label": "11-Dataset Real-CSV Registry Benchmark",
           "value": "11 / 11 gate_informative (5/5 seeds MAE_in < MAE_out)",
-          "note": "Includes Doyle B-H (Spearman +0.323), Perera Suzuki (+0.258), Shields (+0.636), and BH-HTE-OOD (+0.409)"
+          "note": "FreeSolv MAE_in 0.41, AqSolDB 0.58, Lipophilicity 0.42, Biogen 0.34 & Doyle/Perera/Shields/BH-OOD HTE"
         },
         {
           "label": "Sequential 6-Round BO Campaigns (10 Seeds)",
@@ -110,19 +110,19 @@
           "note": "lightgbm_cqr_tr_ucb & tr_conformal_ucb reach 0.004 regret on ESOL and 0.00 on Shields Direct Arylation"
         }
       ],
-      "commit_head": "f72af29",
+      "commit_head": "93db11e",
       "issue_count": 32,
       "concise": {
         "hook": "Answers inside its calibrated chemical manifold, abstains outside, and expands safely across BO rounds.",
         "flow": [
-          "RDKit / HTE encodings",
-          "GBDT/LGBM + CQR-r + Mahalanobis",
+          "1,416d RDKit 2D+Morgan / HTE",
+          "FrontierEnsemble + CQR-r",
           "90% interval or L6_ABSTAIN"
         ],
         "kpis": [
           [
-            "92.4%",
-            "20-seed ESOL cov_in"
+            "0.422",
+            "ESOL MAE (-38.5% vs Delaney)"
           ],
           [
             "11 / 11",
@@ -135,11 +135,11 @@
         ],
         "short": {
           "object": "Gate experiment proposals and sequential BO campaigns by Mondrian conformal intervals and kNN distance.",
-          "data": "SHA-pinned ESOL (561/224/169/169) + 11 real-CSV corpora (BigSolDB v2.2, CALiSol-23, FreeSolv, Doyle/Perera/Shields HTE).",
-          "model": "Huber GBDT/LightGBM + Mondrian CQR-r + ensemble-Mahalanobis kNN + balanced group-packing splits (<=0.67 pp err).",
-          "training": "11/11 real datasets gate_informative=True (5/5 seeds MAE_in < MAE_out) + 10-seed x 6-round BO campaigns.",
-          "history": "41dae77 ESOL demo -> e37de97 11-dataset registry -> f72af29 balanced splits, HTE CQR, BO campaigns & ESOL wire.",
-          "property": "0.000 OOD picks in 6-round BO (0.10 Doyle regret) and residual-gated ESOL ConformalTrustModel on autolab_wire."
+          "data": "SHA-pinned ESOL (561/224/169/169) + 11 real-CSV corpora (AqSolDB, BigSolDB v2.2, FreeSolv, Doyle/Perera/Shields HTE).",
+          "model": "1,416d rdkit_2d_morgan + FrontierEnsembleRegressor (Ridge + KRR + LGBM) + Tanimoto-Mahalanobis CQR-r.",
+          "training": "20-seed ESOL MAE 0.422 (MAE_in 0.378, R^2 0.918, -38.5% vs Delaney 0.686), 11/11 informative gates & 10-seed BO.",
+          "history": "41dae77 ESOL demo -> f72af29 balanced splits & BO -> 93db11e rdkit_2d_morgan FrontierEnsembleRegressor & Delaney bench.",
+          "property": "Beats Delaney (2004) on both random (-38.5%) & scaffold splits with 0.000 OOD BO picks (0.10 Doyle regret)."
         }
       }
     },
@@ -148,17 +148,17 @@
       "url": "https://github.com/yaniguan/buy-or-make",
       "layer": "L5",
       "layer_name": "Executive Planning, Procurement & Scheduling",
-      "tagline": "Cost-aware vendor availability and Retro* multi-step retrosynthesis planner with strict listed-price lower bounds, PaRoutes/USPTO-50K benchmarks, and Lean 4.36.0 stoichiometry proofs.",
+      "tagline": "Cost-aware in-stock vendor availability and zero-target-leakage Retro* multi-step retrosynthesis planner with unit-separated USD/g vs MOQ outlay bounds, PaRoutes/USPTO-50K benchmarks, and 175-case Lean 4.36.0 parity.",
       "object": "Verifies whether candidate molecules proposed by L6/L5 scientific planners (lab-ask-why, lab-decide) are directly purchasable from chemical vendors or makeable in N steps from purchasable building blocks, computing conservative leaf-only stoichiometric cost lower bounds strictly from real listed catalog prices while keeping missing prices null and unverified molecules unknown.",
-      "data": "19 SPDX-audited external sources (`buyormake/sources.py` + `buyormake/open_corpora.py`: PubChem, ZINC, Enamine, eMolecules, Mcule, `PaRoutes 2.0` `n1`/`n5`, `SynPlanner`, `Syntheseus USPTO-50K` with `0` test leakage, `ChEMBL 37`, `SureChEMBL`, `COCONUT 2.0`, `ORDerly`, `ORD`), SHA-256-verified `results/retrosynthesis_benchmark.json` (240 multi-step + 500 single-step targets), and 5 strict JSON Schemas (`extra='forbid'`).",
-      "model": "RDKit canonical/InChIKey + desalting normalizer, throttled SQLite-cached `PubChemVendorBackend` + multi-format `LocalStockBackend`, `Retro*` best-first AND-OR multi-step search (`buyormake/retro_star.py`: 44 atom-balanced acyclic & unimolecular FGI SMARTS templates + train/val `USPTO-50K` lookup), unit-aware `USD/g` leaf-cost & MOQ estimator, and `BuyOrMakeLean` Lean 4.36.0 stoichiometry/budget proofs.",
-      "training": "Zero in-repo neural training; combines `Retro*` cost-guided search with frozen MIT Reaxys `SCScore` weights (`6.18 MB`). On the 240-target multi-step benchmark (`PaRoutes n1`, `PaRoutes n5`, `SynPlanner`), `Retro*` (`max_steps=5`) lifts solve rate from `2.1%` (`5/240`, 2-step baseline) to `69.2%` (`166/240`, `10/10` convergent `PaRoutes`), and lifts 500-target held-out `USPTO-50K` top-10 accuracy from `16.6%` to `43.0%`.",
-      "history": "Initial release `76991c8` (2026-11-18: `buyormake` CLI, 5 JSON Schemas, 20-molecule demo) -> `5fd1afb` (PR #32: `BuyOrMakeLean` & `autolab-wire/v1`) -> `3be1f4a` (PR #33: 19-source 2024-2026 corpora) -> `ec33997` (PR #34: `Retro*` multi-step AND-OR planner, 44 atom-balanced templates, PaRoutes/SynPlanner/USPTO-50K benchmarks, and Lean 4.36.0 CI).",
+      "data": "19/19 SHA-256-pinned, SPDX-audited external sources (`buyormake/sources.py` + `buyormake/open_corpora.py`: PubChem, ZINC, Enamine, eMolecules, Mcule, `PaRoutes 2.0` `n1`/`n5`, `SynPlanner`, `Syntheseus USPTO-50K`, `ChEMBL 37`, `SureChEMBL`, `COCONUT 2.0`, `ORDerly`, `ORD`), leakage-audited `results/retrosynthesis_benchmark.json` (`240` multi-step targets with `all_target_product_inchikey_overlap = 0` + `500` held-out `USPTO-50K` test targets), and 5 strict JSON Schemas (`extra='forbid'`).",
+      "model": "RDKit canonical/InChIKey + desalting normalizer, `in_stock`-honoring SQLite-cached `PubChemVendorBackend` + `LocalStockBackend`, zero-target-leakage `Retro*` best-first AND-OR multi-step search (`buyormake/retro_star.py`: `100` atom-balanced acyclic, unimolecular FGI & ring-synthesis SMARTS templates + held-out `PaRoutes` / `USPTO-50K` train+val lookup), unit-separated `USD/g` vs discrete `USD` MOQ outlay estimator, and `BuyOrMakeLean` Lean 4.36.0 proofs.",
+      "training": "Zero in-repo neural training; combines `Retro*` cost-guided search with frozen MIT Reaxys `SCScore` weights (`6.18 MB`). With target reference trees and InChIKey connectivity strictly excluded (`0` overlap), `Retro*` (`max_steps=5`, `100` SMARTS) lifts 240-target multi-step solve rate from `2.1%` (`5/240`, 2-step baseline) to `30.0%` (`72/240`: `35.0%` `PaRoutes n1`, `43.8%` `PaRoutes n5`, `50.0%` convergent; vs `70.4%` non-headline reference-route upper bound), and lifts 500-target held-out `USPTO-50K` single-step accuracy from `11.4%` Top-1 / `16.6%` Top-10 to `17.6%` Top-1 / `49.4%` Top-10.",
+      "history": "Initial release `76991c8` (2026-11-18: `buyormake` CLI, 5 JSON Schemas, 20-molecule demo) -> `5fd1afb` (PR #32: `BuyOrMakeLean` & `autolab-wire/v1`) -> `3be1f4a` (PR #33: 19-source corpora) -> `ec33997` (PR #34: `Retro*` planner) -> `0d69702` (PR #39: zero-target-leakage `Retro*` benchmark + `100` SMARTS + 19/19 pinned digests, `in_stock=False` honesty, `USD/g` vs `USD` MOQ separation, default `require_complete_cost=True`, and 175-case Lean shipping-gate parity).",
       "unique_properties": [
-        "`Retro*` best-first AND-OR planner solving `69.2%` (`166/240`) of `PaRoutes n1/n5` & `SynPlanner` multi-step targets (`10/10` convergent routes) vs `2.1%` for 2-step lookup/SMARTS.",
-        "Strict `null`/`unknown` price honesty and `data_source` provenance (`synthetic_reference_catalog` vs real stock), never inventing unlisted vendor prices or leaking `USPTO-50K` test reactions.",
-        "Machine-checked `BuyOrMakeLean` Lean 4.36.0 theorems (`unpriced_never_passes_budget`, `routeStoichiometryOK`) compiled and audited in CI across every retrosynthetic template.",
-        "Exports `labshift` release-time / MOQ pack constraints (`to_procurement_constraint`) and `lab-attrib` precursor stoichiometry bases (`build_precursor_attribution_basis`)."
+        "Zero-target-leakage `Retro*` (`all_target_product_inchikey_overlap = 0`, `100` atom-balanced SMARTS) solving `30.0%` (`72/240`) overall and `43.8%` on `PaRoutes n5` (`49.4%` held-out `USPTO-50K` Top-10), explicitly separating the `70.4%` indexed-reference upper bound.",
+        "Out-of-stock catalog offers (`in_stock=False`) never count as `buyable` or schedulable now, and unpriced candidates fail active budget gates by default (`require_complete_cost=True`).",
+        "Strict dimensional separation between per-gram `USD/g` proposal budgets and discrete-pack `USD` MOQ cash outlay (`max_outlay_budget`) across `RankResult`, `Route`, and `autolab_wire`.",
+        "175-case differential shipping-gate parity between `filter_decisions_from_ranked` and compiled `BuyOrMakeLean` Lean 4.36.0 theorems (`unpriced_never_passes_budget`, `routeStoichiometryOK`)."
       ],
       "io_contract": {
         "inputs": "Candidate SMILES strings or .smi files, optional local stock catalogs (.tsv/.csv/.jsonl/.smi/.sqlite/.hdf5), optional USPTO/ORD reactions.sqlite and SCScore/AiZynthFinder weights, max_steps bound, and optional proposal budget.",
@@ -166,51 +166,51 @@
       },
       "key_metrics": [
         {
-          "label": "Multi-Step Retrosynthesis (PaRoutes n1/n5 + SynPlanner)",
-          "value": "69.2% solved (166/240) | 10/10 convergent",
-          "note": "Retro* (max_steps=5, 178.7 ms median) vs 2.1% (5/240) for 2-step lookup+SMARTS baseline"
+          "label": "Leakage-Free Multi-Step Retro* (n = 240, 0 Target Overlap)",
+          "value": "30.0% overall (72/240) | 43.8% PaRoutes n5 | 50.0% conv.",
+          "note": "Up from 2.1% (5/240) 2-step baseline; 35.0% PaRoutes n1 (70.4% upper bound reported separately)"
         },
         {
           "label": "Held-Out USPTO-50K Single-Step Benchmark (500 Targets)",
-          "value": "18.2% top-1 | 43.0% top-10 (0 test leakage)",
-          "note": "Up from 11.4% top-1 / 16.6% top-10 with 17 SMARTS; indexed strictly on train+val"
+          "value": "17.6% top-1 | 49.4% top-10 (100 SMARTS, 0 test leak)",
+          "note": "Up from 11.4% top-1 / 16.6% top-10 with 17 core SMARTS; indexed strictly on train+val"
         },
         {
-          "label": "SPDX-Audited Sources & Cache Speedup",
-          "value": "19 sources | 24.97 s cold -> 0.099 s cached",
-          "note": "5 ms/molecule offline SQLite cache with 5 strict JSON Schemas and Lean 4.36.0 CI"
+          "label": "Pinned SPDX Sources & Lean Shipping-Gate Parity",
+          "value": "19/19 SHA-pinned sources | 175/175 BuyOrMakeLean parity",
+          "note": "Enforces in_stock=False exclusion, unpriced budget rejection, and USD/g vs USD MOQ separation"
         }
       ],
-      "commit_head": "ec33997",
-      "issue_count": 28,
+      "commit_head": "0d69702",
+      "issue_count": 32,
       "concise": {
         "hook": "Buy from catalog or synthesize via Retro*? Strict listed-price lower bounds, never invented costs.",
         "flow": [
           "Candidate SMILES",
-          "PubChem + Retro* 44-SMARTS",
+          "PubChem + 100-SMARTS Retro*",
           "buyable | makeable | unknown"
         ],
         "kpis": [
           [
-            "69.2%",
-            "Retro* 5-step solve"
+            "30.0%",
+            "0-leak Retro* (43.8% n5)"
           ],
           [
-            "43.0%",
+            "49.4%",
             "USPTO-50K top-10"
           ],
           [
-            "19",
-            "SPDX-gated corpora"
+            "175",
+            "Lean gate parity cases"
           ]
         ],
         "short": {
-          "object": "Triage buyable vs multi-step makeable molecules with conservative listed-catalog USD/g lower bounds.",
-          "data": "19 SPDX-gated sources incl. PaRoutes n1/n5, SynPlanner, Syntheseus USPTO-50K (0 test leak), ChEMBL 37 & COCONUT 2.0.",
-          "model": "Vendor lookup + Retro* best-first AND-OR search (44 atom-balanced SMARTS + USPTO train/val) + SA/SCScore.",
-          "training": "Deterministic search + frozen MIT SCScore weights: lifts 240-target multi-step solve 2.1% -> 69.2% (10/10 convergent).",
-          "history": "76991c8 v0.1 release -> 3be1f4a 19-source corpora -> ec33997 Retro* planner, PaRoutes/USPTO-50K bench & Lean 4 CI.",
-          "property": "Missing prices stay null, stoichiometry is Lean-checked, and labshift/lab-attrib handoffs carry MOQ & precursor bases."
+          "object": "Triage in-stock buyable vs multi-step makeable molecules with conservative listed-catalog USD/g lower bounds.",
+          "data": "19/19 SHA-pinned SPDX sources incl. PaRoutes n1/n5, SynPlanner, Syntheseus USPTO-50K (0 target/test leak) & ChEMBL 37.",
+          "model": "In-stock vendor lookup + zero-target-leakage Retro* AND-OR search (100 atom-balanced SMARTS + held-out lookup).",
+          "training": "Zero-leakage Retro* lifts 240-target solve 2.1% -> 30.0% (43.8% PaRoutes n5) & USPTO-50K top-10 16.6% -> 49.4%.",
+          "history": "76991c8 v0.1 -> ec33997 Retro* -> 0d69702 0-leak PaRoutes/USPTO bench, in_stock/MOQ honesty & 175-case Lean parity.",
+          "property": "Out-of-stock offers never count as buyable, unpriced never pass budget, and USD/g never conflates with MOQ cash."
         }
       }
     },
@@ -295,17 +295,17 @@
       "url": "https://github.com/yaniguan/lab-automation-atlas",
       "layer": "L5",
       "layer_name": "Executive Planning, Procurement & Scheduling",
-      "tagline": "Machine-readable 84-entry semantic map of lab hardware, cloud foundries, protocol DSLs, frontier solvers, and open datasets with Lean 4.36.0 compound SPDX + DNS-pinned SSRF verification.",
+      "tagline": "Machine-readable 84-entry semantic map of lab hardware, cloud foundries, protocol DSLs, frontier solvers, and open datasets with canonical URL contamination blocking, default-deny SPDX validation, and 260 compiled Lean 4.36.0 #guards.",
       "object": "Provides a neutral, license-aware semantic world map and pointer registry grounding hardware platform selection, protocol intermediate representation (IR) targeting, combinatorial solver choice, and open protocol dataset discovery across the Auto-Lab stack without copying external data or ranking commercial vendors.",
       "data": "Machine-readable `atlas.json` (`additionalProperties: false` in `schema/atlas.schema.json`) cataloging `84` typed entries across `7` categories (liquid-handling hardware profiles, cloud foundries, protocol SDKs/IRs, combinatorial & embodied solvers `PyJobShop` / `LeRobot`, chemical procurement, `L4` bridges, and 2024-2026 open wet-lab, spectra, crystallography, SQL & Lean benchmarks), byte-for-byte synced with `README.md`.",
-      "model": "Typed hardware capability & protocol-IR compatibility resolver (`lab_atlas/catalog.py`), recursive compound SPDX expression (`AND`/`OR`/`WITH`) + parent-lineage taint evaluator (`lab_atlas/spdx.py` in 1-to-1 parity with `LabAtlasLean.checkAtlasResource`), and concurrent DNS-pinned HTTPS SSRF link auditor (`lab_atlas/linkcheck.py`).",
-      "training": "Zero parametric training and zero third-party runtime dependencies; continuously verified via Lean 4.36.0 `#print axioms` + 335-case `#eval` parity checks, offline `pytest` schema/SSRF suites, and weekly GitHub Actions link audits.",
-      "history": "Initial commit `f2e2e83` (2026-11-18: pointer map & link checker) -> `cab4852` (PR #30: `LabAtlasLean` & wire) -> `3b7d259` (PR #31: 70-entry 2026 dataset expansion) -> `b6455d9` (PR #32: 84 frontier entries across 7 categories, compound SPDX + URL-lineage `autolab_wire` hardening, and Lean 4.36.0 `#print axioms` + 335-case parity CI).",
+      "model": "Typed hardware capability & protocol-IR compatibility resolver (`lab_atlas/catalog.py`), canonical upstream URL normalizer & prefix matcher (`lab_atlas/urlmatch.py`: `hf.co`, `.git`, arXiv `/pdf/<id>`, `www.` & case folding), SPDX-to-`allowed_purposes`/`commercial_use_ok` cross-validator + compound SPDX (`AND`/`OR`/`WITH`) lineage evaluator (`lab_atlas/spdx.py` in boolean policy parity with `LabAtlasLean.checkAtlasResource`), and DNS-pinned HTTPS SSRF link auditor.",
+      "training": "Zero parametric training and zero third-party runtime dependencies; continuously verified via Lean 4.36.0 `#print axioms` + `260` compiled `#guard` assertions (`lean/LabAtlasLean/Parity.lean`) + 335-case `#eval` boolean policy parity checks, `license-expression` differential tests, offline `pytest` schema/SSRF suites, and weekly link/license CI.",
+      "history": "Initial commit `f2e2e83` (2026-11-18: pointer map & link checker) -> `cab4852` (PR #30: `LabAtlasLean` & wire) -> `3b7d259` (PR #31: 70-entry 2026 dataset expansion) -> `b6455d9` (PR #32: 84 entries across 7 categories) -> `34cf0c6` (PR #37: canonical URL matching blocking `160+` `eval_only` URL variants, default-deny missing wire license, SPDX-to-purpose validator, `assayfold`-harmonized `AqSolDB` `CC0-1.0`, and `260` compiled Lean `#guard`s).",
       "unique_properties": [
-        "84-entry zero-copy registry across 7 categories resolving physical hardware profiles (`opentrons_ot2`, `opentrons_flex`, `hamilton_star`, `tecan_fluent`, `emerald_cloud_lab`, `chemputer`) dynamically from `atlas.json`.",
-        "Compound SPDX (`AND`, `OR`, `WITH`) + `parent_licenses` lineage taint + catalog URL cross-matching verified across 335 `#eval` test vectors against `LabAtlasLean` (`0 sorry`, no custom axioms).",
-        "Canonical HTTPS-only public-host SSRF guard rejecting non-canonical IPv4/IPv6 transition literals, private/link-local ranges, and DNS rebinding.",
-        "Byte-for-byte `atlas.json` <-> `README.md` synchronization with `eval_only` benchmark contamination blocks across `LAB-Bench`, `BixBench`, `ChemBench`, `EHRSQL-2024`, and `PutnamBench`."
+        "Canonical URL normalizer (`lab_atlas/urlmatch.py`) blocking `160+` equivalent `hf.co`, `.git`, arXiv `/pdf/<id>`, `www.`, and case-altered URL variants of `eval_only` benchmarks from entering `for_training=True` pipelines.",
+        "Default-deny `autolab_wire.py` requiring explicit SPDX (`explicit_spdx_license`) on unknown URLs, paired with catalog-time SPDX-to-`allowed_purposes` / `commercial_use_ok` validation (`ORD` ShareAlike & `AqSolDB` `CC0-1.0` aligned with `assayfold`).",
+        "260 auto-generated `#guard` assertions compiled directly by the Lean 4.36.0 kernel (`lean/LabAtlasLean/Parity.lean`, `0 sorry`, `0` custom axioms) plus 335-case `#eval` parity over the boolean resource policy and license lattice.",
+        "Canonical HTTPS-only public-host SSRF guard rejecting non-canonical IPv4/IPv6 transition literals, private/link-local ranges, and DNS rebinding."
       ],
       "io_contract": {
         "inputs": "Curated Markdown ecosystem tables and external HTTPS documentation, repository, API, and dataset URLs in README.md.",
@@ -314,27 +314,27 @@
       "key_metrics": [
         {
           "label": "Typed Ecosystem & Dataset Registry",
-          "value": "84 entries across 7 categories",
-          "note": "Synced byte-for-byte between atlas.json and README.md with strict JSON Schema validation"
+          "value": "84 entries across 7 categories (SPDX-to-purpose checked)",
+          "note": "Synced byte-for-byte between atlas.json and README.md with assayfold-harmonized licenses"
         },
         {
-          "label": "Formal SPDX & SSRF Parity (LabAtlasLean)",
-          "value": "335 / 335 #eval parity | 0 custom axioms",
-          "note": "Lean 4.36.0 checkAtlasResource + compound SPDX AND/OR/WITH & parent-lineage taint"
+          "label": "Compiled Lean 4.36.0 Policy Parity (LabAtlasLean)",
+          "value": "260 compiled #guards | 335 #eval parity | 0 custom axioms",
+          "note": "Blocks 160+ equivalent eval_only URL variants and default-denies missing SPDX on autolab_wire"
         },
         {
           "label": "Redistributed Third-Party Data Footprint",
           "value": "0 bytes (pointer-only MIT index)",
-          "note": "Scheduled weekly + PR link-rot & SSRF checks across all external HTTPS URLs"
+          "note": "Scheduled weekly + PR link-rot, upstream license & DNS-pinned SSRF checks"
         }
       ],
-      "commit_head": "b6455d9",
-      "issue_count": 28,
+      "commit_head": "34cf0c6",
+      "issue_count": 32,
       "concise": {
         "hook": "A checked, zero-hype map of lab robots, cloud foundries, protocol DSLs, solvers, and open datasets.",
         "flow": [
           "84 typed entries",
-          "DNS-pinned SSRF + Lean SPDX",
+          "Canonical URL + Lean SPDX",
           "Synced JSON & MD atlas"
         ],
         "kpis": [
@@ -343,21 +343,21 @@
             "typed entries (7 cats)"
           ],
           [
-            "335",
-            "Lean #eval parity"
+            "260",
+            "compiled Lean #guards"
           ],
           [
-            "0",
-            "copied vendor data"
+            "160+",
+            "eval_only URL variants"
           ]
         ],
         "short": {
           "object": "Ground platform capabilities, protocol IRs, compound SPDX expressions, and dataset governance.",
           "data": "84-entry atlas.json across 7 categories (robots, cloud labs, IRs, solvers PyJobShop/LeRobot, procurement & datasets).",
-          "model": "Typed hardware/IR capability resolver + compound SPDX evaluator + DNS-pinned SSRF link auditor.",
-          "training": "Zero parametric training; verified by Lean 4.36.0 #print axioms, 335-case parity, and weekly link CI.",
-          "history": "f2e2e83 pointer map -> 3b7d259 70-entry 2026 atlas -> b6455d9 84 frontier entries, wire hardening & Lean 4 CI.",
-          "property": "Default-deny SPDX AND/OR/WITH + parent-lineage taint and canonical HTTPS SSRF guards."
+          "model": "Canonical URL normalizer (hf.co/.git/arXiv) + SPDX-to-purpose validator + DNS-pinned SSRF link auditor.",
+          "training": "Zero parametric training; verified by Lean 4.36.0 260 compiled #guards, 335-case #eval parity & weekly link CI.",
+          "history": "f2e2e83 pointer map -> b6455d9 84 entries -> 34cf0c6 canonical URL block, default-deny SPDX & 260 Lean #guards.",
+          "property": "Blocks 160+ eval_only URL variants, default-denies missing licenses, and validates SPDX-to-purpose alignment."
         }
       }
     },
@@ -508,65 +508,65 @@
       "url": "https://github.com/yaniguan/lab-attrib",
       "layer": "L4",
       "layer_name": "Digital-Twin Rehearsal, Default-Deny Gate & Causal Attribution",
-      "tagline": "Post-execution 30-theorem Lean 4 blame calculus, shift-tolerant Pseudo-Voigt L1-NNLS XRD/Raman deconvolver, MS/MS spectral entropy & chimera gate, EVOI assay router, and SHA-256 negative ledger.",
+      "tagline": "Post-execution 31-theorem Lean 4 blame calculus, fit-calibrated R_wp & shift-tolerant Pseudo-Voigt L1-NNLS deconvolver, Q1/residual MS/MS chimera gate, default-deny wire firewall, and SHA-256 negative ledger.",
       "object": "Closes the post-execution epistemic blind spot of self-driving laboratories by separating robotic/timing execution artifacts and unreacted precursor diffraction overlap (A-Lab failure mode) from Proof-Carrying Positive and Negative Results before updating scientific memory or recalibrating Chem-RRT frontier shells.",
-      "data": "Benchmarks **51 SHA-256-pinned real experimental spectra & CIF assets** (`results/real_spectra_benchmark.json`: Ceder Group `A-Lab GPSS` `.xrdml` scans, `RRUFF/DARA` powder XRD `.dif`/`.xrdml`, `RRUFF/ROD` `.rod` & JCAMP-DX Raman, and `MassSpecGym` MS/MS spectra), 9-round x 5-seed Delaney ESOL closed-loop discovery, an 11-phase XRD+Raman reference panel, and a 9-dataset `OpenCharacterizationDataset` registry.",
-      "model": "Exact 4-way causal blame calculus (`LabAttribLean`: **30 Lean 4.36.0 theorems**, 16 `#guard` checks, `#print axioms` audited, `0 sorry`), coarse-grid + Golden-Section `2-theta` shift (`+-0.35 deg`) & Pseudo-Voigt `elastic_nnls` (`L1/L2-NNLS` with `< 1e-8` NumPy/stdlib parity), Li et al. MS/MS Spectral Entropy + 2-component chimera detector, EVOI orthogonal modality router, and SHA-256 `CertifiedLedger`.",
-      "training": "Deterministic formal & physical deconvolution gate (`--offline` fails closed unless SHA-verified cache is present). Cuts real `A-Lab GPSS` XRD false discovery rate from `50.0%` (naive) to `0.0%` while lifting true target recall from `0.0%` (unshifted NNLS) to `75.0%` (`R_wp` `641.2 -> 258.0` permille), achieves `0.0%` FDR & `100.0%` recall on `RRUFF/ROD` Raman, and reaches `82.4%` Top-1 (`12.6%` vs `35.2%` FDR) on `MassSpecGym` MS/MS.",
-      "history": "Created as the 15th Core Auto-Lab repository (`6b7f467` on `main` with 5-page LaTeX monograph `paper/main.pdf`) -> `0118a9c` (PR #11: wire & Lean audit) -> `b8df8ef` (PR #12: 9-dataset registry) -> `9a4b119` (PR #13: shift-tolerant Pseudo-Voigt `L1-NNLS`, MS/MS spectral entropy + chimera gate, 51-asset real spectra benchmark, fail-closed `L4_ATTRIB_SCHEMA_REJECT` wire, and 30-theorem `#print axioms` CI).",
+      "data": "Benchmarks **72 SHA-256-pinned real experimental spectra & CIF assets** (`results/real_spectra_benchmark.json`: 352-run Ceder Group `A-Lab GPSS` synthesis summary + 8 `.xrdml` scans matched to each sample's own spinel CIF, 8 `RRUFF/DARA` powder XRD scans, 14 independent `RRUFF/ROD` `.rod` Raman specimens disjoint from the 11-phase reference library, and 110 held-out `MassSpecGym` val/test MS/MS spectra + 24 near-isobaric chimeras), 9-round x 5-seed Delaney ESOL closed-loop discovery with equal-budget & imperfect-sensor sweeps, and a 9-dataset `OpenCharacterizationDataset` registry.",
+      "model": "Exact 4-way causal blame calculus (`LabAttribLean`: **31 Lean 4.36.0 theorems**, 17 `#guard` checks, `#print axioms` audited, `0 sorry`) with fit-method-calibrated $R_{\\mathrm{wp}}$ (`rietveld <= 100` vs `stick_nnls <= 200` permille), Golden-Section `2-theta` shift + Pseudo-Voigt `elastic_nnls` (`L1/L2-NNLS`), Li et al. MS/MS Spectral Entropy + Q1 dual-precursor & unexplained-fragment residual chimera gate, Bayesian EVOI router, and SHA-256 `CertifiedLedger`.",
+      "training": "Deterministic formal & physical deconvolution gate failing closed (`MISSING_EXPERIMENTAL_EVIDENCE` / `L4_ATTRIB_QUARANTINE`) on telemetry-free or passthrough-only wire packets. Across all 352 `A-Lab GPSS` runs, split-calibrated $R_{\\mathrm{wp}}$ certifies `231 CERTIFIED_POSITIVE` and **`15 CERTIFIED_NEGATIVE`** runs at `0.00%` FDR (`69.81%` held-out recall; `0.00%` FDR & `75.00%` recall on the 8 raw `.xrdml` scans), achieves `92.86%` recall across 14 independent `RRUFF/ROD` Raman scans and `75.00%` held-out Q1+residual chimera catch (`95.83%` full-pool) on `MassSpecGym`, and maintains `0.00%` FDR / `0.00` poisoned memory entries in both equal-budget (`180` assays, `17.60` hits) and full closed-loop (`27.00` hits) ESOL campaigns.",
+      "history": "Created as the 15th Core Auto-Lab repository (`6b7f467` with 5-page monograph `paper/main.pdf`) -> `0118a9c` (PR #11: wire & Lean audit) -> `b8df8ef` (PR #12: 9-dataset registry) -> `9a4b119` (PR #13: shift-tolerant Voigt `L1-NNLS`) -> `7404d0d` (PR #18: fail-closed default-deny `autolab_wire` evidence gate, equal-budget & imperfect-sensor ESOL sweeps, equal-rule 72-asset real spectra benchmark with 14 independent Raman scans, 15 `CERTIFIED_NEGATIVE`s on 352-run `A-Lab GPSS`, and 31 Lean 4.36.0 theorems).",
       "unique_properties": [
-        "30 machine-checked Lean 4.36.0 theorems (`0 sorry`, zero custom axioms verified via `lean/CheckAxioms.lean`) proving `corrupted_run_never_poisons_memory` and `unidentifiable_spectrum_never_certified`.",
-        "Shift-tolerant Golden-Section (`+-0.35 deg`) + Pseudo-Voigt `L1-NNLS` deconvolver cutting real `A-Lab GPSS` `.xrdml` FDR `50.0% -> 0.0%` while recovering `75.0%` of strained/shifted target phases (`0.0%` naive NNLS).",
-        "Weighted MS/MS Spectral Entropy + convex 2-component chimera gate lifting real `MassSpecGym` Top-1 identification `69.2% -> 82.4%` and cutting chimera FDR `35.2% -> 12.6%`.",
-        "Fail-closed `autolab_wire.py` (`L4_ATTRIB_SCHEMA_REJECT`) rejecting non-boolean, non-integer, negative, or `NaN`/`Inf` telemetry before ledger commitment."
+        "31 machine-checked Lean 4.36.0 theorems (`0 sorry`, `0` custom axioms via `lean/CheckAxioms.lean`) including `stick_nnls_calibrated_rwp_sound`, `certified_negative_sound`, and `unidentifiable_spectrum_never_certified`.",
+        "Split-calibrated 352-run `A-Lab GPSS` gate certifying `15` `CERTIFIED_NEGATIVE`s and `231` `CERTIFIED_POSITIVE`s at `0.00%` FDR (`75.0%` recall on raw `.xrdml` scans under both full and relaxed equal rules).",
+        "Fail-closed default-deny `autolab_wire.py` quarantining context-only or passthrough-only packets (`MISSING_EXPERIMENTAL_EVIDENCE`, `0` ledger entries) unless explicit `execution_qc` and `characterization` are supplied.",
+        "Equal-budget (`180` assays: `0.00%` FDR, `0.00` poisoned entries, `97.67%` conformal coverage) and imperfect-sensor (`fault_flag_recall = 1.0 / 0.9 / 0.8`) closed-loop Delaney ESOL benchmarks."
       ],
-      "commit_head": "9a4b119",
-      "issue_count": 10,
+      "commit_head": "7404d0d",
+      "issue_count": 14,
       "concise": {
         "hook": "Separate robot glitches and shifted precursor peaks from proof-carrying negative truth after every run.",
         "flow": [
-          "Telemetry + XRD/Raman/MS",
-          "30-thm Lean + Pseudo-Voigt NNLS",
+          "Explicit QC + XRD/Raman/MS",
+          "31-thm Lean + Pseudo-Voigt NNLS",
           "SHA-256 certified ledger"
         ],
         "kpis": [
           [
-            "30",
+            "31",
             "Lean 4 theorems"
           ],
           [
-            "51",
+            "72",
             "pinned real spectra"
           ],
           [
-            "0.0%",
-            "A-Lab & Raman FDR"
+            "15",
+            "A-Lab CERTIFIED_NEG"
           ]
         ],
         "short": {
-          "object": "Block corrupted runs and precursor ghost peaks from poisoning scientific memory or Chem-RRT calibration.",
-          "data": "51 SHA-256-pinned real spectra (A-Lab GPSS .xrdml, RRUFF/DARA XRD, ROD Raman, MassSpecGym) + ESOL + 9 corpora.",
-          "model": "30-theorem Lean 4 blame calculus + shift-tolerant Pseudo-Voigt L1-NNLS + MS/MS spectral entropy & EVOI router.",
-          "training": "Deterministic formal gate failing closed (L4_ATTRIB_SCHEMA_REJECT) on malformed telemetry.",
-          "history": "6b7f467 15th Repo & monograph -> b8df8ef 9-dataset registry -> 9a4b119 shift-Voigt L1-NNLS, 51 real spectra & 30 thms.",
-          "property": "0.0% FDR (75% recall) on real A-Lab GPSS XRD, 82.4% MassSpecGym Top-1, and #print axioms audited in CI."
+          "object": "Block corrupted, telemetry-free, and precursor-overlapped runs from poisoning scientific memory or calibration.",
+          "data": "72 SHA-256-pinned real spectra (352-run A-Lab GPSS, RRUFF/DARA XRD, 14 indep. Raman, MassSpecGym) + ESOL + 9 corpora.",
+          "model": "31-theorem Lean 4 blame calculus + fit-calibrated Rwp + Pseudo-Voigt L1-NNLS + Q1/residual MS/MS chimera gate.",
+          "training": "Default-deny wire gate (MISSING_EXPERIMENTAL_EVIDENCE) + equal-budget & imperfect-sensor closed-loop sweeps.",
+          "history": "6b7f467 15th Repo -> 9a4b119 Voigt-NNLS -> 7404d0d default-deny wire, 72 real spectra, 15 A-Lab negs & 31 thms.",
+          "property": "0.0% FDR (75% recall, 15 CERTIFIED_NEGATIVEs) on real A-Lab GPSS and 0 poisoned entries at 180 equal budget."
         }
       },
       "key_metrics": [
         {
-          "label": "Real A-Lab GPSS & RRUFF/ROD Deconvolution",
-          "value": "0.0% A-Lab FDR (75.0% recall) | 0.0% Raman FDR",
-          "note": "51 SHA-256-pinned experimental files; RRUFF/DARA XRD FDR drops 48.3% -> 6.25% (100% recall)"
+          "label": "Real A-Lab GPSS (352 Runs + 8 .xrdml) & RRUFF XRD/Raman",
+          "value": "0.0% A-Lab FDR | 15 CERTIFIED_NEGATIVEs | 75.0% scan recall",
+          "note": "72 SHA-256-pinned files; RRUFF/DARA XRD 6.25% FDR (100% recall) & 14 independent Raman 92.86% recall"
         },
         {
-          "label": "Real MassSpecGym MS/MS Entropy & Chimera Gate",
-          "value": "82.4% Top-1 | 12.6% FDR (vs 35.2% naive)",
-          "note": "206 real MS/MS evaluation cases with dynamic entropy weighting and 2-component chimera quarantine"
+          "label": "Held-Out MassSpecGym MS/MS & Equal-Budget ESOL Loop",
+          "value": "75.0% held-out / 95.8% full chimera catch | 0.0% loop FDR",
+          "note": "Equal-budget (180 assays): 17.60 hits, 0.00 poisoned entries, 97.67% cov (full loop: 27.00 hits, 98.27% cov)"
         },
         {
-          "label": "Formal Verification (LabAttribLean)",
-          "value": "30 Lean 4.36.0 theorems (0 sorry, 0 custom axioms)",
-          "note": "Audited via #print axioms + --batch-tsv parity CI and 5-page monograph (paper/main.pdf)"
+          "label": "Formal Verification & Default-Deny Wire (LabAttribLean)",
+          "value": "31 Lean 4.36.0 theorems (0 sorry, 0 custom axioms)",
+          "note": "Quarantines missing/passthrough wire telemetry (MISSING_EXPERIMENTAL_EVIDENCE) + 5-page monograph"
         }
       ]
     },

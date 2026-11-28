@@ -6,17 +6,17 @@
       "layer": "L6",
       "git_url": "https://github.com/yaniguan/lab-ask-why.git",
       "default_branch": "main",
-      "head_sha": "6f4887a",
+      "head_sha": "7f945fa",
       "local_relative_path": "../lab-ask-why",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 28
+      "issue_count": 32
     },
     {
       "repo": "lab-decide",
       "layer": "L6",
       "git_url": "https://github.com/yaniguan/lab-decide.git",
       "default_branch": "main",
-      "head_sha": "f72af29",
+      "head_sha": "93db11e",
       "local_relative_path": "../lab-decide",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
       "issue_count": 32
@@ -26,10 +26,10 @@
       "layer": "L5",
       "git_url": "https://github.com/yaniguan/buy-or-make.git",
       "default_branch": "main",
-      "head_sha": "ec33997",
+      "head_sha": "0d69702",
       "local_relative_path": "../buy-or-make",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 28
+      "issue_count": 32
     },
     {
       "repo": "labshift",
@@ -46,10 +46,10 @@
       "layer": "L5",
       "git_url": "https://github.com/yaniguan/lab-automation-atlas.git",
       "default_branch": "main",
-      "head_sha": "b6455d9",
+      "head_sha": "34cf0c6",
       "local_relative_path": "../lab-automation-atlas",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 28
+      "issue_count": 32
     },
     {
       "repo": "lab-rehearsal",
@@ -76,10 +76,10 @@
       "layer": "L4",
       "git_url": "https://github.com/yaniguan/lab-attrib.git",
       "default_branch": "main",
-      "head_sha": "9a4b119",
+      "head_sha": "7404d0d",
       "local_relative_path": "../lab-attrib",
       "profile_doc": "docs/ARCHITECTURE_AND_HISTORY.md",
-      "issue_count": 10
+      "issue_count": 14
     },
     {
       "repo": "labbench-posttrain",

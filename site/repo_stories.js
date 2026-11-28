@@ -13,8 +13,8 @@
       why: 'Most AI co-scientists rush to pick a winner. In real research, prematurely crowning one hypothesis hides the assumptions that actually need testing at the bench.',
       metrics: [
         ['90.9%', 'gold rationale hit@3'],
-        ['90.7%', 'conformal stance cov'],
-        ['100%', 'ConflictBank detected'],
+        ['0.000', 'neg-ctrl conflict FPR'],
+        ['90.0%', 'BGE+NLI doc_recall@5'],
       ],
       playgroundPrompt: 'Pick a real scientific claim to see retrieved evidence & Socratic questions:',
       demos: [
@@ -46,9 +46,9 @@ Ask-Why Experiment Prompt:
         },
       ],
       tabs: {
-        how: 'Combines a two-stage `FrontierHybridVerifier` (`Reciprocal Rank Fusion` of biomedical `BM25` + 96-dim subword LSA + `EntityNumericNegationIndex` followed by a 26-feature `CrossFeatureReranker` and `SplitConformalStanceClassifier`) with structured Socratic `why_questions` and control-well synthesis.',
-        guarantee: 'Trained strictly on `SciFact` `train` (`0` dev overlap, eval docs excluded from IDF): lifts dev `hit@3` `0.818 -> 0.909`, reaches `90.7%` 3-way conformal coverage and `100.0%` `ConflictBank` detection, and fails closed on malformed negative certificates.',
-        status: 'Merged on `main` (`6f4887a` + `LabAskWhyLean` CI): 8-corpus SHA-256-verified real benchmark (`SciFact`, `PubMedQA`, `ConflictBank`, `FaithEval-Inconsistent`, `CLAIMCHECK`, `SciVer`, `ChemBench`, `LitQA2`) and 14-dataset registry.',
+        how: 'Combines `< 1.5 GB` pure-NumPy `FrontierHybridVerifier` (`BM25` + 96-dim CSR LSA + `EntityNumericNegationIndex` RRF, 26-feature `CrossFeatureReranker`, Mondrian `SplitConformalStanceClassifier`, and bilateral cross-passage conflict scorer) with optional CPU `NeuralBiEncoderNliVerifier` (`BAAI/bge-small-en-v1.5` + `DeBERTa-v3-small` NLI), Socratic `why_questions`, and control-well synthesis.',
+        guarantee: 'Trained strictly on `SciFact` `train` (`0` dev overlap, `181` dev/cal docs excluded from IDF/SVD): reaches `0.909` `hit@3` (`0.340` Official Abstract F1), `0.000` single-passage negative-control FPR (`0.975` `ConflictBank` AUROC), `0.917`/`0.903` 90% Mondrian coverage, and enforces `check_ask_why_permille` wire abstention with zero silent aspirin fallback.',
+        status: 'Merged on `main` (`7f945fa`, 21 Lean 4.36.0 theorems + `160/160` `#eval` parity): 8-corpus SHA-256-verified real benchmark (`SciFact`, `PubMedQA`, `ConflictBank`, `FaithEval-Inconsistent`, `CLAIMCHECK`, `SciVer`, `ChemBench`, `LitQA2`) with majority/chance baselines and 14-dataset registry.',
       },
     },
 
@@ -56,7 +56,7 @@ Ask-Why Experiment Prompt:
       headline: 'Give calibrated error bars when a molecule is in familiar territory—and explicitly say "I don’t know" when it isn’t.',
       why: 'Standard regression models happily output confident solubility or yield numbers on chemistry completely outside their training set, wasting expensive bench runs.',
       metrics: [
-        ['92.4%', '20-seed ESOL cov_in'],
+        ['0.422', 'ESOL MAE (-38.5% vs Delaney)'],
         ['11 / 11', 'informative real gates'],
         ['0.000', 'campaign OOD picks'],
       ],
@@ -97,9 +97,9 @@ Round 3 : Calibration holds near ≥90% target while in-region MAE stays ~0.64.`
         },
       ],
       tabs: {
-        how: 'Pairs Huber GBDT and `LightGBM` surrogates with Mondrian `cqr_r` intervals, `onehot_morgan` HTE encodings, train-only `ensemble_mahalanobis` kNN gating, deterministic balanced group-packing splits (`<= 0.67` pp error), and 6-round sequential BO campaigns (`tr_conformal_ucb`, `lightgbm_cqr_tr_ucb`).',
-        guarantee: 'Achieves `11/11` `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`) across all 11 real CSV benchmarks, scores `autolab_wire` candidates with the frozen SHA-pinned ESOL model (`n_calib = 169`, `thr = 0.6750`), and never widens `tau` on high-residual entries.',
-        status: 'Merged on `main` (`f72af29`, 23 Lean 4.36.0 `#print axioms` theorems): 20-seed ESOL (`92.4%` inside cov), 11-dataset real-CSV benchmark, and 10-seed BO campaigns (`0.000` OOD picks, `0.10` Doyle B-H regret).',
+        how: 'Pairs 1,416-dim `rdkit_2d_morgan` + semiparametric `FrontierEnsembleRegressor` (out-of-fold stacked Ridge + multi-scale RBF/RQ/Tanimoto KRR + LightGBM) and `onehot_morgan` HTE encodings with Mondrian `cqr_r` intervals, `tanimoto_mahalanobis` / `ensemble_mahalanobis` gating, balanced group-packing splits (`<= 0.67` pp error), and 6-round sequential BO.',
+        guarantee: 'Beats Delaney (2004) 4-term linear formula across 20 ESOL seeds on both random (`MAE 0.422` vs `0.686`, `-38.5%`, `MAE_in 0.378`, `R^2 0.918`, `cov_in 90.4%`) and scaffold (`0.808` vs `0.832` / `1.083` OLS) splits, achieves `11/11` `gate_informative = True` (`5/5` seeds `MAE_in < MAE_out`), and scores `autolab_wire` SMILES via `rdkit_2d_morgan + frontier_ensemble` (`n_calib = 169`, `thr = 0.6750`).',
+        status: 'Merged on `main` (`93db11e`, 23 Lean 4.36.0 `#print axioms` theorems): 20-seed Delaney head-to-head, 11-dataset real-CSV benchmark (`FreeSolv` `MAE_in 0.41`, `AqSolDB` `0.58`), and 10-seed BO campaigns (`0.000` OOD picks, `0.10` Doyle B-H regret).',
       },
     },
 
@@ -107,9 +107,9 @@ Round 3 : Calibration holds near ≥90% target while in-region MAE stays ~0.64.`
       headline: 'Before planning a synthesis, check if you can simply buy the molecule—or make it in two steps from cheap catalog building blocks.',
       why: 'An autonomous lab shouldn’t spend two days synthesizing a compound sold for $15, nor trust hallucinated vendor prices when public catalogs omit pricing.',
       metrics: [
-        ['69.2%', 'Retro* 5-step solve'],
-        ['43.0%', 'USPTO-50K top-10'],
-        ['Strict null', 'never invents prices'],
+        ['30.0%', '0-leak Retro* (43.8% n5)'],
+        ['49.4%', 'USPTO-50K top-10'],
+        ['Strict null', 'in_stock & MOQ honest'],
       ],
       playgroundPrompt: 'Test how candidate molecules are triaged:',
       demos: [
@@ -148,9 +148,9 @@ Guarantee   : Unverified molecules stay "unknown" or "invalid"—never guessed a
         },
       ],
       tabs: {
-        how: 'Combines SQLite-cached PubChem/local vendor stock lookup with a `Retro*` best-first AND-OR multi-step planner (`44` atom-balanced acyclic/unimolecular SMARTS templates + train/val `USPTO-50K` lookup), unit-aware `USD/g` & MOQ cost bounds, and `SAscore`/`SCScore`.',
-        guarantee: 'Missing catalog prices stay `null`, `USPTO-50K` test reactions have `0` index leakage, `BuyOrMakeLean` Lean 4.36.0 theorems audit stoichiometry and budget soundness in CI, and wire outputs stamp explicit `data_source` provenance.',
-        status: 'Merged on `main` (`ec33997` + `BuyOrMakeLean` CI): `Retro*` lifts 240-target `PaRoutes n1/n5` + `SynPlanner` solve rate `2.1% -> 69.2%` (`10/10` convergent) and 500-target `USPTO-50K` top-10 `16.6% -> 43.0%` across 19 SPDX-gated sources.',
+        how: 'Combines SQLite-cached PubChem/local in-stock vendor lookup with a zero-target-leakage `Retro*` best-first AND-OR multi-step planner (`100` atom-balanced SMARTS templates + held-out `PaRoutes` + train/val `USPTO-50K` lookup), unit-separated `USD/g` vs discrete `USD` MOQ outlay bounds, and `SAscore`/`SCScore`.',
+        guarantee: 'Zero target-route or InChIKey connectivity leakage (`all_target_product_inchikey_overlap = 0`), out-of-stock offers (`in_stock=false`) never count as `buyable`, unpriced candidates never pass active budget gates (`175`-case `BuyOrMakeLean` parity), and per-gram `USD/g` budgets never conflate with multi-gram MOQ cash outlay.',
+        status: 'Merged on `main` (`0d69702` + `BuyOrMakeLean` CI): zero-leakage `Retro*` lifts 240-target solve rate `2.1% -> 30.0%` (`35.0%` `PaRoutes n1`, `43.8%` `PaRoutes n5`, `50.0%` convergent) and 500-target `USPTO-50K` top-10 `16.6% -> 49.4%` across 19/19 SHA-pinned SPDX sources.',
       },
     },
 
@@ -199,8 +199,8 @@ job_01 Gantt   : L[0–18] -> L[18–28] -> I[29–56] -> R[58–62]  (all min/m
       why: 'Lab automation standards are fragmented across vendor silos and academic formats; this index maps what already exists so we build adapters instead of reinventing formats.',
       metrics: [
         ['84', 'typed entries (7 cats)'],
-        ['335', 'Lean #eval parity'],
-        ['Weekly', 'DNS-pinned SSRF check'],
+        ['260', 'compiled Lean #guards'],
+        ['160+', 'eval_only URL variants'],
       ],
       playgroundPrompt: 'Browse the four layers of the open automation ecosystem:',
       demos: [
@@ -236,9 +236,9 @@ Benchmarks : LAB-Bench (CC-BY-SA-4.0, eval-only) · BioProBench (non-commercial)
         },
       ],
       tabs: {
-        how: 'Resolves hardware capability profiles and protocol IRs from an 84-entry `atlas.json` across 7 categories, evaluates compound SPDX (`AND`/`OR`/`WITH`) + `parent_licenses` lineage in 1-to-1 parity with `LabAtlasLean`, and runs DNS-pinned HTTPS SSRF link audits.',
-        guarantee: 'Strictly pointer-only (`0` redistributed data, `0` vendor rankings), blocking `eval_only`, non-commercial, and non-canonical IPv4/IPv6 URLs before training or autonomous ingestion.',
-        status: 'Merged on `main` (`b6455d9` + `LabAtlasLean` `#print axioms` & 335-case `#eval` parity CI): 84 verified entries across liquid handlers, cloud foundries, protocol IRs, `PyJobShop`/`LeRobot` solvers, procurement, and 2024-2026 open datasets.',
+        how: 'Resolves hardware capability profiles and protocol IRs from an 84-entry `atlas.json` across 7 categories, canonicalizes equivalent upstream URLs (`lab_atlas/urlmatch.py`: `hf.co`, `.git`, arXiv `/pdf/<id>`, case/www), cross-validates SPDX expressions against `allowed_purposes`, and checks boolean resource policies in parity with `LabAtlasLean`.',
+        guarantee: 'Strictly pointer-only (`0` redistributed data), blocking `160+` equivalent URL variants of `eval_only` benchmarks, default-denying unknown URLs without explicit SPDX (`explicit_spdx_license`), and rejecting non-canonical IPv4/IPv6 SSRF targets.',
+        status: 'Merged on `main` (`34cf0c6` + `LabAtlasLean` `#print axioms`, `260` compiled `#guard`s & 335-case `#eval` CI): 84 verified entries with `assayfold`-harmonized licenses (`AqSolDB` `CC0-1.0`) across robots, cloud labs, IRs, solvers, procurement, and 2024-2026 datasets.',
       },
     },
 
@@ -665,9 +665,9 @@ Honest caveat   : NumPy dequantizes before matmul—storage drops 250x; real run
       headline: 'After a wet-lab run finishes, separate robot glitches and unreacted precursor peaks from proof-carrying scientific truth.',
       why: 'Pre-execution gates keep a robot from crashing, but raw readouts still lie: a dry pipette draw looks like a negative biochemical result, and overlapping precursor peaks look like a brand-new crystal phase.',
       metrics: [
-        ['30', 'Lean 4 theorems (0 sorry)'],
-        ['51', 'pinned real spectra'],
-        ['0.0%', 'A-Lab & Raman FDR'],
+        ['31', 'Lean 4 theorems (0 sorry)'],
+        ['72', 'pinned real spectra'],
+        ['15', 'A-Lab CERTIFIED_NEGATIVEs'],
       ],
       playgroundPrompt: 'Inspect how lab-attrib classifies post-run telemetry and spectra before touching scientific memory:',
       demos: [
@@ -695,9 +695,9 @@ Ledger   : Appended with SHA-256 chain receipt -> safe constraint for BO & RLVR.
         },
       ],
       tabs: {
-        how: 'Combines a 30-theorem Lean 4.36.0 blame calculus (`LabAttribLean`, `#print axioms` audited) with shift-tolerant Golden-Section + Pseudo-Voigt `L1-NNLS` XRD/Raman deconvolution, MS/MS Spectral Entropy + 2-component chimera detection, `EVOI` routing, and SHA-256 `CertifiedLedger` chains.',
-        guarantee: 'Benchmarked on 51 SHA-256-pinned real spectra (`A-Lab GPSS` XRD `0.0%` FDR & `75.0%` recall, `RRUFF/ROD` Raman `0.0%` FDR, `MassSpecGym` `82.4%` Top-1), while failing closed (`L4_ATTRIB_SCHEMA_REJECT`) on malformed wire telemetry.',
-        status: 'Merged on `main` (`9a4b119` + 30-theorem `LabAttribLean` CI): 51-asset real spectra benchmark, 9-round ESOL stepping-stone campaigns, 5-page LaTeX monograph (`paper/main.pdf`), and 9 open characterization datasets.',
+        how: 'Combines a 31-theorem Lean 4.36.0 blame calculus (`LabAttribLean`, `#print axioms` audited) and fit-method-calibrated $R_{\\mathrm{wp}}$ gate (`rietveld <= 100` vs `stick_nnls <= 200` permille) with shift-tolerant Pseudo-Voigt `L1-NNLS` XRD/Raman deconvolution, Q1 + residual MS/MS chimera detection, `EVOI` routing, and SHA-256 `CertifiedLedger` chains.',
+        guarantee: 'Benchmarked under equal rules across 72 SHA-256-pinned real spectra (`A-Lab GPSS` `0.0%` FDR, `75.0%` scan recall & `15` `CERTIFIED_NEGATIVE`s across 352 runs; 14 independent `RRUFF/ROD` Raman scans `92.9%` recall; `MassSpecGym` `75.0%` Q1+residual chimera catch), while failing closed (`MISSING_EXPERIMENTAL_EVIDENCE`) on telemetry-free wire packets.',
+        status: 'Merged on `main` (`7404d0d` + 31-theorem `LabAttribLean` CI): 72-asset real spectra benchmark, equal-budget (`180` assays, `0.0%` FDR) & imperfect-sensor (`1.0/0.9/0.8`) ESOL sweeps, 5-page monograph (`paper/main.pdf`), and 9 open characterization datasets.',
       },
     },
   };

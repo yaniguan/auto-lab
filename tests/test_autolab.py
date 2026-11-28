@@ -103,11 +103,11 @@ def test_catalog_and_issues_integrity_when_built() -> None:
         assert r["commit_head"] == m_entry["head_sha"], f"SHA drift for {r['repo']}: {r['commit_head']} vs {m_entry['head_sha']}"
 
     issues = load_issues_index()
-    assert issues["total_issues"] >= 461
+    assert issues["total_issues"] >= 481
     assert issues.get("round1_issues") == 322
     assert issues.get("round2_issues") >= 95
-    assert issues.get("round3_issues") >= 44
-    assert issues.get("closed_issues") >= 458
+    assert issues.get("round3_issues") >= 64
+    assert issues.get("closed_issues") >= 478
     assert issues.get("open_issues") == 3
     assert issues.get("open_pending_gpu_issues") == [
         "labfill#35",
@@ -116,9 +116,10 @@ def test_catalog_and_issues_integrity_when_built() -> None:
     ]
     for name in CORE_REPO_NAMES:
         if name == "lab-attrib":
-            assert issues["repos"][name]["count"] >= 10
+            assert issues["repos"][name]["count"] >= 14
         else:
-            assert issues["repos"][name]["count"] >= 28
+            assert issues["repos"][name]["count"] >= 32
+    assert issues["repos"]["assayfold"]["count"] >= 4
 
     assert site_data.exists()
     payload = json.loads(site_data.read_text(encoding="utf-8"))
@@ -558,8 +559,22 @@ def test_fifteen_repo_full_wire_pipeline() -> None:
     assert recorded["all_passed"] is True
     rec_s1 = recorded["scenarios"]["1_full_happy_path_and_round2_recalibration"]
     assert rec_s1["distance_source"] == "fitted_esol_model"
+    assert rec_s1["decide_model_encoding"] == "rdkit_2d_morgan"
+    assert rec_s1["decide_surrogate"] == "frontier_ensemble"
+    assert rec_s1["ask_why_stance_calibrated"] is True
+    assert rec_s1["ask_why_unrelated_abstained"] is True
+    assert rec_s1["atlas_equivalent_url_variants_blocked"] >= 4
+    assert rec_s1["atlas_missing_spdx_blocked"] is True
+    assert rec_s1["buy_or_make_oos_and_unpriced_blocked"] is True
+    assert rec_s1["attribution_defaulted_fields"] == []
     assert rec_s1["round1_effective_n_calib"] == 169 and rec_s1["round2_effective_n_calib"] == 170
     assert recorded["scenarios"]["4_l1_lean_mcp_stale_epoch_block"]["dev_secret_rejected"] is True
+    assert (
+        recorded["scenarios"]["5_l4_postrun_precursor_ghost_peak_quarantine"][
+            "missing_evidence_quarantine_verified"
+        ]
+        is True
+    )
     assert recorded["scenarios"]["6_l3_splitguard_canary_block"]["strict_allowlist_enforced"] is True
 
     wire_script = REPO_ROOT / "benchmarks" / "fifteen_repo_wire_check.py"
@@ -574,6 +589,12 @@ def test_fifteen_repo_full_wire_pipeline() -> None:
         _skip_or_fail(
             f"autolab_wire.py missing in {len(missing)} sibling repos: {', '.join(missing)}", "AUTOLAB_REQUIRE_SIBLINGS"
         )
+    for req_pkg in ("sklearn", "rdkit", "torch"):
+        if importlib.util.find_spec(req_pkg) is None:
+            _skip_or_fail(
+                f"sibling wire runtime package {req_pkg!r} is not installed in this environment",
+                "AUTOLAB_REQUIRE_SIBLINGS",
+            )
 
     live = wire_check.run_all_six_scenarios()
     assert live["all_passed"] is True
